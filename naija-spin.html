@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Naija Spin</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+:root{--acc:#008751;--acc2:#F2C94C;--bg:#F3FAF5;--panel:#fff;--text:#0F1F17;--sub:#5f7268;--line:#d8eadf;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#08130d;--panel:#10241a;--text:#ecfaf1;--sub:#93b3a1;--line:#1f3d2e}}
+:root[data-theme="dark"]{--bg:#08130d;--panel:#10241a;--text:#ecfaf1;--sub:#93b3a1;--line:#1f3d2e}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;color:var(--text);font-family:'Poppins','Trebuchet MS',system-ui,sans-serif;overflow-x:hidden;background:radial-gradient(circle at 50% 0,color-mix(in srgb,var(--acc) 26%,transparent),transparent 62%),var(--bg)}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:5px;z-index:70;background:linear-gradient(90deg,#008751 33.3%,#fff 33.3% 66.6%,#008751 66.6%)}
+.ci{width:1em;height:1em;vertical-align:-.14em;display:inline-block}
+.deco{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}.deco span{position:absolute;bottom:-50px;opacity:.13;color:var(--acc);animation:rise linear infinite}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:8px;padding:15px 12px 10px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.menu{font-size:18px;background:var(--panel);border:1.5px solid var(--line);border-radius:12px;width:42px;height:42px;cursor:pointer;color:var(--text);display:grid;place-items:center;text-decoration:none;flex:none}
+.logo{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-size:18px;background:linear-gradient(135deg,var(--acc),color-mix(in srgb,var(--acc) 55%,#000))}
+.brand{font-weight:800;font-size:17px;letter-spacing:.5px;flex:1;line-height:1.05}.brand small{display:block;font-weight:600;font-size:9.5px;letter-spacing:1.5px;color:var(--sub)}
+.pill{background:var(--panel);border:1.5px solid var(--line);border-radius:99px;padding:6px 11px;font-weight:700;font-size:13px;white-space:nowrap;color:var(--text);text-decoration:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px}.pill i{color:var(--acc)}
+main{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:14px 14px 60px}
+.view{display:none;width:100%;max-width:440px;flex-direction:column;align-items:center}.view.on{display:flex}
+h2{margin:6px 0 10px;font-size:20px;font-weight:800}h3{font-weight:700}
+.badge{background:var(--acc);color:#fff;font-size:10px;font-weight:700;padding:4px 12px;border-radius:99px;letter-spacing:1px}
+.chip2{margin:8px 0;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:12.5px;font-weight:600;cursor:pointer;display:inline-flex;gap:7px;align-items:center}.chip2 i,.chip2 .ci{color:var(--acc)}
+.stage{position:relative;width:min(88vw,340px);height:min(88vw,340px);margin:10px 0}
+.pointer{position:absolute;top:-16px;left:50%;transform:translateX(-50%);z-index:4;font-size:34px;color:#fff;filter:drop-shadow(0 3px 3px rgba(0,0,0,.45));transform-origin:50% 20%}.pointer.tick{animation:tick .12s linear infinite}
+#wheelSvg{width:100%;height:100%;filter:drop-shadow(0 12px 22px rgba(0,0,0,.35))}#wheelRot{transform-origin:170px 170px}
+.bulb{animation:blink 1s infinite}.bulb:nth-child(even){animation-delay:.5s}.stage.glow{animation:glow .6s ease-in-out 4}
+.controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.tier{background:var(--panel);border:1.5px solid var(--line);color:var(--text);border-radius:14px;padding:8px 12px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;min-width:74px}
+.tier .e{display:block;font-size:17px;color:var(--acc);margin-bottom:2px}.tier.active{background:var(--acc);border-color:var(--acc);color:#fff}.tier.active .e{color:#fff}.tier:disabled{opacity:.35;cursor:not-allowed}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:16px;padding:12px 26px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 5px 0 color-mix(in srgb,var(--acc) 55%,#000)}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 color-mix(in srgb,var(--acc) 55%,#000)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.big{font-size:19px;padding:15px 56px;letter-spacing:2px;animation:pulse 1.8s ease-in-out infinite;display:inline-flex;gap:10px;align-items:center}.btn.big:disabled{animation:none}
+.msg{min-height:30px;margin-top:14px;font-size:17px;font-weight:700;text-align:center}.msg.big{animation:zoom .5s ease-out}.win{color:var(--acc)}.lose{color:var(--sub);font-weight:500}
+.card{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-top:14px;box-shadow:0 6px 18px rgba(0,0,0,.05)}
+.card h3{margin:0 0 8px;font-size:13.5px;letter-spacing:.5px;display:flex;gap:8px;align-items:center}.card h3>i{color:var(--acc)}
+.prize{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;padding:7px 0;border-top:1px dashed var(--line)}.prize:first-of-type{border-top:0}.prize .pi{font-size:20px;text-align:center;color:var(--acc)}.prize .pn{font-weight:600;font-size:13px}
+.bar{height:6px;border-radius:9px;background:var(--line);margin-top:5px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2))}.prize .po{font-weight:700;font-size:13px;color:var(--acc)}
+.hist{display:flex;gap:7px;flex-wrap:wrap}.chip{background:var(--bg);border:1px solid var(--line);border-radius:99px;padding:4px 11px;font-size:12.5px;font-weight:600;display:inline-flex;gap:6px;align-items:center}.chip.w{border-color:var(--acc);color:var(--acc)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.pack{background:var(--panel);border:1.5px solid var(--line);border-radius:16px;padding:12px;position:relative;font-size:12px;color:var(--sub)}.pack.best{border-color:var(--acc)}
+.pack .tag{position:absolute;top:-9px;right:10px;background:var(--acc);color:#fff;font-size:10px;font-weight:700;padding:2px 9px;border-radius:99px}
+.pack .big{font-size:17px;font-weight:700;color:var(--text);margin-bottom:4px}.pack .big i{color:var(--acc)}.pack .tot{font-size:15px;font-weight:700;color:var(--text);margin:6px 0}
+.pack .ex{color:var(--acc);font-weight:600}.pack .btn{width:100%;padding:8px;font-size:14px;box-shadow:0 3px 0 color-mix(in srgb,var(--acc) 55%,#000)}
+.theme{background:var(--panel);border:1.5px solid var(--line);border-radius:16px;padding:10px;cursor:pointer;text-align:center}.theme.on{border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 28%,transparent)}
+.theme .sw{height:26px;border-radius:8px;margin-bottom:6px}.theme b{display:block;font-size:13px}.theme .it{font-size:16px;display:flex;gap:9px;justify-content:center;margin-top:5px;color:var(--acc)}
+.modes{display:flex;gap:8px;width:100%;margin-bottom:12px}.mode{flex:1;background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:10px 4px;text-align:center;cursor:pointer;font-size:12px;color:var(--sub)}
+.mode b{display:block;font-size:14px;color:var(--text)}.mode i{font-size:20px;color:var(--acc);display:block;margin-bottom:3px}.mode.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--panel))}
+input.txt{width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--text);font:inherit;font-size:15px}
+.avs{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.av{font-size:20px;background:var(--bg);border:1.5px solid var(--line);border-radius:14px;width:50px;height:50px;cursor:pointer;color:var(--text)}.av.on{border-color:var(--acc);color:var(--acc)}
+.big-av{width:84px;height:84px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;font-size:38px;color:#fff;background:linear-gradient(135deg,var(--acc),color-mix(in srgb,var(--acc) 50%,#000))}
+.row{display:flex;justify-content:space-between;padding:7px 0;border-top:1px dashed var(--line);font-size:13px}.row:first-child{border-top:0}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:260px;background:var(--panel);z-index:40;padding:calc(24px + env(safe-area-inset-top,0px)) 14px 20px;transform:translateX(-105%);transition:transform .3s;box-shadow:6px 0 24px rgba(0,0,0,.35)}
+.drawer.open{transform:none}.scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:30;display:none}.scrim.open{display:block}
+.dbrand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;margin-bottom:16px}
+.nav{display:flex;align-items:center;gap:14px;width:100%;background:none;border:0;color:var(--text);font:inherit;font-size:15px;font-weight:600;padding:12px;border-radius:12px;cursor:pointer;text-align:left}.nav i{width:20px;text-align:center;color:var(--acc)}.nav.on{background:color-mix(in srgb,var(--acc) 15%,transparent)}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:600;font-size:14px;z-index:80;animation:zoom .3s;max-width:92%;text-align:center}
+.note{max-width:360px;text-align:center;color:var(--sub);font-size:11px;margin-top:14px;line-height:1.55}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:50}
+@keyframes rise{to{transform:translateY(-115vh) rotate(40deg)}}@keyframes blink{50%{opacity:.25}}@keyframes pulse{50%{transform:scale(1.05)}}
+@keyframes zoom{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+@keyframes tick{0%,100%{transform:translateX(-50%) rotate(-10deg)}50%{transform:translateX(-50%) rotate(8deg)}}@keyframes glow{50%{filter:brightness(1.25) saturate(1.3)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+</style></head><body>
+<div class="deco" id="deco"></div><div class="scrim" id="scrim"></div><nav class="drawer" id="drawer"></nav>
+<header><a class="menu" href="index.html" aria-label="Back to arcade" title="Back to arcade"><i class="fa-solid fa-arrow-left"></i></a><button class="menu" id="menuBtn" aria-label="Menu"><i class="fa-solid fa-bars"></i></button>
+<div class="brand">NAIJA SPIN<small>PLAY NAIJA STYLE</small></div>
+<a class="pill" href="index.html#wallet" aria-label="Wallet"><i class="fa-solid fa-ticket"></i><span id="hSpins">0</span></a><a class="pill" href="index.html#wallet" aria-label="Wallet"><b style="color:#d99a00">₦</b><span id="hCoins">0</span></a></header>
+<main>
+<section class="view on" id="v-play"><span class="badge">18+ · PLAY RESPONSIBLY</span><div class="chip2" id="themeChip"></div>
+<div class="stage" id="stage"><div class="pointer" id="pointer"><i class="fa-solid fa-location-dot"></i></div><svg id="wheelSvg" viewBox="0 0 340 340"></svg></div>
+<div class="controls" id="tiers"></div><button class="btn big" id="spinBtn">SPIN!</button><div class="msg" id="msg"></div>
+<div class="card"><h3><i class="fa-solid fa-trophy"></i> WHAT YOU CAN WIN <span id="modeLbl" style="color:var(--sub)"></span></h3><div id="prizeList"></div><div style="font-size:11px;color:var(--sub);margin-top:8px;line-height:1.5"><i class="fa-solid fa-shield-halved"></i> A bonus win can kick in after a cold run of spins. Over time players get back less than they wager.</div></div>
+<div class="card"><h3><i class="fa-solid fa-clock-rotate-left"></i> RECENT SPINS</h3><div class="hist" id="hist"><span class="lose">No spins yet</span></div></div></section>
+<section class="view" id="v-profile"><h2><i class="fa-solid fa-user"></i> Profile</h2>
+<div class="card" style="text-align:center"><div class="big-av" id="pAv"></div><div id="pName" style="font-weight:800;font-size:20px"></div></div>
+<div class="card"><h3>YOUR NAME</h3><input class="txt" id="nameIn" maxlength="16" placeholder="Enter a player name"><h3 style="margin-top:12px">PICK AN AVATAR</h3><div class="avs" id="avs"></div><button class="btn" id="saveP" style="width:100%">Save profile</button></div>
+<div class="card"><h3>STATS</h3><div id="stats"></div></div></section>
+<section class="view" id="v-market"><h2><i class="fa-solid fa-store"></i> Marketplace</h2>
+<div class="note" style="margin:0 0 12px">Spins come out of your main wallet. 1 spin is worth ₦40; the ₦10 is our service fee, so a spin costs ₦50. Bigger packs cut the fee, and some return it as bonus spins. You can cash spins back into your wallet at ₦40 each.</div>
+<div class="card" style="margin:0 0 12px;text-align:center"><div style="font-size:13px">You have <b id="mySp">0</b> spins (worth <b id="myVal">₦0</b>)</div><button class="btn" id="cashBtn" style="margin-top:8px;width:100%">CONVERT ALL TICKETS TO MONEY</button></div>
+<div class="grid" id="packs"></div></section>
+<section class="view" id="v-themes"><h2><i class="fa-solid fa-palette"></i> Themes &amp; Modes</h2><h3 style="align-self:flex-start;margin:4px 0 8px">MODE</h3><div class="modes" id="modes"></div><h3 style="align-self:flex-start;margin:4px 0 8px">WHEEL THEME</h3><div class="grid" id="themes"></div></section>
+<div class="note" id="syncStatus"></div>
+<div class="note">🔞 18+ only. This is a real-money game: you can lose what you stake. Gamble responsibly: set daily limits or take a break from your wallet, never chase losses. One login and one wallet for every Naija game.</div>
+</main><canvas id="fx"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.13.1/firebase-app-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.13.1/firebase-auth-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.13.1/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig={apiKey:"AIzaSyAu6DV03Br6bA4kt3qINjLipZnyk7WJJe8",authDomain:"gamify-gamify.firebaseapp.com",projectId:"gamify-gamify",storageBucket:"gamify-gamify.firebasestorage.app",messagingSenderId:"1034118592327",appId:"1:1034118592327:web:7850904e752635b94a3e62"};
+const $=id=>document.getElementById(id);
+let db=null,uid=null,kyc='none',unW=null,pendW=null;
+// Money lives in the main wallet (wallets/{uid}). S.spins / S.coins are display copies. Look and prefs are saved in players/{uid}.state
+const S={spins:0,coins:0,profile:{name:'',avatar:'fa-user-tie'},theme:0,mode:0,stats:{spins:0,best:0,wins:0}};
+const CI={ng:'<rect x="2" y="5" width="6.7" height="14" fill="#008751"/><rect x="8.7" y="5" width="6.6" height="14" fill="#fff"/><rect x="15.3" y="5" width="6.7" height="14" fill="#008751"/><rect x="2" y="5" width="20" height="14" rx="1" fill="none" stroke="rgba(0,0,0,.35)" stroke-width=".8"/>',
+ fries:'<g fill="#F2B705"><rect x="6.4" y="3.2" width="2.3" height="10" rx=".7"/><rect x="9.1" y="1.4" width="2.3" height="11.6" rx=".7"/><rect x="11.8" y="2.6" width="2.3" height="10.4" rx=".7"/><rect x="14.5" y="4" width="2.3" height="9" rx=".7"/></g><path d="M5 11h14l-1.6 11H6.6z" fill="#D6112F"/><path d="M9 14.5h6" stroke="#F2B705" stroke-width="1.4" stroke-linecap="round"/>',
+ jollof:'<path d="M4.5 12a7.5 7 0 0 1 15 0z" fill="#E8501A"/><circle cx="9" cy="8.6" r=".9" fill="#F2B705"/><circle cx="13" cy="7" r=".9" fill="#F2B705"/><circle cx="15.6" cy="9.6" r=".9" fill="#F2B705"/><circle cx="11" cy="10.4" r=".8" fill="#7A1A0A"/><path d="M3 12.5h18l-2 7.5a2 2 0 0 1-2 1.5H7A2 2 0 0 1 5 20z" fill="currentColor"/>',
+ theatre:'<g fill="currentColor"><path d="M1 19.5h22v2H1z"/><path d="M3 19.5c0-6.5 3-10.5 9-12.5 6 2 9 6 9 12.5z"/><rect x="11" y="2" width="2" height="5"/></g><path d="M8.5 19.5v-4a3.5 3.5 0 0 1 7 0v4z" fill="rgba(0,0,0,.4)"/>',
+ stadium:'<g fill="currentColor"><path fill-rule="evenodd" d="M2 14a10 6 0 1 0 20 0a10 6 0 1 0-20 0zM6 14a6 3 0 1 0 12 0a6 3 0 1 0-12 0z"/><rect x="2.6" y="3" width="1.6" height="9"/><rect x="19.8" y="3" width="1.6" height="9"/><rect x="1.6" y="1.6" width="3.6" height="2.2"/><rect x="18.8" y="1.6" width="3.6" height="2.2"/></g>'};
+const isCustom=k=>Object.prototype.hasOwnProperty.call(CI,k);
+const ic=(k,cls='')=>isCustom(k)?`<svg class="ci ${cls}" viewBox="0 0 24 24" aria-hidden="true">${CI[k]}</svg>`:`<i class="fa-solid ${k} ${cls}" aria-hidden="true"></i>`;
+const GL={};function glyph(k){if(GL[k])return GL[k];const i=document.createElement('i');i.className='fa-solid '+k;i.style.cssText='position:absolute;visibility:hidden';document.body.appendChild(i);let c=getComputedStyle(i,'::before').content;i.remove();c=(c||'').replace(/^["']|["']$/g,'');if(!c||c==='none'||c==='normal')return '';return GL[k]=c}
+function wIcon(k,x,y,s,mid){if(isCustom(k))return `<g transform="rotate(${mid} ${x} ${y})" style="color:#fff"><svg x="${x-s/2}" y="${y-s/2}" width="${s}" height="${s}" viewBox="0 0 24 24">${CI[k]}</svg></g>`;const g=glyph(k);if(!g)return '';
+return `<text x="${x}" y="${y}" font-family="'Font Awesome 6 Free'" font-weight="900" font-size="${s*.9}" fill="#fff" stroke="rgba(0,0,0,.35)" stroke-width="1" paint-order="stroke" text-anchor="middle" dominant-baseline="central" transform="rotate(${mid} ${x} ${y})">${g}</text>`}
+const THEMES=[
+ {n:'Naija Pride',c:['#006B3F','#008751','#0A3D24','#1F9D63'],a:'#008751',b:'#F2C94C',i:['fa-seedling','fa-drum','fa-pepper-hot','fa-feather','fa-trophy','ng','fa-futbol']},
+ {n:'Jollof Party',c:['#B3260E','#E8501A','#7A1A0A','#F29F05'],a:'#E8501A',b:'#F2B705',i:['fa-pepper-hot','fa-drumstick-bite','fries','fa-fire','fa-star','jollof','ng']},
+ {n:'Super Eagles',c:['#006B3F','#00A862','#0A3D24','#2E8B57'],a:'#008751',b:'#FFFFFF',i:['fa-shirt','fa-flag','fa-medal','fa-feather','stadium','fa-trophy','fa-futbol']},
+ {n:'Lagos Nights',c:['#1B1B3A','#6C3FC5','#C2410C','#0F1F3D'],a:'#6C3FC5',b:'#F2B705',i:['fa-bus','fa-music','fa-moon','theatre','fa-bolt','fa-gem','fa-star']},
+ {n:'Abuja Gold',c:['#8D6E00','#D4A017','#5D4037','#B8860B'],a:'#B8860B',b:'#F2D479',i:['fa-mountain','fa-landmark','fa-sun','stadium','fa-coins','fa-crown','fa-gem']},
+ {n:'Naija Street Food',c:['#C2410C','#EA580C','#7C2D12','#F59E0B'],a:'#EA580C',b:'#FDE68A',i:['fa-lemon','fa-cookie-bite','fries','fa-burger','fa-fire','jollof','fa-utensils']}];
+const TIERSET=[[5,10,20,40],[1,2,5,10],[2,4,8,15],[3,6,10,20],[10,20,40,80],[1,3,6,12]];THEMES.forEach((t,i)=>t.t=TIERSET[i]);
+const NAMES=['No luck','Small chop','Break even','Nice one','Big win','JACKPOT','Free Spin'];
+const MODES=[{n:'Classic',e:'fa-dharmachakra',d:'Balanced',dur:4.2,m:[0,.5,1,2,3,10,0],w:[38,22,18,11,6,2,3]},{n:'Turbo',e:'fa-bolt',d:'Fast spin',dur:1.8,m:[0,.5,1,2,3,10,0],w:[38,22,18,11,6,2,3]},{n:'High Roller',e:'fa-gem',d:'Rare, big wins',dur:4.2,m:[0,.5,1,3,5,20,0],w:[52,19,13,7.5,4.5,1,3]}];
+const PW=[[0,0,70,20,7,1,2],[0,0,70,20,7,1,2],[0,0,88,8,2.5,.2,1.3]];   // weights used for the bonus win after a cold run
+const TEM=['fa-bullseye','fa-bolt','fa-fire','fa-crown'];
+const PACKS=[{s:2,d:0,k:'none'},{s:3,d:0,k:'none'},{s:5,d:10,k:'off'},{s:10,d:15,k:'off'},{s:20,d:20,k:'extra'},{s:30,d:25,k:'off'},{s:50,d:30,k:'extra'},{s:100,d:40,k:'extra'}];
+const AVS=['fa-user-tie','fa-user-ninja','fa-user-astronaut','fa-crown','fa-futbol','fa-feather','fa-fire','fa-bolt','fa-gem','fa-dragon','fa-hat-wizard','fa-paw'];
+let tier=0,spinning=false,free=false,rot=0,hist=[],pendAv=null;
+const fmt=n=>Number.isInteger(n)?n.toLocaleString():n.toFixed(1),money=n=>'₦'+(+n).toLocaleString(undefined,{maximumFractionDigits:2});
+const SRV=()=>firebase.firestore.FieldValue.serverTimestamp();
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),3200)}
+function calc(pk){const base=pk.s*40,fee=pk.s*10,dv=Math.round(fee*pk.d/100);let off=0,extra=0;if(pk.k==='off')off=dv;if(pk.k==='extra')extra=Math.floor(dv/40);return{base,fee,off,extra,total:base+fee-off}}
+// ---- money actions: plain Firestore transactions on wallets/{uid} (no Cloud Functions) ----
+async function buyTx(i){const pk=PACKS[i],q=calc(pk),total=q.total*100,got=pk.s+q.extra,ref=db.doc('wallets/'+uid);
+await db.runTransaction(async t=>{const w=(await t.get(ref)).data()||{};if(w.blocked)throw Error('Your wallet is on hold. Contact support.');if((w.balance||0)<total)throw Error('Not enough balance. Add money in your wallet first.');
+t.set(ref,{balance:w.balance-total,spinK:(w.spinK||0)+got*4000},{merge:true});
+t.set(db.collection('purchases').doc(),{uid,spins:pk.s,bonus:q.extra,paid:q.total,fee:q.fee,off:q.off,at:SRV()})});
+return{got}}
+async function sellTx(n){const ref=db.doc('wallets/'+uid),k=n*4000;
+await db.runTransaction(async t=>{const w=(await t.get(ref)).data()||{};if(w.blocked)throw Error('Your wallet is on hold. Contact support.');if((w.spinK||0)<k)throw Error('Not enough spins');
+t.set(ref,{balance:(w.balance||0)+k,spinK:w.spinK-k},{merge:true})});return{n}}
+async function spinTx(d){const th=THEMES[d.theme],md=MODES[d.mode],stake=th.t[d.tier],ref=db.doc('wallets/'+uid),logRef=db.collection('spins').doc();let out;
+await db.runTransaction(async t=>{const w=(await t.get(ref)).data()||{},sp=w.spin||{},wasFree=!!sp.free;if(w.blocked)throw Error('Your wallet is on hold. Contact support.');
+const cost=wasFree?0:stake;if((w.spinK||0)<cost*4000)throw Error('Not enough spins. Top up in the Marketplace');
+const dry=sp.dry||0,weights=dry>=4?md.w.map((x,i)=>(md.m[i]>=1||i===6)?PW[d.mode][i]:0):md.w;
+let r=Math.random()*weights.reduce((a,b)=>a+b,0),idx=weights.length-1;for(let i=0;i<weights.length;i++){if(r<weights[i]){idx=i;break}r-=weights[i]}
+const m=md.m[idx],win=Math.round(stake*m*2)/2,isWin=m>=1||idx===6,newK=(w.spinK||0)-cost*4000+win*4000;
+t.set(ref,{spinK:newK,spin:{free:idx===6,dry:isWin?0:dry+1,last:logRef.id}},{merge:true});
+t.set(logRef,{uid,cost,stake,won:win,prize:NAMES[idx],free:wasFree,theme:th.n,mode:md.n,at:SRV()});
+out={idx,win,stake,spins:newK/4000,balance:w.balance||0,nextFree:idx===6}});
+return out}
+async function call(n,d){try{if(!uid||!db)throw Error('Log in first');
+if(n==='buySpins')return await buyTx(d.pack);if(n==='sellSpins')return await sellTx(d.spins);if(n==='spinRound')return await spinTx(d)}
+catch(e){console.error(e);toast(e.code==='permission-denied'?'Permission denied by Firestore rules. Publish the new firestore.rules.':(e.message||'Something went wrong. Try again.'))}return null}
+function savePrefs(){if(db&&uid)db.doc('players/'+uid).set({state:{profile:S.profile,theme:S.theme,mode:S.mode,stats:S.stats}},{merge:true}).catch(()=>{})}
+function prizes(){const md=MODES[S.mode],th=THEMES[S.theme];return md.m.map((m,i)=>({m,w:md.w[i],x:i===6,e:th.i[i],n:NAMES[i],l:i===6?'Free':m===0?'0':m===.5?'½':m===1?'Even':'x'+m,col:th.c[i%4]}))}
+const C=170,pol=(r,a)=>{const t=(a-90)*Math.PI/180;return{x:C+r*Math.cos(t),y:C+r*Math.sin(t)}};
+function buildWheel(){const P=prizes(),th=THEMES[S.theme],n=P.length,st=360/n,R=150;let h=`<circle cx="${C}" cy="${C}" r="168" fill="${th.a}" stroke="${th.b}" stroke-width="4"/><g id="wheelRot">`;
+P.forEach((p,i)=>{const a=pol(R,i*st),b=pol(R,(i+1)*st),mid=i*st+st/2,ip=pol(R*.68,mid),lp=pol(R*.42,mid);
+h+=`<path d="M${C},${C}L${a.x},${a.y}A${R},${R} 0 0 1 ${b.x},${b.y}Z" fill="${p.col}" stroke="#fff" stroke-width="2.5"/>`+wIcon(p.e,ip.x,ip.y,28,mid)+`<text x="${lp.x}" y="${lp.y}" font-size="14" font-weight="800" fill="#fff" stroke="rgba(0,0,0,.55)" stroke-width="3" paint-order="stroke" font-family="Poppins,Trebuchet MS,sans-serif" text-anchor="middle" dominant-baseline="middle" transform="rotate(${mid} ${lp.x} ${lp.y})">${p.l}</text>`});
+h+='</g>';for(let i=0;i<20;i++){const q=pol(159,i*18);h+=`<circle class="bulb" cx="${q.x}" cy="${q.y}" r="4.5" fill="${i%2?'#fff':th.b}"/>`}
+h+=`<circle cx="${C}" cy="${C}" r="27" fill="#fff" stroke="${th.a}" stroke-width="4"/>`;
+h+=isCustom(th.i[6])?`<svg x="${C-14}" y="${C-14}" width="28" height="28" viewBox="0 0 24 24" style="color:${th.a}">${CI[th.i[6]]}</svg>`:(glyph(th.i[6])?`<text x="${C}" y="${C}" font-family="'Font Awesome 6 Free'" font-weight="900" font-size="24" fill="${th.a}" text-anchor="middle" dominant-baseline="central">${glyph(th.i[6])}</text>`:'');
+$('wheelSvg').innerHTML=h;rot=0}
+function buildPrizes(){const P=prizes(),tot=P.reduce((s,p)=>s+p.w,0);$('modeLbl').textContent='· '+MODES[S.mode].n;
+$('prizeList').innerHTML=P.map(p=>`<div class="prize"><div class="pi">${ic(p.e)}</div><div><div class="pn">${p.n} <span style="color:var(--sub);font-weight:500">${p.x?'· free extra spin':p.m===0?'· no return':'· '+p.m+'x wager'}</span></div><div class="bar"><i style="width:${Math.min(100,p.w/tot*200)}%"></i></div></div><div class="po">${(p.w/tot*100).toFixed(0)}%</div></div>`).join('')}
+const chipHTML=()=>{const th=THEMES[S.theme],md=MODES[S.mode];return `${ic(th.i[5])} ${th.n} · ${ic(md.e)} ${md.n} · Min ${th.t[0]} <i class="fa-solid fa-chevron-right" style="font-size:10px"></i>`};
+function applyTheme(){const th=THEMES[S.theme],r=document.documentElement.style;r.setProperty('--acc',th.a);r.setProperty('--acc2',th.b);
+$('deco').innerHTML=Array.from({length:14},(_,i)=>`<span style="left:${(i*7.3+3)%96}%;font-size:${22+(i*7)%22}px;animation-duration:${14+(i*3)%12}s;animation-delay:-${(i*2.7)%14}s">${ic(th.i[i%7])}</span>`).join('');
+$('themeChip').innerHTML=chipHTML();tier=0;buildTiers();buildWheel();buildPrizes()}
+const VIEWS=[['play','fa-dharmachakra','Play'],['profile','fa-user','Profile'],['wallet','fa-wallet','Wallet'],['market','fa-store','Marketplace'],['themes','fa-palette','Themes & Modes']];
+function go(v){if(v==='wallet'){location.href='index.html#wallet';return}document.querySelectorAll('.view').forEach(e=>e.classList.toggle('on',e.id==='v-'+v));document.querySelectorAll('.nav').forEach(e=>e.classList.toggle('on',e.dataset.v===v));closeMenu();scrollTo(0,0);renderAll()}
+const openMenu=()=>{$('drawer').classList.add('open');$('scrim').classList.add('open')},closeMenu=()=>{$('drawer').classList.remove('open');$('scrim').classList.remove('open')};
+function renderAll(){$('hSpins').textContent=fmt(S.spins);$('hCoins').textContent=S.coins.toLocaleString(undefined,{maximumFractionDigits:2});
+const T=THEMES[S.theme].t;document.querySelectorAll('.tier').forEach((b,i)=>b.disabled=!free&&S.spins<T[i]);
+$('spinBtn').disabled=spinning;$('spinBtn').innerHTML=free?'<i class="fa-solid fa-gift"></i> FREE SPIN!':'SPIN!';
+$('pAv').innerHTML=ic(S.profile.avatar);$('pName').textContent=S.profile.name||'Guest Player';
+$('stats').innerHTML=[['Total spins played',S.stats.spins],['Winning spins',S.stats.wins],['Biggest win',S.stats.best+' spins']].map(r=>`<div class="row"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('');
+$('themeChip').innerHTML=chipHTML();$('mySp').textContent=fmt(S.spins);$('myVal').textContent=money(S.spins*40);$('cashBtn').disabled=S.spins<1;
+$('packs').innerHTML=PACKS.map((pk,i)=>{const q=calc(pk);return `<div class="pack ${pk.d>=30?'best':''}">${pk.d>=30?'<span class="tag">BEST VALUE</span>':''}<div class="big"><i class="fa-solid fa-ticket"></i> ${pk.s} Spins</div><div>Spins: ${pk.s}×40 = ₦${q.base}</div><div>Fee: ₦${q.fee}</div>${pk.k==='off'?`<div class="ex">Fee −${pk.d}%: −₦${q.off}</div>`:pk.k==='extra'?`<div class="ex">Fee −${pk.d}% → +${q.extra} bonus spin${q.extra>1?'s':''}</div>`:'<div>No discount</div>'}<div class="tot">₦${q.total.toLocaleString()}</div><button class="btn" data-buy="${i}" ${S.coins<q.total?'disabled':''}>Buy${q.extra?` (${pk.s+q.extra})`:''}</button></div>`}).join('');
+document.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buy(+b.dataset.buy));
+$('modes').innerHTML=MODES.map((m,i)=>`<div class="mode ${i===S.mode?'on':''}" data-m="${i}">${ic(m.e)}<b>${m.n}</b>${m.d}</div>`).join('');
+document.querySelectorAll('[data-m]').forEach(e=>e.onclick=()=>{S.mode=+e.dataset.m;savePrefs();applyTheme();go('play');toast(MODES[S.mode].n+' mode')});
+$('themes').innerHTML=THEMES.map((t,i)=>`<div class="theme ${i===S.theme?'on':''}" data-t="${i}"><div class="sw" style="background:linear-gradient(90deg,${t.c.join(',')})"></div><b>${t.n}</b><div style="font-size:11px;color:var(--sub)">Min ${t.t[0]} spins</div><div class="it">${t.i.slice(0,5).map(k=>ic(k)).join('')}</div></div>`).join('');
+document.querySelectorAll('[data-t]').forEach(e=>e.onclick=()=>{S.theme=+e.dataset.t;savePrefs();applyTheme();go('play');toast(THEMES[S.theme].n+' · min '+THEMES[S.theme].t[0]+' spins')});
+document.querySelectorAll('.av').forEach(b=>b.classList.toggle('on',b.dataset.a===(pendAv||S.profile.avatar)))}
+function applyWallet(w){S.coins=(w.balance||0)/100;S.spins=(w.spinK||0)/4000;kyc=w.kyc||'none';free=!!(w.spin&&w.spin.free);renderAll()}
+async function buy(i){const r=await call('buySpins',{pack:i});if(r){toast('+'+r.got+' spins added');confetti(50)}}
+$('cashBtn').onclick=async()=>{if(S.spins<1)return;const n=Math.floor(S.spins*2)/2;if(n<1)return;const r=await call('sellSpins',{spins:n});if(r)toast(money(n*40)+' added to your wallet')};
+function buildTiers(){$('tiers').innerHTML='';THEMES[S.theme].t.forEach((c,i)=>{const b=document.createElement('button');b.className='tier'+(i===tier?' active':'');b.innerHTML=`<span class="e">${ic(TEM[i])}</span>${c} Spin${c>1?'s':''}`;b.onclick=()=>{tier=i;document.querySelectorAll('.tier').forEach((x,j)=>x.classList.toggle('active',j===i))};$('tiers').appendChild(b)})}
+function addHist(t,w){hist.unshift({t,w});hist=hist.slice(0,6);$('hist').innerHTML=hist.map(h=>`<span class="chip ${h.w?'w':''}">${h.t}</span>`).join('')}
+async function spin(){if(spinning||!uid)return;const stake=THEMES[S.theme].t[tier];if(!free&&S.spins<stake){toast('Need '+stake+' spins. Top up in the Marketplace');return}
+spinning=true;renderAll();$('msg').textContent='';const r=await call('spinRound',{theme:S.theme,mode:S.mode,tier});if(!r){spinning=false;if(pendW){applyWallet(pendW);pendW=null}renderAll();return}
+const P=prizes(),p=P[r.idx],st=360/P.length,dur=MODES[S.mode].dur,jit=(Math.random()-.5)*st*.6;
+rot+=360*6+((360-(r.idx*st+st/2+jit))-(rot%360)+360)%360;const w=$('wheelRot');w.style.transition=`transform ${dur}s cubic-bezier(.12,.7,.08,1)`;w.style.transform=`rotate(${rot}deg)`;$('pointer').classList.add('tick');
+setTimeout(()=>{$('pointer').classList.remove('tick');const win=r.win,m=$('msg');m.classList.remove('big');void m.offsetWidth;m.classList.add('big');S.stats.spins++;
+if(p.x){m.innerHTML=`<span class="win">${ic(p.e)} Free spin unlocked!</span>`;addHist(`${ic(p.e)} Free spin`,true);confetti(60)}
+else if(win>r.stake){m.innerHTML=`<span class="win">${ic(p.e)} +${win} spins!</span>`;addHist(`${ic(p.e)} +${win}`,true);S.stats.wins++;S.stats.best=Math.max(S.stats.best,win);confetti(p.m>=10?220:110);$('stage').classList.add('glow');setTimeout(()=>$('stage').classList.remove('glow'),2500)}
+else if(win>0){m.innerHTML=`<span class="lose">${ic(p.e)} Got ${win} back</span>`;addHist(`${ic(p.e)} +${win}`,false)}
+else{m.innerHTML=`<span class="lose">${ic(p.e)} No win. Spin again</span>`;addHist(`${ic(p.e)} 0`,false)}
+spinning=false;if(pendW){applyWallet(pendW);pendW=null}else{S.spins=r.spins;S.coins=r.balance/100;free=r.nextFree;renderAll()}savePrefs()},dur*1000+150)}
+const cv=$('fx'),cx=cv.getContext('2d');let parts=[],raf=null;
+function size(){cv.width=innerWidth;cv.height=innerHeight}addEventListener('resize',size);size();
+function confetti(n){const cols=['#008751','#ffffff',THEMES[S.theme].b,THEMES[S.theme].a,'#F2C94C'];for(let i=0;i<n;i++)parts.push({x:innerWidth/2,y:innerHeight*.4,vx:(Math.random()-.5)*14,vy:-Math.random()*13-4,s:Math.random()*7+4,c:cols[i%5],r:Math.random()*6,vr:(Math.random()-.5)*.4,l:0});if(!raf)loop()}
+function loop(){cx.clearRect(0,0,cv.width,cv.height);parts.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.l++;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/3,p.s,p.s*.6);cx.restore()});parts=parts.filter(p=>p.y<cv.height+20&&p.l<200);raf=parts.length?requestAnimationFrame(loop):null;if(!raf)cx.clearRect(0,0,cv.width,cv.height)}
+$('drawer').innerHTML=`<div class="dbrand"><div class="logo"><i class="fa-solid fa-dharmachakra"></i></div>NAIJA SPIN</div>`+VIEWS.map(v=>`<button class="nav ${v[0]==='play'?'on':''}" data-v="${v[0]}"><i class="fa-solid ${v[1]}"></i>${v[2]}</button>`).join('')+'<button class="nav" onclick="location.href=\'index.html\'" style="margin-top:14px"><i class="fa-solid fa-gamepad"></i>Back to arcade</button>';
+document.querySelectorAll('.nav[data-v]').forEach(b=>b.onclick=()=>go(b.dataset.v));
+$('menuBtn').onclick=openMenu;$('scrim').onclick=closeMenu;$('themeChip').onclick=()=>go('themes');$('spinBtn').onclick=spin;
+$('avs').innerHTML=AVS.map(a=>`<button class="av" data-a="${a}" aria-label="Avatar">${ic(a)}</button>`).join('');
+document.querySelectorAll('.av').forEach(b=>b.onclick=()=>{pendAv=b.dataset.a;document.querySelectorAll('.av').forEach(x=>x.classList.toggle('on',x===b))});
+$('saveP').onclick=()=>{const n=$('nameIn').value.trim();if(n)S.profile.name=n;if(pendAv)S.profile.avatar=pendAv;if(!S.profile.name)return toast('Enter a name first');savePrefs();renderAll();toast('Profile saved')};
+applyTheme();renderAll();
+// ---- one login for every game: sign in on the arcade, this page just uses that session ----
+try{firebase.initializeApp(firebaseConfig);db=firebase.firestore();
+firebase.auth().onAuthStateChanged(async u=>{if(unW){unW();unW=null}
+if(!u){location.href='index.html?next=naija-spin.html';return}uid=u.uid;$('syncStatus').textContent='Signed in as '+(u.displayName||u.email);
+try{const d=await db.doc('players/'+uid).get(),st=d.exists&&d.data().state||{};if(st.profile)S.profile=st.profile;if(!(S.profile&&S.profile.name))S.profile={name:u.displayName||'',avatar:(S.profile&&S.profile.avatar)||'fa-user-tie'};
+if(st.theme>=0&&st.theme<THEMES.length)S.theme=st.theme;if(st.mode>=0&&st.mode<MODES.length)S.mode=st.mode;if(st.stats)S.stats=Object.assign(S.stats,st.stats);$('nameIn').value=S.profile.name;applyTheme()}catch(e){}
+unW=db.doc('wallets/'+uid).onSnapshot(sn=>{const w=sn.exists?sn.data():{};if(spinning)pendW=w;else applyWallet(w)},()=>toast('Could not load your wallet'))})}
+catch(e){$('syncStatus').textContent='Could not connect. Check your internet and reload.'}
+if(document.fonts&&document.fonts.load)document.fonts.load('900 20px "Font Awesome 6 Free"').then(()=>{if(!spinning)buildWheel()}).catch(()=>{});
+addEventListener('load',()=>{if(!spinning)buildWheel()});
+</script></body></html>
