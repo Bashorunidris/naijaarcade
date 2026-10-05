@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Naija Arcade</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700;800&display=swap');
+:root{--bg:#08130d;--bg2:#10241a;--card:#10241a;--tx:#ecfaf1;--mu:#93b3a1;--ac:#F2C94C;--ac2:#e0a800;--gr:#1f9d63;--ln:#1f3d2e;--rd:#ff6b7d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#F3FAF5;--bg2:#fff;--card:#fff;--tx:#0F1F17;--mu:#5f7268;--ln:#d8eadf}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:5px;z-index:70;background:linear-gradient(90deg,#008751 33.3%,#fff 33.3% 66.6%,#008751 66.6%)}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:'Poppins','Segoe UI',system-ui,sans-serif}
+#app{max-width:520px;margin:0 auto;min-height:100vh;padding:0 0 84px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;justify-content:space-between;padding:12px 14px 10px;background:var(--bg2);border-bottom:1px solid var(--ln)}
+.logo{display:flex;align-items:center;gap:8px;font-weight:900;font-size:17px;font-style:italic}.logo i{font-style:normal;width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:flex;align-items:center;justify-content:center}
+.bal{padding:6px 14px;border-radius:999px;background:var(--card);border:1px solid var(--ln);font-weight:800;font-size:14px;cursor:pointer;color:var(--ac)}
+.scr{padding:12px 14px}.hide{display:none!important}
+h2{margin:6px 0 8px;font-size:17px}h3{margin:14px 0 8px;font-size:13px;letter-spacing:1px;color:var(--mu)}
+.note{font-size:11px;color:var(--mu);line-height:1.6;margin:8px 0}
+.ban{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;scrollbar-width:none;margin:0 -14px;padding:0 14px}.ban::-webkit-scrollbar{display:none}
+.b{flex:0 0 100%;scroll-snap-align:center;min-height:140px;border-radius:18px;padding:16px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.b h2{margin:0 0 4px;font-size:21px;font-style:italic;max-width:68%;line-height:1.1}.b p{margin:0 0 10px;font-size:12px;max-width:60%}.b em{position:absolute;right:10px;bottom:-6px;font-size:88px;font-style:normal}
+.btn{display:block;width:100%;margin:8px 0 0;padding:12px;border:0;border-radius:14px;font:800 14px inherit;font-family:inherit;color:#fff;background:linear-gradient(180deg,#00a862,#008751);cursor:pointer;text-align:center;text-decoration:none;box-shadow:0 4px 0 #005a36}
+.btn:active{transform:translateY(3px);box-shadow:none}.btn.gold{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#1a1203;box-shadow:0 4px 0 #8a6a00}.btn.gh{background:var(--card);border:1px solid var(--ln);box-shadow:none;color:var(--tx)}.btn.red{background:linear-gradient(180deg,#d63b50,#a3182b);box-shadow:none}.btn:disabled{opacity:.4;pointer-events:none}.btn.sm{display:inline-block;width:auto;padding:8px 14px;font-size:12px;margin:0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g{display:block;border:1px solid var(--ln);background:var(--card);border-radius:18px;overflow:hidden;text-decoration:none;color:inherit;cursor:pointer;text-align:left;padding:0;font:inherit}
+.art{height:100px;display:flex;align-items:center;justify-content:center;font-size:46px;position:relative}.art b{position:absolute;top:8px;left:8px;font-size:10px;padding:3px 8px;border-radius:7px;background:#ff3d57;color:#fff}.art b.n{background:var(--gr)}.art b.s{background:#6b7390}
+.gi{padding:10px 12px 12px}.gi b{display:block;font-size:14px}.gi span{font-size:11px;color:var(--mu)}
+.k1{background:linear-gradient(180deg,#0c2a5a 40%,#23a83f 40%)}.k2{background:radial-gradient(circle,#3a1a7a,#160a38)}.k3{background:#1a2e24;opacity:.7}
+.tabs{display:flex;gap:6px;margin-bottom:10px}.tab{flex:1;margin:0;padding:9px 2px;border:1px solid var(--ln);border-radius:12px;background:var(--card);color:var(--tx);font:800 12px inherit;font-family:inherit;cursor:pointer}.tab.on{background:#008751;border-color:#008751;color:#fff}
+.st{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--ln);border-radius:16px;background:var(--card);margin-bottom:8px}.st .a{font-size:20px;font-weight:900;color:var(--ac);min-width:84px}.st .w{flex:1;font-size:11px;color:var(--mu)}.st .w b{display:block;color:var(--tx);font-size:13px}.st .btn{margin:0;width:auto;padding:9px 14px;font-size:12px}
+.card{padding:14px;border:1px solid var(--ln);border-radius:18px;background:var(--card);margin-bottom:12px}
+.big{font-size:34px;font-weight:900;color:var(--ac);margin:2px 0}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input,select,textarea{width:100%;padding:11px;border-radius:12px;border:1.5px solid var(--ln);background:var(--bg);color:var(--tx);font:600 14px inherit;font-family:inherit;margin-top:6px}
+textarea{min-height:92px;resize:vertical}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.chip{flex:1;padding:8px 4px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);border-radius:10px;font:800 12px inherit;font-family:inherit;cursor:pointer}
+.tx{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--ln);font-size:12px}.tx span{flex:1;padding-right:8px}.p{color:var(--gr);font-weight:800}.m{color:var(--rd);font-weight:800}.w2{color:var(--ac);font-weight:800}
+.rg{padding:12px;border:1px solid var(--ln);border-radius:14px;background:var(--card);font-size:11.5px;color:var(--mu);line-height:1.6}.rg b{color:var(--ac)}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;display:flex;background:var(--bg2);border-top:1px solid var(--ln);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:6}
+nav button{flex:1;border:0;background:none;color:var(--mu);font:800 10px inherit;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;cursor:pointer}nav button span{font-size:21px}nav button.on{color:var(--ac)}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);padding:10px 16px;border-radius:12px;background:#000d;color:#fff;font-size:13px;font-weight:700;z-index:99;max-width:90%;text-align:center;display:none}
+.ov{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:#000c;padding:20px}.ov.on{display:flex}.ov .card{width:min(92vw,380px);text-align:center;margin:0}
+#auth{z-index:100;background:radial-gradient(circle at 50% 0,#0f5a3a99,transparent 65%),var(--bg);overflow:auto}
+.code{font-size:44px;font-weight:900;letter-spacing:8px;color:var(--ac);margin:8px 0}.spin{width:44px;height:44px;border:5px solid var(--ln);border-top-color:var(--ac);border-radius:50%;margin:10px auto;animation:r 1s linear infinite}@keyframes r{to{transform:rotate(360deg)}}
+.stage{position:relative;width:100%;aspect-ratio:900/506;border-radius:14px;overflow:hidden;background:#000;box-shadow:0 0 40px #0a7cff33}canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+.hud{position:absolute;top:2%;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:5px 14px;background:#0b1730dd;border:1px solid #4aa3ff55;border-radius:999px;font-size:11px;white-space:nowrap}.hud b{font-size:20px;font-weight:900}.sd{display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700}
+.pips{display:flex;gap:3px}.pip{width:12px;height:12px;border-radius:50%;border:2px solid #6c8fc7;font-size:8px;display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:900}.pip.g{background:#2ee66b;border-color:#2ee66b;color:#042}.pip.m{background:#ff4d5e;border-color:#ff4d5e;color:#400}
+.tag{position:absolute;bottom:3%;left:50%;transform:translateX(-50%);padding:6px 14px;border-radius:12px;background:#000a;font-weight:800;font-size:12px;white-space:nowrap}.pot{position:absolute;top:13%;left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;color:var(--ac);text-shadow:0 1px 4px #000;white-space:nowrap}
+.bn{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);font-size:11vmin;font-weight:900;font-style:italic;pointer-events:none;opacity:0;text-shadow:0 0 30px currentColor}.bn.s{animation:pop 1.3s ease-out}@keyframes pop{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}80%{opacity:1}100%{opacity:0}}
+.pic{width:36px;height:36px;border-radius:50%;background:var(--card) center/cover no-repeat;border:2px solid var(--ac);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;overflow:hidden;flex:none}
+a.alink{display:block;text-align:center;color:var(--ac);font-weight:700;text-decoration:none}
+.ov.dm .card.tl{text-align:left;position:relative;max-height:92vh;overflow:auto}
+.x{position:absolute;top:6px;right:10px;border:0;background:none;color:var(--mu);font-size:22px;cursor:pointer;padding:4px 8px}
+nav button{position:relative}
+.dot{position:absolute;top:2px;left:calc(50% + 8px);width:10px;height:10px;border-radius:50%;background:#ff3d57}
+.bad{color:var(--rd);font-weight:700;font-size:12px;min-height:16px;margin-top:6px}
+#blk{z-index:120;background:var(--bg)}
+.rcimg{max-width:100%;border-radius:10px;margin-top:8px;border:1px solid var(--ln)}
+.tx.click{cursor:pointer}
+</style></head><body>
+<div id="auth" class="ov on"><div style="width:min(92vw,380px);display:flex;flex-direction:column;gap:10px;text-align:center"><div style="font-size:54px">🎮</div><h2 style="font-size:26px;font-style:italic;margin:0">NAIJA ARCADE</h2><p class="note" style="margin:0">Log in or create an account</p>
+<div class="tabs"><button class="tab on" data-am="login">Log in</button><button class="tab" data-am="signup">Sign up</button></div>
+<input id="aname" placeholder="Player name" maxlength="14" class="hide"><input id="aem" type="email" placeholder="Email"><input id="apw" type="password" placeholder="Password (6+ characters)">
+<label class="note hide" id="aage" style="text-align:left"><input type="checkbox" id="aok" style="width:auto;margin:0 6px 0 0"> I am 18 or older and I will play responsibly.</label>
+<label class="note" style="text-align:left"><input type="checkbox" id="akeep" checked style="width:auto;margin:0 6px 0 0"> Keep me logged in on this device</label>
+<div id="aerr" style="min-height:18px;color:var(--rd);font-size:13px;font-weight:700"></div><button class="btn gold" id="ago">Log in</button><button class="btn gh" id="afg">Forgot password?</button><a class="alink" id="authcall" href="#">Need help? Call customer care</a><p class="note">🔞 18+ only. Gamble responsibly.</p></div></div>
+<div id="srch" class="ov"><div class="card"><div class="spin" id="spn"></div><h2 id="stt">Searching…</h2><div class="code hide" id="rc"></div><p class="note" id="sst"></p><button class="btn red" onclick="cancelQ()">CANCEL</button></div></div>
+<div id="app"><header><div class="logo"><i>🎮</i>NAIJA ARCADE</div><div style="display:flex;gap:8px;align-items:center"><div class="bal" onclick="show('wallet')" id="hb">₦0</div><div class="pic" id="hav" onclick="show('settings')">🙂</div></div></header>
+<div id="s-home" class="scr"><div class="card" onclick="show('wallet')" style="cursor:pointer;text-align:center"><div class="two"><div><small class="note">CASH WALLET</small><div class="big" id="sc1" style="font-size:22px">₦0</div></div><div><small class="note">SPINS</small><div class="big" id="sc2" style="font-size:22px">0</div></div></div><div class="note" style="margin:0">Spins worth <b id="sc3">₦0</b> (cash out at ₦40 each) · tap for your full wallet</div></div><div class="ban" id="ban">
+<div class="b" style="background:linear-gradient(135deg,#0b7a3b,#0c2a5a)"><h2>NAIJA KICK ONLINE</h2><p>Pick a stake, get matched with a real player in seconds.</p><button class="btn gold sm" onclick="location.href='naija-kick.html'">PLAY NOW</button><em>⚽</em></div>
+<div class="b" style="background:linear-gradient(135deg,#c2185b,#6a1b9a)"><h2>PLAY WITH FRIENDS</h2><p>Make a room code. Play free or agree a stake.</p><button class="btn gold sm" onclick="location.href='naija-kick.html'">CREATE ROOM</button><em>👥</em></div>
+<div class="b" style="background:linear-gradient(135deg,#8d6e00,#3e2723)"><h2>PLAY SMART</h2><p>Set deposit and stake limits in your wallet. Never stake what you can't lose.</p><button class="btn gold sm" onclick="show('wallet')">MY LIMITS</button><em>🛡</em></div></div>
+<h3>🎮 GAMES</h3><div class="grid">
+<div class="g" onclick="location.href='naija-kick.html'"><div class="art k1">⚽<b>ONLINE</b></div><div class="gi"><b>Naija Kick</b><span>Penalty duels · 1v1</span></div></div>
+<a class="g" href="naija-spin.html"><div class="art k2">🎡<b class="n">SPIN & WIN</b></div><div class="gi"><b>Naija Spin</b><span>Same wallet · same login</span></div></a>
+<div class="g" onclick="toast('Shooting Range is coming soon')"><div class="art k3">🎯<b class="s">SOON</b></div><div class="gi"><b>Shooting Range</b><span>2-player target duel</span></div></div>
+<div class="g" onclick="toast('Whot is coming soon')"><div class="art k3">🃏<b class="s">SOON</b></div><div class="gi"><b>Whot Duel</b><span>Card battle · 1v1</span></div></div></div>
+<button class="btn gh" onclick="show('help')">🎧 CUSTOMER CARE &amp; LIVE CHAT</button>
+<p class="note">Prizes depend on winning. Every stake can be lost. A 15% fee is taken from the winner's winnings.</p></div>
+<div id="s-kick" class="scr hide"><h2>⚽ Naija Kick</h2><div class="tabs"><button class="tab on" data-kt="pr">Practice</button><button class="tab" data-kt="on">Online</button><button class="tab" data-kt="fr">Friends</button></div>
+<div id="k-pr"><div class="card"><b>Free practice vs computer</b><p class="note">A demo to learn the game. No money involved.</p><button class="btn" onclick="startPractice()">⚽ PLAY PRACTICE</button></div></div>
+<div id="k-on" class="hide"><p class="note">Pick your stake. You are matched at random with another player who picked the same stake, wherever they are. Winner collects both stakes minus a 15% fee on the winnings. You can lose your stake.</p><div id="stakes"></div></div>
+<div id="k-fr" class="hide"><div class="card"><b>Create a room</b><select id="rst"></select><button class="btn gold" onclick="mkRoom()">CREATE ROOM CODE</button></div>
+<div class="card"><b>Join a room</b><input id="rjc" placeholder="ROOM CODE" maxlength="6" style="text-transform:uppercase;text-align:center;letter-spacing:4px"><button class="btn" onclick="joinRoom()">JOIN</button></div><p class="note">Friends play the stake chosen by the room creator (free or paid). Joiners see the stake before the match starts.</p></div></div>
+<div id="s-match" class="scr hide" style="padding:8px"><div class="stage"><canvas id="c"></canvas>
+<div class="hud"><div class="sd"><span id="yn">YOU</span><div class="pips" id="p0"></div></div><b id="sc">0 - 0</b><div class="sd"><span id="on">OPP</span><div class="pips" id="p1"></div></div></div>
+<div class="pot" id="pot"></div><div class="bn" id="bn"></div><div class="tag" id="tag"></div></div>
+<div class="note" id="tm" style="text-align:center"></div><div class="two"><button class="btn red" onclick="leaveMatch()">🏳 FORFEIT / EXIT</button><button class="btn gh" onclick="show('home')" id="hm">HOME</button></div></div>
+<div id="s-wallet" class="scr hide">
+<div id="wmsg" class="card hide" style="border-color:#ff6b7d;color:#ff6b7d;font-size:12px"></div>
+<div class="card" style="text-align:center"><small class="note">MAIN WALLET BALANCE</small><div class="big" id="wb">₦0</div><div class="note" id="wl"></div>
+<div id="tk" class="hide"><div class="note" style="margin:6px 0">🎟 <b id="tkn">0</b> Naija Spin tickets = <b id="tkv">₦0</b></div><button class="btn gold" onclick="cashSpins()">CONVERT TICKETS TO MONEY</button></div></div>
+<div id="lg" class="card hide"><b>🔄 Convert your old balance</b><p class="note" id="lgt"></p><button class="btn" id="lgb" onclick="sendLegacy()">SEND FOR CONVERSION</button></div>
+<div class="card"><b>🎮 ALL GAMES</b><div id="allb"></div></div>
+<div class="two"><button class="btn gold" onclick="openM('mdp')">➕ DEPOSIT</button><button class="btn" onclick="openM('mwd')">⬆ WITHDRAW</button></div>
+
+
+<h3>MY DEPOSITS</h3><div class="card" id="dlist"><span class="note">None yet</span></div>
+<h3>MY WITHDRAWALS</h3><div class="card" id="wlist"><span class="note">None yet</span></div>
+<button class="btn gh" onclick="show('help')">🎧 PAYMENT PROBLEM? CONTACT CUSTOMER CARE</button>
+<h3>🛡 PLAY RESPONSIBLY</h3><div class="card"><b>Daily limits</b> <span class="note" id="lm"></span><div class="two"><input id="ls" type="number" placeholder="Max stake / day ₦"><input id="ld" type="number" placeholder="Max deposit / day ₦"></div><button class="btn gh" onclick="doLim()">SAVE LIMITS</button><p class="note">Lowering a limit is instant. Raising or removing one takes 24 hours.</p>
+<b>Take a break</b><select id="ex"><option value="7">7 days</option><option value="30">30 days</option><option value="90">90 days</option><option value="180">180 days</option><option value="365">365 days</option></select><button class="btn red" onclick="doEx()">PAUSE MY ACCOUNT</button></div>
+<h3>HISTORY</h3><div class="card" id="hist"><span class="note">No activity yet</span></div>
+<div class="rg" style="margin-top:12px"><b>🔞 18+ ONLY.</b> Gamble responsibly. Decide a budget first, never chase losses, never stake money you need.</div></div>
+<div id="s-help" class="scr hide"><h2>🎧 Customer care</h2>
+<div class="card"><b>Talk to us</b><p class="note" id="hrs"></p>
+<a class="btn gold" id="hcall" href="#">📞 CALL CUSTOMER CARE</a>
+<button class="btn" onclick="openChat()">🟢 START LIVE CHAT</button>
+<a class="btn gh" id="hwa" href="#" target="_blank" rel="noopener">💬 CHAT ON WHATSAPP</a>
+<a class="btn gh" id="hmail" href="#">✉ EMAIL SUPPORT</a></div>
+<div class="card"><b>Send us a message</b><p class="note">Use this for deposits, withdrawals or anything you want us to look into. Our reply shows up below.</p>
+<select id="tcat"><option>Deposit problem</option><option>Withdrawal problem</option><option>Game problem</option><option>My account</option><option>Responsible gaming</option><option>Something else</option></select>
+<input id="tref" placeholder="Payment reference or match code (if any)" maxlength="60">
+<textarea id="tmsg" maxlength="1000" placeholder="Tell us what happened"></textarea>
+<button class="btn" id="tsend" onclick="sendTicket()">SEND MESSAGE</button></div>
+<h3>FROM US</h3><div class="card" id="mslist"><span class="note">None yet</span></div><h3>MY MESSAGES</h3><div class="card" id="tlist"><span class="note">None yet</span></div>
+<div class="rg"><b>🔞 18+ ONLY.</b> If gambling is no longer fun, tell us and we will pause your account. You can also set limits or take a break in your wallet.</div></div>
+<div id="s-settings" class="scr hide"><h2>⚙ Settings</h2>
+<div class="card" style="text-align:center"><div class="pic" id="bigpic" style="width:96px;height:96px;margin:0 auto 8px;font-size:44px;cursor:default">🙂</div><b id="sname"></b><div class="note" id="semail"></div>
+<label class="btn gold" style="cursor:pointer">📷 CHOOSE PICTURE<input type="file" id="pf" accept="image/*" hidden></label><button class="btn gh" onclick="savePic('')">Remove picture</button></div>
+<div class="card"><b>Player name</b><input id="sn" maxlength="14" placeholder="Player name"><button class="btn" onclick="saveName()">SAVE NAME</button></div>
+<div class="card"><b>Account</b><p class="note">Signed in as <b id="semail2"></b>. You stay logged in on this device for every Naija game until you log out.</p><button class="btn gh" onclick="pwReset()">🔑 CHANGE PASSWORD (EMAIL LINK)</button><button class="btn gh" onclick="au.signOut()">🔁 SWITCH ACCOUNT</button><button class="btn red" onclick="au.signOut()">LOG OUT</button></div>
+<div class="card"><b>Need help?</b><p class="note">Call, chat or send us a message.</p><button class="btn gold" onclick="show('help')">🎧 CUSTOMER CARE</button></div>
+<div class="card"><b>Play responsibly</b><p class="note">Set daily limits or pause your account.</p><button class="btn gh" onclick="show('wallet')">🛡 LIMITS &amp; BREAKS</button></div>
+<div class="rg"><b>🔞 18+ ONLY.</b> Gamble responsibly. Set daily limits or take a break in your wallet.</div></div>
+</div>
+<div id="mdp" class="ov dm"><div class="card tl"><button class="x" onclick="closeM('mdp')" aria-label="Close">✕</button><b style="font-size:16px">➕ Deposit</b><p class="note">Pay with Flutterwave by card, bank transfer or USSD. We confirm the payment and add it to your wallet, usually within minutes.</p><div class="chips"><button class="chip" data-d="500">₦500</button><button class="chip" data-d="1000">₦1,000</button><button class="chip" data-d="2000">₦2,000</button><button class="chip" data-d="5000">₦5,000</button></div><input id="da" type="number" inputmode="decimal" placeholder="Amount in ₦ (min 100)"><div class="bad" id="dperr"></div><button class="btn gold" id="dgo" onclick="doDep()">CONTINUE TO PAYMENT</button><p class="note">Track it under MY DEPOSITS. If it takes long, contact customer care with your payment reference.</p></div></div>
+<div id="mwd" class="ov dm"><div class="card tl"><button class="x" onclick="closeM('mwd')" aria-label="Close">✕</button><b style="font-size:16px">⬆ Withdraw</b><p class="note">Available to withdraw: <b id="wdb">₦0</b>. Requests already waiting are not counted.</p><input id="wa" type="number" inputmode="decimal" placeholder="Amount in ₦ (min 1,000)"><div class="chips"><button class="chip" onclick="wdMax()">WITHDRAW MAX</button></div><div class="bad" id="wderr"></div><select id="wbk"></select><input id="wn" placeholder="Account number (10 digits)" maxlength="10" inputmode="numeric"><input id="wm" placeholder="Account name"><button class="btn" id="wgo" onclick="doWd()" disabled>SEND WITHDRAWAL REQUEST</button><p class="note">We check your request and pay it to your account. Your balance is reduced when we pay, and you get a receipt here so you can confirm the transfer. Rejected requests change nothing on your balance.</p></div></div>
+<div id="mrc" class="ov dm"><div class="card tl"><button class="x" onclick="closeM('mrc')" aria-label="Close">✕</button><b style="font-size:16px">🧾 Payment receipt</b><div id="rcb" style="margin-top:8px"></div></div></div>
+<div id="blk" class="ov"><div class="card"><div style="font-size:50px">⛔</div><h2 id="blt">Account on hold</h2><p class="note" id="bls"></p><a class="btn gold" id="blc" href="#">📞 CALL CUSTOMER CARE</a><button class="btn gh" onclick="au.signOut()">LOG OUT</button></div></div>
+<div id="res" class="ov"><div class="card"><div style="font-size:50px" id="re">🏆</div><h2 id="rt"></h2><p class="note" id="rs"></p><button class="btn gold" onclick="closeRes()">CONTINUE</button></div></div>
+<nav><button data-n="home" class="on" onclick="show('home')"><span>🏠</span>HOME</button><button data-n="kick" onclick="location.href='naija-kick.html'"><span>⚽</span>KICK</button><button data-n="wallet" onclick="show('wallet')"><span>👛</span>WALLET</button><button data-n="help" onclick="show('help')"><span>🎧</span>HELP<i class="dot hide" id="hdot"></i></button><button data-n="settings" onclick="show('settings')"><span>⚙</span>SETTINGS</button></nav><div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-functions-compat.js"></script>
+<script>
+/* fallback if gstatic is blocked */
+if(!window.firebase){
+  ['app','auth','firestore','functions'].forEach(function(n){
+    document.write('<script src="https://cdn.jsdelivr.net/npm/firebase@10.13.1/firebase-'+n+'-compat.js"><\/script>');
+  });
+}
+/* show any crash on the login screen instead of failing silently */
+window.addEventListener('error',function(e){
+  var a=document.getElementById('aerr');
+  if(a&&!a.textContent)a.textContent='Error: '+e.message;
+});
+</script>
+<script>
+(function(){
+  var a=document.getElementById('aerr');
+  function say(t){a.textContent=t}
+  if(!window.firebase) say('Firebase failed to load. Check your network or VPN, or try another network.');
+  window.addEventListener('error',function(e){say('Script error: '+e.message+' (line '+e.lineno+')')});
+  window.addEventListener('unhandledrejection',function(e){say('Error: '+((e.reason&&e.reason.message)||e.reason))});
+})();
+</script> src="https://checkout.flutterwave.com/v3.js"></script>
+<script>
+/* ===== EDIT THESE ===== */
+const CFG={
+  FLW_PUBLIC_KEY:'FLWPUBK-5000677a0e4e7d4c4759f83d112397b0-X', // public key only (starts with FLWPUBK). Never put the secret key in this page.
+  SUPPORT_PHONE:'+2349078139367',
+  SUPPORT_WHATSAPP:'2349078139367',   // international format, digits only
+  SUPPORT_EMAIL:'support@yourdomain.com',
+  SUPPORT_HOURS:'every day, 8am to 10pm',
+  TAWK:''                              // from Tawk.to: 'PROPERTY_ID/WIDGET_ID'. Leave empty to turn live chat off.
+};
+/* ====================== */
+const W=900,H=506;let BC=['#fff','#b5bccd'];
+const GX=260,GY=165,GW=380,GH=125,SX=450,SY=425;
+const L=(a,b,t)=>a+(b-a)*t,cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),eo=t=>1-Math.pow(1-t,3);
+const zc=i=>({x:GX+GW*((i%3)+.5)/3,y:GY+GH*((i/3|0)+.5)/2+((i/3|0)?-6:6)});
+const hx=v=>/^#[0-9a-f]{6}$/i.test(v),dk=(h,f)=>'#'+[1,3,5].map(i=>Math.round(parseInt(h.substr(i,2),16)*f).toString(16).padStart(2,'0')).join('');
+const lt=(h,f)=>'#'+[1,3,5].map(i=>Math.round(parseInt(h.substr(i,2),16)*(1-f)+255*f).toString(16).padStart(2,'0')).join('');
+const SK=['#f1c9a0','#d9a066','#b9794a','#8a5530','#5a3520'],HR=['Short','Afro','Bald','Mohawk'],STY=['Solid','Stripes','Hoops','Sash'],DF=['EASY','MEDIUM','HARD'];
+function rng(a){return()=>(a=(a*16807)%2147483647)/2147483647}
+// ---- stadium ----
+const bg=document.createElement('canvas');bg.width=W;bg.height=H;
+(function(){const x=bg.getContext('2d'),r=rng(7);
+let s=x.createLinearGradient(0,0,0,GY+20);s.addColorStop(0,'#030614');s.addColorStop(1,'#0c1c40');x.fillStyle=s;x.fillRect(0,0,W,H);
+for(let y=20;y<GY+10;y+=9)for(let xx=(y%2)*5;xx<W;xx+=10){x.globalAlpha=.25+r()*.5;x.fillStyle=['#d22','#fc3','#37f','#fff','#2b6'][r()*5|0];x.beginPath();x.arc(xx+r()*3,y,2.2,0,7);x.fill()}
+x.globalAlpha=1;s=x.createLinearGradient(0,GY+5,0,GY+30);s.addColorStop(0,'#101a35');s.addColorStop(1,'#1a2a55');x.fillStyle=s;x.fillRect(0,GY+5,W,28);x.font='900 13px sans-serif';x.fillStyle='#4aa3ff';for(let a=10;a<W;a+=170)x.fillText('NAIJA KICK',a,GY+24);
+[90,810].forEach(a=>{const q=x.createRadialGradient(a,10,2,a,10,260);q.addColorStop(0,'#fff');q.addColorStop(.08,'#9cf8');q.addColorStop(1,'#0000');x.fillStyle=q;x.fillRect(0,0,W,H)});
+const hz=GY+GH;let y=hz-2,i=0,h=7;while(y<H){x.fillStyle=i%2?'#23a83f':'#36d658';x.fillRect(0,y,W,h+1);y+=h;h*=1.18;i++}
+x.strokeStyle='#fffc';x.lineWidth=3;x.beginPath();x.moveTo(-30,hz+3);x.lineTo(W+30,hz+3);x.stroke();
+x.lineWidth=4;x.beginPath();x.moveTo(120,H);x.lineTo(205,hz+55);x.lineTo(695,hz+55);x.lineTo(780,H);x.stroke();
+x.lineWidth=3;x.beginPath();x.moveTo(330,hz+3);x.lineTo(330,hz+28);x.lineTo(570,hz+28);x.lineTo(570,hz+3);x.stroke();
+x.fillStyle='#fff';x.beginPath();x.ellipse(SX,SY+14,9,3.5,0,0,7);x.fill();
+s=x.createRadialGradient(W/2,H/2,H*.35,W/2,H/2,H*.85);s.addColorStop(0,'#0000');s.addColorStop(1,'#000a');x.fillStyle=s;x.fillRect(0,0,W,H)})();
+// ---- drawing ----
+function net(){g.save();g.strokeStyle='#ffffff55';g.lineWidth=1;g.beginPath();
+for(let i=0;i<=24;i++){const x=GX+GW*i/24;g.moveTo(x,GY);g.lineTo(L(x,SX,.06),GY+GH+8)}
+for(let j=0;j<=10;j++){const y=GY+GH*j/10;g.moveTo(GX,y);g.lineTo(GX+GW,y)}g.stroke();g.fillStyle='#0000002a';g.fillRect(GX,GY,GW,GH);g.restore()}
+function frame(){g.save();g.shadowColor='#8cf';g.shadowBlur=14;g.lineCap='round';
+const p=c=>{g.strokeStyle=c;g.beginPath();g.moveTo(GX,GY+GH+4);g.lineTo(GX,GY);g.lineTo(GX+GW,GY);g.lineTo(GX+GW,GY+GH+4);g.stroke()};
+g.lineWidth=9;p('#dfe8f5');g.shadowBlur=0;g.lineWidth=3;p('#fff');g.restore()}
+function ball(x,y,r,rot){g.save();g.translate(x,y);g.fillStyle='#0005';g.beginPath();g.ellipse(0,r*.9,r*1.1,r*.3,0,0,7);g.fill();
+const s=g.createRadialGradient(-r*.3,-r*.3,r*.1,0,0,r);s.addColorStop(0,BC[0]);s.addColorStop(1,BC[1]);g.fillStyle=s;g.beginPath();g.arc(0,0,r,0,7);g.fill();
+g.rotate(rot);g.fillStyle='#161a24';for(let i=0;i<5;i++){g.rotate(Math.PI*2/5);g.beginPath();g.arc(0,-r*.62,r*.22,0,7);g.fill()}g.beginPath();g.arc(0,0,r*.24,0,7);g.fill();g.restore()}
+// 3D-shaded avatar with face. o: rot, arm(0-1), leg(-1..1), mood(0 neutral,1 happy,2 sad), gk
+function av(c,x,y,sc,cf,o={}){const sk=SK[cf.skin],HC='#1b120b';c.save();c.translate(x,y);c.scale(sc,sc);
+c.fillStyle='#0006';c.beginPath();c.ellipse(0,2,26,6,0,0,7);c.fill();c.rotate(o.rot||0);
+const cy=(x0,w,col)=>{const q=c.createLinearGradient(x0,0,x0+w,0);q.addColorStop(0,dk(col,.6));q.addColorStop(.4,lt(col,.25));q.addColorStop(1,dk(col,.55));return q};
+[-1,1].forEach(s=>{c.save();c.translate(s*6,-40);if(s>0)c.rotate((o.leg||0)*.8);c.fillStyle=cy(-4,8,sk);c.fillRect(-4,0,8,36);c.fillStyle=cy(-4,8,cf.c2);c.fillRect(-4,16,8,18);c.fillStyle='#111';c.beginPath();c.roundRect(-5,34,14,7,3);c.fill();c.restore()});
+c.fillStyle=cy(-13,26,dk(cf.c1,.75));c.beginPath();c.roundRect(-13,-46,26,15,4);c.fill();
+const a=o.arm||0;c.lineCap='round';
+[-1,1].forEach(s=>{const hx_=s*(19+15*a),hy=-52-a*36;c.strokeStyle=sk;c.lineWidth=8;c.beginPath();c.moveTo(s*15,-78);c.lineTo(hx_,hy);c.stroke();c.fillStyle=cf.c1;c.beginPath();c.arc(s*15,-78,6,0,7);c.fill();c.fillStyle=o.gk?'#39ff7a':sk;c.beginPath();c.arc(hx_,hy,o.gk?7:4.5,0,7);c.fill()});
+c.save();c.beginPath();c.roundRect(-15,-88,30,46,9);c.clip();c.fillStyle=cy(-15,30,cf.c1);c.fillRect(-15,-88,30,46);c.fillStyle=cf.c2+'cc';
+if(cf.sty==1)for(let i=-15;i<15;i+=10)c.fillRect(i,-88,5,46);
+if(cf.sty==2)for(let j=-88;j<-42;j+=12)c.fillRect(-15,j,30,6);
+if(cf.sty==3){c.beginPath();c.moveTo(-15,-88);c.lineTo(-5,-88);c.lineTo(15,-42);c.lineTo(5,-42);c.fill()}
+c.restore();c.textAlign='center';c.shadowColor='#000';c.shadowBlur=3;c.fillStyle=lt(cf.c1,.1)==cf.c1||cf.c1=='#f2f2f2'?'#111':'#fff';c.font='900 16px sans-serif';c.fillText(cf.num,0,-58);c.shadowBlur=0;
+c.fillStyle=dk(sk,.8);c.fillRect(-3,-95,6,9);
+if(cf.hair==1){c.fillStyle=HC;c.beginPath();c.arc(0,-106,19,0,7);c.fill()}
+[-1,1].forEach(s=>{c.fillStyle=dk(sk,.85);c.beginPath();c.arc(s*12,-102,3.2,0,7);c.fill()});
+const q=c.createRadialGradient(-4,-107,2,0,-102,14);q.addColorStop(0,lt(sk,.3));q.addColorStop(.6,sk);q.addColorStop(1,dk(sk,.65));c.fillStyle=q;c.beginPath();c.arc(0,-102,12.5,0,7);c.fill();
+c.fillStyle=HC;
+if(cf.hair==0){c.beginPath();c.arc(0,-103,13,Math.PI*1.05,Math.PI*1.95);c.fill()}
+if(cf.hair==1){c.beginPath();c.arc(0,-104,13,Math.PI*1.12,Math.PI*1.88);c.fill()}
+if(cf.hair==3)c.fillRect(-2.5,-120,5,11);
+const m=o.mood||0;
+[-1,1].forEach(s=>{c.fillStyle='#fff';c.beginPath();c.ellipse(s*4.8,-103,3.4,2.8,0,0,7);c.fill();c.fillStyle='#1a1008';c.beginPath();c.arc(s*4.8+(o.look||0),-103,1.6,0,7);c.fill();c.fillStyle='#fff';c.fillRect(s*4.8-1,-104.5,1,1);
+c.strokeStyle=HC;c.lineWidth=1.6;c.beginPath();c.moveTo(s*2,-108+(m==2?-2:0));c.lineTo(s*8,-108+(m==2?1:-1)+(m==2?-3:0));c.stroke()});
+c.fillStyle=dk(sk,.75);c.beginPath();c.ellipse(0,-99.5,1.6,1.2,0,0,7);c.fill();
+c.strokeStyle='#4a1a14';c.lineWidth=1.8;c.beginPath();
+if(m==1){c.arc(0,-96.5,5,.1*Math.PI,.9*Math.PI);c.stroke();c.fillStyle='#fff';c.beginPath();c.arc(0,-96.5,5,.1*Math.PI,.9*Math.PI);c.fill()}
+else if(m==2){c.arc(0,-90.5,4,1.15*Math.PI,1.85*Math.PI);c.stroke()}
+else{c.moveTo(-3.5,-94.5);c.lineTo(3.5,-94.5);c.stroke()}
+c.restore()}
+const gkOf=cf=>({...cf,c1:'#ff9a00',c2:'#222222',sty:0});
+
+
+const FC={apiKey:"AIzaSyAu6DV03Br6bA4kt3qINjLipZnyk7WJJe8",authDomain:"gamify-gamify.firebaseapp.com",projectId:"gamify-gamify",storageBucket:"gamify-gamify.firebasestorage.app",messagingSenderId:"1034118592327",appId:"1:1034118592327:web:7850904e752635b94a3e62"};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const cv=$('#c'),g=cv.getContext('2d');cv.width=W;cv.height=H;
+firebase.initializeApp(FC);const db=firebase.firestore(),au=firebase.auth(),fn=n=>firebase.functions().httpsCallable(n);au.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
+const SRV=()=>firebase.firestore.FieldValue.serverTimestamp();
+const STK=[1500,10000,20000,40000,50000,100000,500000],N=k=>'₦'+(k/100).toLocaleString('en-NG',{maximumFractionDigits:2}),pay=s=>2*s-Math.floor(s*.15);
+let me=null,Wl={balance:0,locked:0,kyc:'none',limits:{}},unW=null,unM=null,M=null,mid=null,shown=0,anim=null,pend=false,scr='home',searching=false,claimed={},myPick=null,mk=0,mg=0,shake=0,conf=[],hov=-1,qt=null;
+function toast(t){const e=$('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',3000)}
+async function call(n,d){try{return(await fn(n)(d||{})).data}catch(e){console.error(n,e.code,e.message);
+ toast(e.code==='functions/not-found'?'This feature is not available yet ('+n+').':e.code==='functions/unavailable'?'Server unreachable. Try again.':e.code==='functions/unauthenticated'?'Log in again and retry.':e.message&&e.message!=='internal'?e.message:'Server error ('+n+'). Contact customer care if it continues.');return null}}
+function show(id){scr=id;$$('.scr').forEach(e=>e.classList.toggle('hide',e.id!=='s-'+id));$$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.n===id));scrollTo(0,0);if(id==='kick')renderStakes();if(id==='wallet')loadHist();if(id==='help')markRead()}
+function ktab(t){$$('.tab[data-kt]').forEach(b=>b.classList.toggle('on',b.dataset.kt===t));['pr','on','fr'].forEach(x=>$('#k-'+x).classList.toggle('hide',x!==t))}
+$$('.tab[data-kt]').forEach(b=>b.onclick=()=>ktab(b.dataset.kt));
+// ---- auth ----
+let am='login';const AE={'auth/invalid-email':'That email looks wrong.','auth/user-not-found':'No account with that email.','auth/wrong-password':'Wrong password.','auth/invalid-credential':'Wrong email or password.','auth/email-already-in-use':'That email already has an account. Log in instead.','auth/weak-password':'Password needs 6+ characters.','auth/too-many-requests':'Too many tries. Wait a bit.','auth/network-request-failed':'No internet connection, or this website is blocked.','auth/unauthorized-domain':'This website address is not authorised in Firebase (Authentication > Settings > Authorized domains).','auth/operation-not-allowed':'Email/Password sign-in is not enabled in Firebase (Authentication > Sign-in method).','auth/configuration-not-found':'Email/Password sign-in is not enabled in Firebase (Authentication > Sign-in method).','auth/invalid-api-key':'The Firebase API key is wrong.','auth/operation-not-supported-in-this-environment':'Open the site from a web address (https), not a double-clicked file.'};
+const aerr=t=>$('#aerr').textContent=t;
+$$('.tab[data-am]').forEach(b=>b.onclick=()=>{am=b.dataset.am;$$('.tab[data-am]').forEach(x=>x.classList.toggle('on',x===b));$('#aname').classList.toggle('hide',am!=='signup');$('#aage').classList.toggle('hide',am!=='signup');$('#ago').textContent=am==='signup'?'Create account':'Log in';aerr('')});
+$('#ago').onclick=async()=>{const em=$('#aem').value.trim(),pw=$('#apw').value,nm=$('#aname').value.trim();aerr('');if(!em||!pw)return aerr('Enter your email and password.');
+try{await au.setPersistence($('#akeep').checked?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION);if(am==='signup'){if(!nm)return aerr('Enter a player name.');if(!$('#aok').checked)return aerr('You must be 18 or older to play.');const c=await au.createUserWithEmailAndPassword(em,pw);await c.user.updateProfile({displayName:nm});await c.user.getIdToken(true)}else await au.signInWithEmailAndPassword(em,pw)}catch(e){aerr(AE[e.code]||'Login failed ('+(e.code||'error')+')')}};
+$('#afg').onclick=async()=>{const em=$('#aem').value.trim();if(!em)return aerr('Type your email first.');try{await au.sendPasswordResetEmail(em);aerr('Reset link sent.')}catch(e){aerr(AE[e.code]||'Could not send.')}};
+au.onAuthStateChanged(u=>{me=u;if(unW){unW();unW=null}if(!u){$('#auth').classList.add('on');$('#apw').value='';aerr('');show('home');return}$('#auth').classList.remove('on');const nx=new URLSearchParams(location.search).get('next');if(nx&&/^[\w-]+\.html$/.test(nx)){location.replace(nx);return}
+unW=db.doc('wallets/'+u.uid).onSnapshot(s=>{$('#wmsg').classList.add('hide');Wl=Object.assign({balance:0,locked:0,kyc:'none',limits:{}},s.exists?s.data():{});renderW();
+if(Wl.activeMatch)location.href='naija-kick.html';
+if(searching&&!Wl.activeQueue&&!Wl.activeMatch){searching=false;$('#srch').classList.remove('on');toast('No opponent found. Your stake was refunded.')}},walletErr)});
+function renderW(){$('#hb').textContent=N(Wl.balance);$('#wb').textContent=N(Wl.balance);$('#wdb').textContent=N(Math.max(0,Wl.balance-pendWd()));$('#wl').textContent=(Wl.blocked?'⛔ Your wallet is on hold. Contact customer care. ':'')+(Wl.locked?'🔒 '+N(Wl.locked)+' held in your current match':'');if($('#mwd').classList.contains('on'))wdCheck();
+const sp=(Wl.spinK||0)/4000;$('#tk').classList.toggle('hide',sp<1);$('#tkn').textContent=sp.toLocaleString();$('#tkv').textContent=N(Wl.spinK||0);
+const L=Wl.limits||{};$('#lm').textContent='Now: stake '+(L.dailyStake?N(L.dailyStake):'none')+' · deposit '+(L.dailyDeposit?N(L.dailyDeposit):'none');renderAllB()}
+function walletErr(e){const m=$('#wmsg');m.textContent='Could not load your wallet ('+(e&&e.code||'error')+'). Check your connection and Firestore rules, then reload. If it continues, contact customer care.';m.classList.remove('hide')}
+// ---- lobby ----
+function renderStakes(){const ok=Wl.kyc==='verified';$('#stakes').innerHTML=STK.map(s=>`<div class="st"><div class="a">${N(s)}</div><div class="w"><b>Win ${N(pay(s))}</b>Pot ${N(s*2)} · fee ${N(Math.floor(s*.15))}</div><button class="btn gold" data-s="${s}" ${Wl.balance<s||!ok?'disabled':''}>FIND</button></div>`).join('')+(ok?'':'<p class="note">⚠ Verification is required before staking real money.</p>');
+$$('[data-s]').forEach(b=>b.onclick=()=>findMatch(+b.dataset.s));$('#rst').innerHTML='<option value="0">Free (no stake)</option>'+STK.map(s=>`<option value="${s}" ${ok?'':'disabled'}>Stake ${N(s)} each (winner ${N(pay(s))})</option>`).join('')}
+function showSearch(t,sub,code){searching=true;const o=$('#srch');o.classList.add('on');$('#stt').textContent=t;$('#sst').textContent=sub;$('#rc').textContent=code||'';$('#rc').classList.toggle('hide',!code);$('#spn').classList.toggle('hide',!!code&&false)}
+async function findMatch(s){const r=await call('joinQueue',{stake:s});if(!r)return;if(r.status==='matched')startMatch(r.matchId);else showSearch('Searching for a player…','Stake '+N(s)+'. We refund automatically if nobody is found within about 90 seconds.')}
+async function mkRoom(){const s=+$('#rst').value,c=Array.from({length:5},()=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.random()*32|0]).join('');const r=await call('joinQueue',{stake:s,code:c});if(r&&r.status==='searching')showSearch('Room ready','Tell your friend to join with this code. '+(s?'Stake '+N(s)+' each.':'Free match.'),c);else if(r&&r.matchId)startMatch(r.matchId)}
+async function joinRoom(){const c=$('#rjc').value.trim().toUpperCase();if(c.length<4)return toast('Enter the room code');const r=await call('joinQueue',{code:c});if(r&&r.matchId)startMatch(r.matchId)}
+async function cancelQ(){await call('leaveQueue');searching=false;$('#srch').classList.remove('on')}
+// ---- match engine ----
+function finished(h0,h1,s0,s1,round){const n=5,ra=Math.max(0,n-h0.length),rb=Math.max(0,n-h1.length);if(h0.length>=n&&h1.length>=n){if(h0.length===h1.length&&s0!==s1)return true}else if(s0>s1+rb||s1>s0+ra)return true;return round>=24}
+const myid=()=>M.practice?'me':me.uid,mI=()=>M.players.indexOf(myid());
+function startMatch(id){if(mid===id)return;searching=false;$('#srch').classList.remove('on');mid=id;shown=0;anim=null;pend=false;claimed={};M=null;if(unM)unM();
+unM=db.doc('matches/'+id).onSnapshot(s=>{if(s.exists)onMatch(s.data())},()=>toast('Connection lost. Reconnecting…'));show('match')}
+function onMatch(d){const first=!M;M=d;if(first)hud();checkLast();if(!anim)hud();if(M.status==='done'&&!anim&&shown>=(M.last?M.last.r+1:0))finishMatch()}
+function checkLast(){if(!anim&&M&&M.last&&M.last.r>=shown){shown=M.last.r+1;anim={t:0,...M.last,done:false};pend=false;myPick=null}}
+function startPractice(){const nm=(me.displayName||'YOU').toUpperCase().slice(0,12);M={practice:1,players:['me','cpu'],names:[nm,'CPU'],stake:0,fee:0,status:'live',round:0,score:[0,0],h0:[],h1:[],picked:{},last:null,deadline:1e15};mid='practice';shown=0;anim=null;pend=false;if(unM){unM();unM=null}hud();show('match')}
+function localPick(z){const ki=M.round%2,cz=Math.random()*6|0,kz=ki===0?z:cz,sz=ki===0?cz:z,goal=kz!==sz,h0=[...M.h0],h1=[...M.h1],sc=[...M.score];(ki?h1:h0).push(goal?1:0);if(goal)sc[ki]++;
+const done=finished(h0,h1,sc[0],sc[1],M.round+1),ev={r:M.round,ki,k:kz,s:sz,goal,done};setTimeout(()=>onMatch({...M,round:M.round+1,score:sc,h0,h1,last:ev,status:done?'done':'live',winner:done?(sc[0]>sc[1]?'me':sc[1]>sc[0]?'cpu':null):null,reason:'final'}),350)}
+const canPick=()=>M&&M.status==='live'&&!anim&&!pend;
+async function pick(z){if(!canPick())return;pend=true;myPick=z;if(M.practice)return localPick(z);const r=await call('submitPick',{matchId:mid,z});if(!r){pend=false;myPick=null}}
+function hud(){if(!M)return;const mi=mI(),oi=1-mi,h=[M.h0,M.h1];$('#yn').textContent=M.names[mi];$('#on').textContent=M.names[oi];pips('#p0',h[mi]);pips('#p1',h[oi]);$('#sc').textContent=M.score[mi]+' - '+M.score[oi];
+$('#pot').textContent=M.stake?'POT '+N(M.stake*2)+' · WIN '+N(pay(M.stake)):M.practice?'PRACTICE':'FREE MATCH'}
+function pips(sel,a){$(sel).innerHTML=Array.from({length:Math.max(5,a.length)},(_,i)=>`<i class="pip ${a[i]===1?'g':a[i]===0?'m':''}">${a[i]===1?'✓':a[i]===0?'✕':''}</i>`).join('')}
+function endAnim(){const a=anim,b=$('#bn');b.className='bn';void b.offsetWidth;b.textContent=a.goal?'GOAL!':'SAVED!';b.style.color=a.goal?'#2ee66b':'#ffb800';b.classList.add('s');mk=a.goal?1:2;mg=a.goal?2:1;
+if(a.goal)for(let i=0;i<110;i++)conf.push({x:W/2,y:200,vx:(Math.random()-.5)*14,vy:-Math.random()*12-2,c:['#ffd23f','#2d8cff','#ff4d5e','#2ee66b','#fff'][i%5],r:Math.random()*6});else shake=14;hud();
+setTimeout(()=>{anim=null;mk=mg=0;checkLast();if(!anim&&M.status==='done')finishMatch()},1500)}
+let fin=false;function finishMatch(){if(fin)return;fin=true;const d=M,won=d.winner&&d.winner===myid();let t,s,e;
+if(!d.winner){t=d.reason==='void'?'MATCH VOIDED':'DRAW';e='🤝';s=d.stake?'Your '+N(d.stake)+' stake was refunded in full. No fee taken.':'No money involved.'}
+else if(won){t='YOU WIN!';e='🏆';s=d.practice?'Practice match. No money involved.':d.stake?'+'+N(pay(d.stake))+' paid to your wallet (15% fee on winnings taken).':'Free match. Bragging rights!';if(d.reason==='forfeit')s='Opponent forfeited. '+s}
+else{t='YOU LOSE';e='😤';s=d.practice?'Practice match. Try again!':d.stake?'Your '+N(d.stake)+' stake went to the winner.':'Free match. Good game!'}
+$('#re').textContent=e;$('#rt').textContent=t;$('#rs').textContent=s;$('#res').classList.add('on')}
+function closeRes(){$('#res').classList.remove('on');fin=false;if(unM){unM();unM=null}mid=null;M=null;anim=null;location.href='naija-kick.html'}
+async function leaveMatch(){if(!M)return show('home');if(M.practice||M.status==='done'){closeRes();return}
+if(!confirm('Leave this match? You will forfeit and lose your stake.'))return;toast('Stay in the match until it finishes. Missing 3 rounds forfeits automatically.')}
+
+// ---- deposits (Flutterwave inline checkout + Firestore, no Cloud Functions) ----
+$$('[data-d]').forEach(b=>b.onclick=()=>$('#da').value=b.dataset.d);
+const BANKS=['Access Bank','GTBank','Zenith Bank','First Bank','UBA','Fidelity Bank','FCMB','Sterling Bank','Union Bank','Wema Bank','Polaris Bank','Stanbic IBTC','Opay','PalmPay','Kuda','Moniepoint','Other'];
+$('#wbk').innerHTML=BANKS.map(b=>'<option>'+b+'</option>').join('');
+const blocked=()=>!!Wl.blocked;
+function openM(id){if(id==='mdp'||id==='mwd'){if(!me)return toast('Log in first');if(blocked())return toast('Your wallet is on hold. Contact customer care.')}
+ $('#'+id).classList.add('on');if(id==='mwd'){$('#wderr').textContent='';renderW();wdCheck()}if(id==='mdp')$('#dperr').textContent=''}
+function closeM(id){$('#'+id).classList.remove('on')}
+$$('.ov.dm').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('on')}));
+const pendWd=()=>WDS.filter(x=>x.status==='pending').reduce((s,x)=>s+(+x.amount||0),0);
+const avail=()=>Math.max(0,(Wl.balance||0)-pendWd());
+function wdCheck(){const raw=$('#wa').value,a=Math.round(+raw*100);let m='';
+ if(blocked())m='Your wallet is on hold. Contact customer care.';
+ else if(avail()<100000)m='You need at least ₦1,000 available to withdraw.';
+ else if(raw!==''&&a>avail())m='You can only withdraw up to '+N(avail())+'.';
+ else if(raw!==''&&a<100000)m='Minimum withdrawal is ₦1,000.';
+ $('#wderr').textContent=m;$('#wgo').disabled=!!m||raw===''}
+function wdMax(){const m=Math.floor(avail()/100);$('#wa').value=m>0?m:'';wdCheck()}
+$('#wa').addEventListener('input',wdCheck);
+let fwBusy=false;
+function loadScript(src){return new Promise((res,rej)=>{const e=document.createElement('script');e.src=src;e.onload=res;e.onerror=rej;document.head.appendChild(e)})}
+async function logTxn(txRef,amount,ref,status,startedAt){
+ try{localStorage.removeItem('na_pending_tx')}catch(e){}
+ try{await db.collection('transactions').add({uid:me.uid,amount,txRef,paidRef:ref,status,startedAt:startedAt||Date.now(),createdAt:SRV()})}catch(e){console.error(e)}}
+async function resumePendingTx(){
+ let p;try{p=JSON.parse(localStorage.getItem('na_pending_tx')||'null')}catch(e){p=null}
+ if(!p||!me||p.uid!==me.uid)return;
+ try{localStorage.removeItem('na_pending_tx')}catch(e){}
+ try{await db.collection('transactions').add({uid:me.uid,amount:p.amount||0,txRef:p.txRef||'',paidRef:'',status:'interrupted',startedAt:p.startedAt||Date.now(),createdAt:SRV()})}catch(e){}
+ toast('A payment was interrupted (ref '+p.txRef+'). If your bank confirms it went through, contact customer care with this reference.')}
+/* Flutterwave client-side checkout. A successful payment becomes a "paid_claimed" deposit for admin to verify.
+   A failed or cancelled payment sends NOTHING to admin: it is only logged in "transactions". */
+async function doDep(){
+ const err=m=>{$('#dperr').textContent=m};err('');
+ const naira=+$('#da').value;
+ if(!me)return err('Log in first');
+ if(blocked())return err('Your wallet is on hold. Contact customer care.');
+ if(!(naira>=100))return err('Minimum deposit is ₦100.');
+ if(naira>500000)return err('Maximum deposit is ₦500,000.');
+ if(fwBusy)return err('A payment window is already open.');
+ if(String(CFG.FLW_PUBLIC_KEY).indexOf('FLWPUBK')!==0||/REPLACE/.test(CFG.FLW_PUBLIC_KEY))return err('Payments are not set up yet. Contact customer care.');
+ if(typeof FlutterwaveCheckout!=='function'){try{await loadScript('https://checkout.flutterwave.com/v3.js')}catch(e){return err('Could not load the payment window. Check your network.')}}
+ const txRef='na_'+me.uid+'_'+Date.now(),startedAt=Date.now(),amt=Math.round(naira*100);
+ try{localStorage.setItem('na_pending_tx',JSON.stringify({uid:me.uid,txRef,amount:amt,startedAt}))}catch(e){}
+ fwBusy=true;closeM('mdp');
+ let settled=false,modal=null;
+ modal=FlutterwaveCheckout({
+  public_key:CFG.FLW_PUBLIC_KEY,tx_ref:txRef,amount:naira,currency:'NGN',country:'NG',
+  payment_options:'card,ussd,banktransfer,mobilemoney',
+  customer:{email:me.email,phone_number:'',name:me.displayName||me.email},
+  customizations:{title:'Naija Arcade',description:'Wallet deposit'},
+  callback:async r=>{
+   settled=true;fwBusy=false;
+   const ref=String(r.transaction_id||r.flw_ref||''),ok=r.status==='successful'||r.status==='completed';
+   try{modal&&modal.close()}catch(e){}
+   if(r.status==='cancelled'){await logTxn(txRef,amt,ref,'cancelled',startedAt);return}
+   if(ok){
+    try{await db.doc('deposits/'+txRef).set({uid:me.uid,email:me.email||'',amount:amt,status:'paid_claimed',flwId:ref,flwRef:String(r.flw_ref||''),txRef,at:SRV()});
+     $('#da').value='';toast('Payment received. We are confirming it and will add it to your wallet.');await logTxn(txRef,amt,ref,'successful',startedAt)}
+    catch(x){console.error(x);toast('Payment went through, but we could not send your request. Contact customer care with reference '+txRef+'.');await logTxn(txRef,amt,ref,'successful-not-sent',startedAt)}
+   }else{toast('Payment was not completed. Nothing was sent. You can try again.');await logTxn(txRef,amt,ref,'failed',startedAt)}
+  },
+  onclose:async()=>{fwBusy=false;if(!settled)await logTxn(txRef,amt,'','cancelled',startedAt)}
+ });
+}
+async function doWd(){
+ wdCheck();if($('#wgo').disabled)return;
+ if(!me)return toast('Log in first');
+ const a=Math.round(+$('#wa').value*100),acc=$('#wn').value.trim(),nm=$('#wm').value.trim(),e=$('#wderr');
+ if(a>avail()){e.textContent='You can only withdraw up to '+N(avail())+'.';return}
+ if(!/^\d{10}$/.test(acc)){e.textContent='Account number must be 10 digits.';return}
+ if(nm.length<3){e.textContent='Enter the account name.';return}
+ const b=$('#wgo');b.disabled=true;
+ try{await db.collection('withdrawals').add({uid:me.uid,email:me.email||'',amount:a,bank:{bank:$('#wbk').value,account:acc,name:nm.slice(0,60)},status:'pending',at:SRV()});
+  closeM('mwd');['#wa','#wn','#wm'].forEach(x=>$(x).value='');toast('Request sent. We will check and pay you.')}
+ catch(x){console.error(x);e.textContent=x.code==='permission-denied'?'This request was refused. The amount may be above your balance, or your wallet is on hold.':'Could not send the request. Check your connection or contact customer care.';b.disabled=false}
+}
+let LG={spins:0,spinNaira:0,kickCoins:0};
+async function chkLg(){if(!me)return;const t=LG.spins+LG.spinNaira+LG.kickCoins;let c=null;try{c=await db.doc('conversions/'+me.uid).get()}catch(e){}
+const card=$('#lg');card.classList.toggle('hide',!(t>0||(c&&c.exists)));if(c&&c.exists){const d=c.data();$('#lgt').textContent='Your conversion request is '+d.status+(d.status==='approved'?' and '+N(d.credited||0)+' was added to your wallet.':'.');$('#lgb').classList.add('hide')}
+else{$('#lgt').textContent='You have old balances: '+LG.spins+' Spin tickets, ₦'+LG.spinNaira+' Spin Naira and '+LG.kickCoins+' Kick coins. Send them for review and we will credit your wallet in naira after we check them.';$('#lgb').classList.remove('hide')}}
+async function sendLegacy(){const r=await call('claimLegacy');if(r){toast('Sent for review. We will credit your wallet.');chkLg()}}
+async function doLim(){const r=await call('setLimits',{dailyStake:Math.round(+$('#ls').value*100),dailyDeposit:Math.round(+$('#ld').value*100)});if(r)toast(r.pending?'Saved. Loosening takes effect in 24h.':'Limits saved')}
+async function doEx(){const d=+$('#ex').value;if(!confirm('Pause your account for '+d+' days? You cannot undo this.'))return;const r=await call('selfExclude',{days:d});if(r)toast('Account paused')}
+async function loadHist(){if(!me)return;const L={deposit:'Deposit',stake_lock:'Stake placed',stake_refund:'Stake refunded',win_payout:'Win payout',stake_lost:'Stake lost',withdraw_request:'Withdrawal',withdraw_refund:'Withdrawal refunded',withdraw_paid:'Withdrawal paid',admin_credit:'Added by support',admin_deduct:'Deducted by support',spin_buy:'Spins bought',spin_cashout:'Tickets converted',legacy_convert:'Old balance converted'};
+try{const s=await db.collection('ledger').where('uid','==',me.uid).orderBy('at','desc').limit(25).get(),h=$('#hist');h.textContent='';let n=0;
+s.docs.forEach(x=>{const d=x.data();if(d.type==='spin'||(!d.dB&&d.type!=='stake_lost'))return;n++;const r=document.createElement('div');r.className='tx';const a=document.createElement('span'),b=document.createElement('b');a.textContent=L[d.type]||d.type;
+b.className=d.dB>0?'p':'m';b.textContent=d.type==='stake_lost'?'-'+N(-d.dL):(d.dB>=0?'+':'-')+N(Math.abs(d.dB));r.append(a,b);h.appendChild(r)});if(!n)h.innerHTML='<span class="note">No activity yet</span>'}catch(e){}}
+// ---- live lists: deposits, withdrawals, support messages, inbox ----
+let unD=null,unWd=null,unT=null,unMs=null,DPS=[],WDS=[],TKS=[],MSG=[],PL={};
+const tsOf=d=>d.at&&d.at.toMillis?d.at.toMillis():Date.now();
+const byNew=(a,b)=>tsOf(b)-tsOf(a);
+function rows(el,list,empty,fmt){el.textContent='';if(!list.length){const s=document.createElement('span');s.className='note';s.textContent=empty;el.appendChild(s);return}
+ list.forEach(x=>{const f=fmt(x),r=document.createElement('div');r.className='tx'+(f[3]?' click':'');const s=document.createElement('span'),v=document.createElement('b');s.textContent=f[0];v.textContent=f[1];if(f[2])v.className=f[2];if(f[3])r.onclick=f[3];r.append(s,v);el.appendChild(r)})}
+function when(d){return new Date(tsOf(d)).toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}
+function renderLists(){
+ const DS={started:['Not finished','m'],paid_claimed:['Checking','w2'],credited:['Added','p'],rejected:['Rejected','m']};
+ rows($('#dlist'),DPS.slice(0,10),'None yet',x=>{const s=DS[x.status]||[x.status,''];return [N(x.amount)+' · '+when(x)+' · '+x.id+(x.status==='rejected'&&x.reason?' — '+x.reason:''),s[0],s[1]]});
+ const WS={pending:['PENDING','w2'],paid:['PAID','p'],rejected:['REJECTED','m']};
+ rows($('#wlist'),WDS.slice(0,10),'None yet',x=>{const s=WS[x.status]||[String(x.status).toUpperCase(),''],rc=x.status==='paid'&&x.receipt;return [N(x.amount)+' to '+(x.bank&&x.bank.bank||'')+' ••'+String(x.bank&&x.bank.account||'').slice(-4)+' · '+when(x)+(x.status==='rejected'&&x.reason?' — '+x.reason:''),s[0]+(rc?' · RECEIPT':''),s[1],rc?()=>showReceipt(x.id):null]});
+ const TS={open:['OPEN','w2'],answered:['ANSWERED','p'],closed:['CLOSED','']};
+ rows($('#tlist'),TKS.slice(0,10),'None yet',x=>{const s=TS[x.status]||[String(x.status).toUpperCase(),''];return [x.cat+' · '+when(x)+' — '+x.msg+(x.reply?'\nReply: '+x.reply:''),s[0],s[1]]});
+ rows($('#mslist'),MSG.slice(0,15),'None yet',x=>[(x.read?'':'● ')+when(x)+' — '+x.text,'','',x.wd?()=>showReceipt(x.wd):null]);
+ $$('#tlist .tx span,#mslist .tx span').forEach(e=>e.style.whiteSpace='pre-wrap');
+ $('#hdot').classList.toggle('hide',!MSG.some(x=>!x.read));
+ $('#wdb').textContent=N(Math.max(0,Wl.balance-pendWd()));
+ if($('#mwd').classList.contains('on'))wdCheck();
+}
+function showReceipt(id){const w=WDS.find(x=>x.id===id);if(!w||!w.receipt)return toast('Receipt not available yet');const r=w.receipt,box=$('#rcb');box.textContent='';
+ const line=(a,b)=>{const d=document.createElement('div');d.className='tx';const s=document.createElement('span'),v=document.createElement('b');s.textContent=a;v.textContent=b;d.append(s,v);box.appendChild(d)};
+ line('Amount',N(w.amount));line('Paid to',(w.bank&&w.bank.bank||'')+' ••'+String(w.bank&&w.bank.account||'').slice(-4));line('Account name',w.bank&&w.bank.name||'');line('Reference',r.ref||'');if(r.at)line('Date',new Date(r.at).toLocaleString());
+ if(r.note){const p=document.createElement('p');p.className='note';p.textContent=r.note;box.appendChild(p)}
+ if(r.img&&/^data:image\//.test(r.img)){const i=document.createElement('img');i.className='rcimg';i.src=r.img;i.alt='Receipt';box.appendChild(i)}
+ const n=document.createElement('p');n.className='note';n.textContent='Check this reference in your bank app to confirm the money arrived. Not received? Contact customer care.';box.appendChild(n);openM('mrc')}
+function markRead(){const un=MSG.filter(x=>!x.read);if(!un.length||!me)return;const b=db.batch();un.slice(0,400).forEach(x=>b.update(db.collection('messages').doc(x.id),{read:true}));b.commit().catch(()=>{})}
+function renderGate(){const o=$('#blk');if(!me||!(PL.suspended||PL.removed)){o.classList.remove('on');return}
+ $('#blt').textContent=PL.removed?'Account closed':'Account suspended';$('#bls').textContent=(PL.modNote?PL.modNote+' ':'')+'Contact customer care if you think this is a mistake.';$('#blc').href='tel:'+CFG.SUPPORT_PHONE;o.classList.add('on')}
+au.onAuthStateChanged(u=>{[unD,unWd,unT,unMs].forEach(f=>f&&f());unD=unWd=unT=unMs=null;DPS=[];WDS=[];TKS=[];MSG=[];PL={};renderLists();renderGate();if(!u)return;
+ const q=c=>db.collection(c).where('uid','==',u.uid).limit(30);
+ unD=q('deposits').onSnapshot(s=>{DPS=s.docs.map(x=>({id:x.id,...x.data()})).sort(byNew);renderLists()},e=>console.error('deposits',e.code));
+ unWd=q('withdrawals').onSnapshot(s=>{WDS=s.docs.map(x=>({id:x.id,...x.data()})).sort(byNew);renderLists()},e=>console.error('withdrawals',e.code));
+ unT=q('tickets').onSnapshot(s=>{TKS=s.docs.map(x=>({id:x.id,...x.data()})).sort(byNew);renderLists()},e=>console.error('tickets',e.code));
+ unMs=db.collection('messages').where('to','==',u.uid).limit(30).onSnapshot(s=>{MSG=s.docs.map(x=>({id:x.id,...x.data()})).sort(byNew);renderLists();if(scr==='help')markRead()},e=>console.error('messages',e.code));
+ db.doc('players/'+u.uid).set({email:u.email||'',name:u.displayName||'',updatedAt:SRV()},{merge:true}).catch(()=>{});
+ loadChat();setTawkUser();setTimeout(resumePendingTx,800)});
+// ---- customer care: phone, WhatsApp, email, live chat, messages ----
+function setupSupport(){const p=CFG.SUPPORT_PHONE;
+ $('#hcall').href='tel:'+p;$('#hcall').textContent='📞 CALL '+p;
+ $('#hwa').href='https://wa.me/'+CFG.SUPPORT_WHATSAPP+'?text='+encodeURIComponent('Hello Naija Arcade support, I need help.');
+ $('#hmail').href='mailto:'+CFG.SUPPORT_EMAIL;
+ $('#hrs').textContent='We are available '+CFG.SUPPORT_HOURS+'. Choose the fastest way to reach us.';
+ const ac=$('#authcall');ac.href='tel:'+p;ac.textContent='Need help? Call '+p}
+setupSupport();
+let tawkReady=false,tawkLoading=false;
+function loadChat(){if(!CFG.TAWK||tawkLoading)return;tawkLoading=true;window.Tawk_API=window.Tawk_API||{};
+ Tawk_API.onLoad=function(){tawkReady=true;Tawk_API.hideWidget();setTawkUser()};
+ Tawk_API.onChatMinimized=function(){Tawk_API.hideWidget()};
+ const s=document.createElement('script');s.async=true;s.src='https://embed.tawk.to/'+CFG.TAWK;s.charset='UTF-8';s.setAttribute('crossorigin','*');document.head.appendChild(s)}
+function setTawkUser(){if(tawkReady&&me&&window.Tawk_API&&Tawk_API.setAttributes)Tawk_API.setAttributes({name:me.displayName||'Player',email:me.email||''},function(){})}
+function openChat(){
+ if(!CFG.TAWK){toast('Live chat is offline right now. Call us or send a message.');$('#tmsg').focus();return}
+ if(!tawkReady)return toast('Chat is loading. Try again in a moment.');
+ Tawk_API.showWidget();Tawk_API.maximize()}
+async function sendTicket(){
+ if(!me)return toast('Log in first');
+ const m=$('#tmsg').value.trim();if(m.length<5)return toast('Tell us what happened');
+ const b=$('#tsend');b.disabled=true;
+ try{await db.collection('tickets').add({uid:me.uid,email:me.email||'',name:me.displayName||'',cat:$('#tcat').value,ref:$('#tref').value.trim().slice(0,60),msg:m.slice(0,1000),status:'open',at:SRV()});
+  $('#tmsg').value='';$('#tref').value='';toast('Message sent. Our reply will show here.')}
+ catch(e){console.error(e);toast('Could not send. Please call us instead.')}
+ b.disabled=false}
+// ---- cfg for avatars ----
+const KITS=[['#d81f26','#ffffff'],['#6cc4ff','#ffffff'],['#0b3ea8','#ffd23f'],['#f5c400','#111111'],['#0a8f4a','#ffffff'],['#f2f2f2','#111111']];
+function cf(i){const nm=M.names[i];let h=0;for(const c of nm+M.players[i])h=(h*31+c.charCodeAt(0))>>>0;const k=KITS[(h+i*3)%6];return{name:nm,num:1+h%98,c1:k[0],c2:k[1],sty:(h>>3)&3,skin:(h>>5)%5,hair:(h>>9)&3}}
+// ---- render loop ----
+let last=performance.now(),hrz=0;
+function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;requestAnimationFrame(loop);if(scr!=='match'||!M)return;
+g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,W,H);if(shake>.3){g.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);shake*=.88}g.drawImage(bg,0,0);
+const ki=anim?anim.ki:M.round%2;let B={x:SX,y:SY,r:13,rot:0},kp={x:SX+Math.sin(now/300)*6,y:GY+GH-6,rot:0,dive:false};
+if(anim){const a=anim;a.t+=dt/1.5;const t=a.t,tg=zc(a.k),sv=zc(a.s),p=eo(cl((t-.18)/.32)),d=eo(cl((t-.2)/.28));kp.x=L(SX,sv.x,d);kp.y=L(GY+GH-6,sv.y+34,d*(a.s>2?.4:1));kp.rot=(sv.x-SX)/200*1.25*d;kp.dive=d>.05;
+B.x=L(SX,tg.x,p);B.y=L(SY,tg.y,p)-Math.sin(Math.PI*p)*55*(1-(a.k>2?.6:0));B.r=L(13,7,p);B.rot=t*30;
+if(!a.goal&&t>.5){const q=cl((t-.5)/.3);B.x=tg.x+(tg.x-SX)*.7*q;B.y=tg.y+60*q-Math.sin(Math.PI*q)*40;B.r=7+6*q}if(a.goal&&t>.5){B.x=tg.x;B.y=tg.y+8*cl((t-.5)/.3)}
+if(t>=1.15&&!a.done){a.done=true;endAnim()}}
+net();av(g,kp.x,kp.y,.85,gkOf(cf(1-ki)),{rot:kp.rot,arm:kp.dive?1:.35,gk:1,mood:mg});frame();
+const ing=anim&&anim.goal&&anim.t>.45;if(ing)ball(B.x,B.y,B.r,B.rot);
+const cp=canPick(),mi=mI(),kick=M.round%2===mi;
+if(cp){for(let i=0;i<6;i++){const c=i%3,r=i/3|0,x=GX+GW*c/3,y=GY+GH*r/2;g.fillStyle=hov===i?(kick?'#ffd23f55':'#39ff7a55'):'#ffffff0d';g.fillRect(x+2,y+2,GW/3-4,GH/2-4);g.strokeStyle=hov===i?'#fff':'#ffffff33';g.lineWidth=hov===i?3:1;g.strokeRect(x+2,y+2,GW/3-4,GH/2-4)}}
+if(pend&&myPick!==null){const z=zc(myPick);g.fillStyle='#ffd23f66';g.beginPath();g.arc(z.x,z.y,18+Math.sin(now/120)*3,0,7);g.fill()}
+if(!ing)ball(B.x,B.y,B.r,B.rot);
+const run=anim?cl(anim.t/.18):0;av(g,SX-62+run*52,SY+16-run*8,.95,cf(ki),{leg:anim?Math.sin(Math.min(anim.t,.3)*10):0,arm:.2,mood:mk,look:2});
+conf=conf.filter(c=>c.y<H+20);conf.forEach(c=>{c.x+=c.vx;c.y+=c.vy;c.vy+=.35;c.vx*=.99;g.fillStyle=c.c;g.fillRect(c.x,c.y,c.r,c.r*.6)});
+const sec=Math.max(0,Math.ceil((M.deadline-Date.now())/1000));$('#tm').textContent=M.status==='live'&&!M.practice&&!anim?(pend?'Waiting for opponent… ':'')+'⏱ '+sec+'s to pick':'';
+$('#tag').textContent=anim||M.status==='done'?'':pend?'Locked in. Waiting…':kick?'⚽ Your kick: tap where to shoot':'🧤 Your save: tap where to dive';
+if(!M.practice&&M.status==='live'&&Date.now()>M.deadline+1500&&!claimed[M.round]){claimed[M.round]=1;call('claimTimeout',{matchId:mid})}}
+requestAnimationFrame(loop);
+let unP=null,KP={};function renderAllB(){const n=x=>(+x||0).toLocaleString(),sp=(Wl.spinK||0)/4000,k=KP;$('#sc1').textContent=N(Wl.balance);$('#sc2').textContent=n(sp);$('#sc3').textContent=N(sp*4000);
+$('#allb').innerHTML=`<div class="tx"><span>💵 Cash wallet (all games)</span><b class="p">${N(Wl.balance)}</b></div><div class="tx"><span>🎟 Naija Spin · ${n(sp)} spins</span><b>${N(sp*4000)}</b></div><div class="tx"><span>⚽ Naija Kick · level ${1+((+k.xp||0)/100|0)}</span><b>${n(k.xp)} XP</b></div>`}
+async function cashSpins(){const n=Math.floor((Wl.spinK||0)/4000*2)/2;if(n<1)return toast('You need at least 1 spin');const r=await call('sellSpins',{spins:n});if(r)toast(N(n*4000)+' added to your wallet')}
+function setPic(url){[$('#hav'),$('#bigpic')].forEach(e=>{e.style.backgroundImage=url?'url("'+url+'")':'';e.textContent=url?'':'🙂'})}
+async function savePic(d){if(!au.currentUser)return;setPic(d);try{await db.doc('players/'+au.currentUser.uid).set({photo:d},{merge:true});toast(d?'Picture saved':'Picture removed')}catch(e){toast('Could not save picture')}}
+$('#pf').onchange=e=>{const f=e.target.files[0];if(!f)return;if(!/^image\//.test(f.type))return toast('Choose an image file');const img=new Image,u=URL.createObjectURL(f);
+img.onload=()=>{const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d'),s=Math.min(img.width,img.height);x.drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,128,128);URL.revokeObjectURL(u);savePic(c.toDataURL('image/jpeg',.8))};img.onerror=()=>toast('Could not read that image');img.src=u;e.target.value=''};
+async function pwReset(){try{await au.sendPasswordResetEmail(me.email);toast('Reset link sent to '+me.email)}catch(e){toast('Could not send reset email')}}
+async function saveName(){const n=$('#sn').value.trim().replace(/[^\w \-]/g,'').slice(0,14);if(!n||!me)return toast('Enter a name');try{await me.updateProfile({displayName:n});await me.getIdToken(true);$('#sname').textContent=n;toast('Name saved')}catch(e){toast('Could not save name')}}
+au.onAuthStateChanged(u=>{if(unP){unP();unP=null}if(!u)return;$('#sname').textContent=u.displayName||'Player';$('#semail').textContent=u.email||'';$('#semail2').textContent=u.email||'';$('#sn').value=u.displayName||'';unP=db.doc('players/'+u.uid).onSnapshot(sn=>{const d=sn.exists?sn.data():{};PL=d;renderGate();KP=d.kick||{};const st=d.state||{};LG={spins:+st.spins||0,spinNaira:+st.coins||0,kickCoins:+KP.coins||0};setPic(d.photo||'');renderAllB();chkLg()})});
+if(location.hash==='#wallet')show('wallet');
+if(location.hash==='#help')show('help');
+function zoneAt(e){const r=cv.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;if(x<GX||x>GX+GW||y<GY||y>GY+GH)return -1;return((y-GY)/(GH/2)|0)*3+((x-GX)/(GW/3)|0)}
+cv.addEventListener('pointermove',e=>hov=zoneAt(e));cv.addEventListener('pointerdown',e=>{hov=zoneAt(e);if(hov>=0)pick(hov)});
+const ban=$('#ban');setInterval(()=>{if(scr!=='home')return;const n=(Math.round(ban.scrollLeft/ban.clientWidth)+1)%3;ban.scrollTo({left:n*ban.clientWidth,behavior:'smooth'})},4500);
+
+</script></body></html>
