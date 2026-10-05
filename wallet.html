@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Naija Spin — Wallet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+:root{--acc:#008751;--acc2:#F2C94C;--bg:#F3FAF5;--panel:#fff;--text:#0F1F17;--sub:#5f7268;--line:#d8eadf;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#08130d;--panel:#10241a;--text:#ecfaf1;--sub:#93b3a1;--line:#1f3d2e;}}
+:root[data-theme="dark"]{--bg:#08130d;--panel:#10241a;--text:#ecfaf1;--sub:#93b3a1;--line:#1f3d2e;}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;color:var(--text);font-family:'Poppins','Trebuchet MS',system-ui,sans-serif;overflow-x:hidden;
+ background:radial-gradient(circle at 50% 0,color-mix(in srgb,var(--acc) 26%,transparent),transparent 62%),var(--bg);}
+body::before{content:'';position:fixed;top:0;left:0;right:0;height:5px;z-index:70;background:linear-gradient(90deg,#008751 33.3%,#fff 33.3% 66.6%,#008751 66.6%)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:10px;padding:15px 12px 10px;
+ background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.back{font-size:18px;background:var(--panel);border:1.5px solid var(--line);border-radius:12px;width:42px;height:42px;cursor:pointer;color:var(--text);text-decoration:none;display:flex;align-items:center;justify-content:center}
+.brand{font-weight:800;font-size:17px;letter-spacing:.5px;flex:1;line-height:1.05}
+.brand small{display:block;font-weight:600;font-size:9.5px;letter-spacing:1.5px;color:var(--sub)}
+main{display:flex;flex-direction:column;align-items:center;padding:14px 14px 60px}
+.wrap{width:100%;max-width:440px;display:flex;flex-direction:column;align-items:center}
+.card{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px 16px;margin-top:14px;box-shadow:0 6px 18px rgba(0,0,0,.05)}
+.card h3{margin:0 0 10px;font-size:13.5px;letter-spacing:.5px;display:flex;gap:8px;align-items:center}
+.card h3>i{color:var(--acc)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.bal{text-align:center;margin:0!important}.bal i{font-size:26px;color:var(--acc)}.bal .nr{font-style:normal;font-weight:800;font-size:28px;color:#d99a00}
+.bal b{display:block;font-size:26px;font-weight:800;margin:4px 0 0}.bal span{font-size:11px;color:var(--sub);letter-spacing:1px}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:16px;padding:12px 26px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 5px 0 color-mix(in srgb,var(--acc) 55%,#000);width:100%;text-align:center;text-decoration:none;display:block}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 color-mix(in srgb,var(--acc) 55%,#000)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px dashed var(--line);font-size:13px}.row:first-child{border-top:0}
+.row span:last-child{color:var(--sub);white-space:nowrap}
+.sec{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.sec h3{margin:0}.sec small{color:var(--sub);font-size:11px}
+.goal{padding:9px 0;border-top:1px dashed var(--line)}.goal:first-of-type{border-top:0}.gt{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px;font-weight:600}
+.gb{height:6px;border-radius:9px;background:var(--line);margin-top:7px;overflow:hidden}.gb i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2))}
+.gs{font-size:11px;color:var(--sub);margin-top:4px}.gbtn{width:auto;padding:6px 14px;font-size:12.5px;box-shadow:0 3px 0 color-mix(in srgb,var(--acc) 55%,#000);white-space:nowrap}.gr{font-weight:700;color:var(--acc);font-size:13px;white-space:nowrap}
+.lose{color:var(--sub);font-weight:500;font-size:13px}
+.note{max-width:360px;text-align:center;color:var(--sub);font-size:11px;margin-top:14px;line-height:1.55}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:600;font-size:14px;z-index:80;animation:zoom .3s;white-space:nowrap}
+.gate{display:none;flex-direction:column;align-items:center;gap:10px;text-align:center;padding-top:40px}
+.gate>i{font-size:46px;color:var(--acc)}
+@keyframes zoom{0%{transform:translateX(-50%) scale(.4);opacity:0}70%{transform:translateX(-50%) scale(1.12)}100%{transform:translateX(-50%) scale(1);opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+button:focus-visible,a:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:50}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="index.html" aria-label="Back to game"><i class="fa-solid fa-arrow-left"></i></a>
+  <div class="brand">NAIJA SPIN<small>WALLET</small></div>
+</header>
+<main>
+<div class="wrap gate" id="gate">
+  <i class="fa-solid fa-lock"></i>
+  <div style="font-weight:800;font-size:17px">Log in to see your wallet</div>
+  <div class="note" style="margin:0">Your Spins and Naira live on your account.</div>
+  <a class="btn" href="index.html" style="max-width:220px">Go to Login</a>
+</div>
+
+<div class="wrap" id="app" style="display:none">
+  <div class="grid">
+    <div class="card bal"><i class="fa-solid fa-ticket"></i><b id="wSpins">0</b><span>SPINS</span></div>
+    <div class="card bal"><i class="nr">₦</i><b id="wCoins">0</b><span>PLAY NAIRA</span></div>
+  </div>
+  <div class="card"><h3><i class="fa-solid fa-scale-balanced"></i> WHAT YOUR ₦ IS WORTH</h3>
+    <div class="row"><span>Value of 1 spin</span><span style="color:var(--text)">₦40</span></div>
+    <div class="row"><span>Price to buy 1 spin</span><span style="color:var(--text)">₦50 (₦40 + ₦10 fee)</span></div>
+    <div class="row"><span>Your ₦ buys</span><span style="color:var(--text)" id="wWorth"></span></div>
+    <div class="row"><span>Your spins are worth</span><span style="color:var(--text)" id="wSpinVal"></span></div>
+    <div class="row"><span><b>Total play balance</b></span><b id="wTotal"></b></div>
+    <div class="note" style="margin:8px 0 0">Play Naira (₦) is in-game money with no real-world value. The ₦10 is Naija Spin's service fee (lower in bigger packs); it is not part of a spin's value.</div></div>
+  <div id="goals"></div>
+  <div class="card"><h3><i class="fa-solid fa-store"></i> NEED MORE SPINS?</h3><div class="note" style="margin:0 0 10px">Finish goals to earn ₦, then swap it for spin packs in the game's Marketplace.</div><a class="btn" href="index.html">Open Game</a></div>
+  <div class="card"><h3><i class="fa-solid fa-clock-rotate-left"></i> ACTIVITY</h3><div id="txList"></div></div>
+  <div class="note" id="syncStatus"></div>
+  <div class="note">Spins and Play Naira (₦) are play money only — not bought with real currency and not withdrawable or exchangeable for cash.</div>
+</div>
+</main>
+<canvas id="fx"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.13.1/firebase-app-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.13.1/firebase-auth-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/firebase@10.13.1/firebase-firestore-compat.js"></script>
+<script>
+// ---- Same config as index.html — keep both files in sync ----
+const firebaseConfig={apiKey:"AIzaSyAu6DV03Br6bA4kt3qINjLipZnyk7WJJe8",authDomain:"gamify-gamify.firebaseapp.com",projectId:"gamify-gamify",storageBucket:"gamify-gamify.firebasestorage.app",messagingSenderId:"1034118592327",appId:"1:1034118592327:web:7850904e752635b94a3e62",measurementId:"G-1BTW2PZVCX"};
+// ---------------------------------------------------------------
+const $=id=>document.getElementById(id);
+// ---- Goals: shared by game + wallet (progress is counted in the game, rewards are claimed in the wallet) ----
+function periodKeys(){const t=new Date(Date.now()+36e5),dk=t.toISOString().slice(0,10),dow=(t.getUTCDay()+6)%7;return{dk,wk:new Date(t.getTime()-dow*864e5).toISOString().slice(0,10)};}
+function normG(g){const k=periodKeys();g=g||{};
+  if(g.dk!==k.dk){g.dk=k.dk;g.d={s:0,w:0,b:0};g.cc=0;g.ca=0;}
+  if(g.wk!==k.wk){g.wk=k.wk;g.w={s:0,w:0,b:0,ad:0};}
+  g.d=g.d||{s:0,w:0,b:0};g.w=g.w||{s:0,w:0,b:0};g.w.ad=g.w.ad||0;g.cc=g.cc||0;g.ca=g.ca||0;g.cd=g.cd||{};g.cw=g.cw||{};g.ac=g.ac||{};return g;}
+// REWARD BUDGET: a spin is worth ₦40; Naija Spin keeps the ₦10 fee plus a ~7.5% edge (~₦9+ per wagered spin even on the biggest discount pack).
+// Rewards are sized to give back about 15-20% of that, are based on money actually wagered, and are capped per day.
+const CAP=60; // max ₦ from daily/weekly goals claimable per day; achievements: 1 per day
+const GOALS=[
+ {id:'d1',k:'d',f:'s',n:'Wager 10 spins',t:10,r:4},
+ {id:'d2',k:'d',f:'w',n:'Win 3 times',t:3,r:4},
+ {id:'d3',k:'d',f:'s',n:'Wager 30 spins',t:30,r:4},
+ {id:'w1',k:'w',f:'s',n:'Wager 70 spins',t:70,r:30},
+ {id:'w2',k:'w',f:'ad',n:'Play on 4 different days',t:4,r:25},
+ {id:'w3',k:'w',f:'b',n:'Land 15 wins of 2x or better',t:15,r:40},
+ {id:'a1',k:'a',v:s=>s.stats.spins,n:'Play your first spin',t:1,r:10},
+ {id:'a2',k:'a',v:s=>s.stats.wag,n:'Wager 100 spins in total',t:100,r:40},
+ {id:'a3',k:'a',v:s=>s.stats.wag,n:'Wager 500 spins in total',t:500,r:100},
+ {id:'a4',k:'a',v:s=>s.stats.wins,n:'Win 200 times',t:200,r:80},
+ {id:'a5',k:'a',v:s=>s.stats.jp,n:'Hit a JACKPOT',t:1,r:60},
+ {id:'a6',k:'a',v:s=>s.stats.wag,n:'Wager 2,000 spins in total',t:2000,r:300}];
+const gval=(s,d)=>d.k==='a'?d.v(s):s.g[d.k][d.f];
+const gmap=(s,d)=>d.k==='d'?s.g.cd:d.k==='w'?s.g.cw:s.g.ac;
+const gkey=(s,d)=>d.k==='d'?s.g.dk:d.k==='w'?s.g.wk:1;
+const left=ms=>{const h=Math.floor(ms/36e5);return h>=24?Math.floor(h/24)+'d '+h%24+'h':h+'h '+Math.floor(ms%36e5/6e4)+'m';};
+let db=null,uid=null,S=null;
+const fmt=n=>Number.isInteger(n)?n.toLocaleString():n.toFixed(1);
+const stamp=()=>new Date().toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=t;document.body.appendChild(e);setTimeout(()=>e.remove(),2200);}
+function norm(st){st=st||{};st.spins=st.spins||0;st.coins=st.coins||0;st.lastClaim=st.lastClaim||0;st.tx=Array.isArray(st.tx)?st.tx:[];st.stats=Object.assign({spins:0,best:0,wins:0,wag:0,jp:0},st.stats||{});st.g=normG(st.g);return st;}
+function render(){
+  if(!S)return;
+  $('wSpins').textContent=fmt(S.spins);$('wCoins').textContent=S.coins.toLocaleString();
+  $('wWorth').textContent=Math.floor(S.coins/50).toLocaleString()+' spins';$('wSpinVal').textContent='₦'+(S.spins*40).toLocaleString();$('wTotal').textContent='₦'+(S.coins+S.spins*40).toLocaleString();
+  const tl=$('txList');tl.textContent='';
+  if(!S.tx.length){const s=document.createElement('span');s.className='lose';s.textContent='No activity yet';tl.appendChild(s);}
+  S.tx.forEach(t=>{const r=document.createElement('div');r.className='row';const a=document.createElement('span'),b=document.createElement('span');a.textContent=t.t;b.textContent=t.d;r.append(a,b);tl.appendChild(r);});
+  renderGoals();
+}
+function showGate(){$('gate').style.display='flex';$('app').style.display='none';}
+function showApp(){$('gate').style.display='none';$('app').style.display='flex';}
+function renderGoals(){
+  const now=Date.now()+36e5,dow=(new Date(now).getUTCDay()+6)%7;
+  const secs=[['d','Daily goals','fa-sun','Resets in '+left(864e5-now%864e5)],['w','Weekly goals','fa-calendar-week','Resets in '+left((7-dow)*864e5-now%864e5)],['a','Achievements','fa-medal','One-time rewards']];
+  $('goals').innerHTML=`<div class="note" style="margin:10px 0 0">Goal rewards claimed today: ₦${S.g.cc} of ₦${CAP} · 1 achievement reward per day · progress counts spins you wager (free spins don't count)</div>`+secs.map(([k,title,icon,sub])=>`<div class="card"><div class="sec"><h3><i class="fa-solid ${icon}"></i> ${title.toUpperCase()}</h3><small>${sub}</small></div>`+
+    GOALS.filter(d=>d.k===k).map(d=>{const v=Math.min(gval(S,d),d.t),done=gval(S,d)>=d.t,got=gmap(S,d)[d.id]===gkey(S,d);
+      return `<div class="goal"><div class="gt"><span>${d.n}</span>${got?'<span class="gr"><i class="fa-solid fa-check"></i> Claimed</span>':done?`<button class="btn gbtn" data-g="${d.id}">Claim ₦${d.r}</button>`:`<span class="gr">₦${d.r}</span>`}</div><div class="gb"><i style="width:${v/d.t*100}%"></i></div><div class="gs">${v.toLocaleString()} / ${d.t.toLocaleString()}</div></div>`;}).join('')+'</div>').join('');
+  document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>claimGoal(b.dataset.g));
+}
+async function claimGoal(id){
+  const d=GOALS.find(x=>x.id===id);if(!d||!uid)return;const ref=db.collection('players').doc(uid);
+  // Transaction: re-checks progress and claimed status on the latest server data, so a reward can only be taken once.
+  try{
+    const ok=await db.runTransaction(async t=>{
+      const snap=await t.get(ref),st=norm(snap.exists&&snap.data().state);
+      if(gmap(st,d)[id]===gkey(st,d)||gval(st,d)<d.t)return false;
+      if(d.k==='a'){if(st.g.ca>=1)return 'cap';st.g.ca++;}else{if(st.g.cc+d.r>CAP)return 'cap';st.g.cc+=d.r;}
+      gmap(st,d)[id]=gkey(st,d);
+      t.set(ref,{state:{coins:st.coins+d.r,g:st.g,tx:[{t:`Goal done: ${d.n} +₦${d.r}`,d:stamp()},...st.tx].slice(0,25)}},{merge:true});
+      return true;});
+    if(ok===true){toast(`+₦${d.r}!`);confetti(60);}else if(ok==='cap')toast('Daily claim limit reached — claim it tomorrow');else toast('Not ready yet');
+  }catch(e){console.error(e);toast('Could not claim. Try again.');}
+}
+setInterval(render,30000);
+
+{
+  try{
+    firebase.initializeApp(firebaseConfig);db=firebase.firestore();
+    let unsub=null;
+    firebase.auth().onAuthStateChanged(user=>{
+      if(unsub){unsub();unsub=null;}
+      if(!user){S=null;uid=null;showGate();return;}
+      uid=user.uid;$('syncStatus').textContent='Synced live · '+user.email;
+      // Live: spins won in the game and coins from the bonus show up here instantly
+      unsub=db.collection('players').doc(uid).onSnapshot(snap=>{
+        S=norm(snap.exists&&snap.data().state);showApp();render();
+      },e=>{console.error(e);$('syncStatus').textContent='Could not load your data.';showGate();});
+    });
+  }catch(e){console.error(e);showGate();}
+}
+
+const cv=$('fx'),cx=cv.getContext('2d');let parts=[],raf=null;
+function size(){cv.width=innerWidth;cv.height=innerHeight;}addEventListener('resize',size);size();
+function confetti(n){const cols=['#008751','#ffffff','#F2C94C','#1F9D63','#F2C94C'];
+  for(let i=0;i<n;i++)parts.push({x:innerWidth/2,y:innerHeight*.4,vx:(Math.random()-.5)*14,vy:-Math.random()*13-4,s:Math.random()*7+4,c:cols[i%5],r:Math.random()*6,vr:(Math.random()-.5)*.4,l:0});
+  if(!raf)loop();}
+function loop(){cx.clearRect(0,0,cv.width,cv.height);
+  parts.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.l++;cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;cx.fillRect(-p.s/2,-p.s/3,p.s,p.s*.6);cx.restore();});
+  parts=parts.filter(p=>p.y<cv.height+20&&p.l<200);raf=parts.length?requestAnimationFrame(loop):null;if(!raf)cx.clearRect(0,0,cv.width,cv.height);}
+</script>
+</body>
+</html>
