@@ -53,10 +53,12 @@ nav button{position:relative}
 #blk{z-index:120;background:var(--bg)}
 .rcimg{max-width:100%;border-radius:10px;margin-top:8px;border:1px solid var(--ln)}
 .tx.click{cursor:pointer}
+.warnbox{padding:10px 12px;border:1px solid var(--ac);border-radius:12px;background:#f2c94c1f;color:var(--tx);font-size:12px;font-weight:700;line-height:1.5;text-align:left}
 </style></head><body>
 <div id="auth" class="ov on"><div style="width:min(92vw,380px);display:flex;flex-direction:column;gap:10px;text-align:center"><div style="font-size:54px">🎮</div><h2 style="font-size:26px;font-style:italic;margin:0">NAIJA ARCADE</h2><p class="note" style="margin:0">Log in or create an account</p>
+<div id="inapp" class="warnbox hide">⚠ You opened this inside another app (WhatsApp, Facebook, Instagram…). Login can fail there. Tap the menu (⋮ or Share) and choose <b>Open in Chrome</b> or your normal browser.</div>
 <div class="tabs"><button class="tab on" data-am="login">Log in</button><button class="tab" data-am="signup">Sign up</button></div>
-<input id="aname" placeholder="Player name" maxlength="14" class="hide"><input id="aem" type="email" placeholder="Email"><input id="apw" type="password" placeholder="Password (6+ characters)">
+<input id="aname" placeholder="Player name" maxlength="14" class="hide"><input id="aem" type="email" placeholder="Email" autocomplete="email" autocapitalize="none"><input id="apw" type="password" placeholder="Password (6+ characters)" autocomplete="current-password">
 <label class="note hide" id="aage" style="text-align:left"><input type="checkbox" id="aok" style="width:auto;margin:0 6px 0 0"> I am 18 or older and I will play responsibly.</label>
 <label class="note" style="text-align:left"><input type="checkbox" id="akeep" checked style="width:auto;margin:0 6px 0 0"> Keep me logged in on this device</label>
 <div id="aerr" style="min-height:18px;color:var(--rd);font-size:13px;font-weight:700"></div><button class="btn gold" id="ago">Log in</button><button class="btn gh" id="afg">Forgot password?</button><a class="alink" id="authcall" href="#">Need help? Call customer care</a><p class="note">🔞 18+ only. Gamble responsibly.</p></div></div>
@@ -127,32 +129,36 @@ nav button{position:relative}
 <div id="res" class="ov"><div class="card"><div style="font-size:50px" id="re">🏆</div><h2 id="rt"></h2><p class="note" id="rs"></p><button class="btn gold" onclick="closeRes()">CONTINUE</button></div></div>
 <nav><button data-n="home" class="on" onclick="show('home')"><span>🏠</span>HOME</button><button data-n="kick" onclick="location.href='naija-kick.html'"><span>⚽</span>KICK</button><button data-n="wallet" onclick="show('wallet')"><span>👛</span>WALLET</button><button data-n="help" onclick="show('help')"><span>🎧</span>HELP<i class="dot hide" id="hdot"></i></button><button data-n="settings" onclick="show('settings')"><span>⚙</span>SETTINGS</button></nav><div id="toast"></div>
 
+<!-- Firebase: Google CDN first -->
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-functions-compat.js"></script>
 <script>
-/* fallback if gstatic is blocked */
-if(!window.firebase){
-  ['app','auth','firestore','functions'].forEach(function(n){
-    document.write('<script src="https://cdn.jsdelivr.net/npm/firebase@10.13.1/firebase-'+n+'-compat.js"><\/script>');
+/* Fallback: if any Firebase part failed to load from Google, load just the missing parts from jsDelivr */
+(function(){
+  var V='10.13.1',need=[
+    ['app',function(){return !!window.firebase}],
+    ['auth',function(){return !!(window.firebase&&firebase.auth)}],
+    ['firestore',function(){return !!(window.firebase&&firebase.firestore)}],
+    ['functions',function(){return !!(window.firebase&&firebase.functions)}]
+  ];
+  need.forEach(function(n){
+    if(!n[1]())document.write('<script src="https://cdn.jsdelivr.net/npm/firebase@'+V+'/firebase-'+n[0]+'-compat.js"><\/script>');
   });
-}
-/* show any crash on the login screen instead of failing silently */
-window.addEventListener('error',function(e){
-  var a=document.getElementById('aerr');
-  if(a&&!a.textContent)a.textContent='Error: '+e.message;
-});
+})();
 </script>
 <script>
+/* Show real problems on the login screen, but ignore harmless cross-origin noise */
 (function(){
   var a=document.getElementById('aerr');
-  function say(t){a.textContent=t}
-  if(!window.firebase) say('Firebase failed to load. Check your network or VPN, or try another network.');
-  window.addEventListener('error',function(e){say('Script error: '+e.message+' (line '+e.lineno+')')});
-  window.addEventListener('unhandledrejection',function(e){say('Error: '+((e.reason&&e.reason.message)||e.reason))});
+  function say(t){if(a&&!a.textContent)a.textContent=t}
+  if(!window.firebase||!firebase.auth||!firebase.firestore)say('Could not load the login service. Check your network, turn off any VPN or data saver, and reload.');
+  window.addEventListener('error',function(e){if(!e.message||e.message==='Script error.')return;say('Script error: '+e.message+' (line '+e.lineno+')')});
+  window.addEventListener('unhandledrejection',function(e){var m=(e.reason&&e.reason.message)||e.reason;if(m)say('Error: '+m)});
 })();
-</script> src="https://checkout.flutterwave.com/v3.js"></script>
+</script>
+<script src="https://checkout.flutterwave.com/v3.js" async></script>
 <script>
 /* ===== EDIT THESE ===== */
 const CFG={
@@ -231,7 +237,10 @@ const gkOf=cf=>({...cf,c1:'#ff9a00',c2:'#222222',sty:0});
 const FC={apiKey:"AIzaSyAu6DV03Br6bA4kt3qINjLipZnyk7WJJe8",authDomain:"gamify-gamify.firebaseapp.com",projectId:"gamify-gamify",storageBucket:"gamify-gamify.firebasestorage.app",messagingSenderId:"1034118592327",appId:"1:1034118592327:web:7850904e752635b94a3e62"};
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const cv=$('#c'),g=cv.getContext('2d');cv.width=W;cv.height=H;
-firebase.initializeApp(FC);const db=firebase.firestore(),au=firebase.auth(),fn=n=>firebase.functions().httpsCallable(n);au.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
+firebase.initializeApp(FC);const db=firebase.firestore(),au=firebase.auth(),fn=n=>firebase.functions().httpsCallable(n);
+/* Firestore: auto-switch to long polling on networks that block websockets (helps on some mobile networks) */
+try{db.settings({experimentalAutoDetectLongPolling:true})}catch(e){console.warn('Firestore settings',e)}
+au.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
 const SRV=()=>firebase.firestore.FieldValue.serverTimestamp();
 const STK=[1500,10000,20000,40000,50000,100000,500000],N=k=>'₦'+(k/100).toLocaleString('en-NG',{maximumFractionDigits:2}),pay=s=>2*s-Math.floor(s*.15);
 let me=null,Wl={balance:0,locked:0,kyc:'none',limits:{}},unW=null,unM=null,M=null,mid=null,shown=0,anim=null,pend=false,scr='home',searching=false,claimed={},myPick=null,mk=0,mg=0,shake=0,conf=[],hov=-1,qt=null;
@@ -242,12 +251,66 @@ function show(id){scr=id;$$('.scr').forEach(e=>e.classList.toggle('hide',e.id!==
 function ktab(t){$$('.tab[data-kt]').forEach(b=>b.classList.toggle('on',b.dataset.kt===t));['pr','on','fr'].forEach(x=>$('#k-'+x).classList.toggle('hide',x!==t))}
 $$('.tab[data-kt]').forEach(b=>b.onclick=()=>ktab(b.dataset.kt));
 // ---- auth ----
-let am='login';const AE={'auth/invalid-email':'That email looks wrong.','auth/user-not-found':'No account with that email.','auth/wrong-password':'Wrong password.','auth/invalid-credential':'Wrong email or password.','auth/email-already-in-use':'That email already has an account. Log in instead.','auth/weak-password':'Password needs 6+ characters.','auth/too-many-requests':'Too many tries. Wait a bit.','auth/network-request-failed':'No internet connection, or this website is blocked.','auth/unauthorized-domain':'This website address is not authorised in Firebase (Authentication > Settings > Authorized domains).','auth/operation-not-allowed':'Email/Password sign-in is not enabled in Firebase (Authentication > Sign-in method).','auth/configuration-not-found':'Email/Password sign-in is not enabled in Firebase (Authentication > Sign-in method).','auth/invalid-api-key':'The Firebase API key is wrong.','auth/operation-not-supported-in-this-environment':'Open the site from a web address (https), not a double-clicked file.'};
+let am='login';
+const AE={
+ 'auth/invalid-email':'That email looks wrong.',
+ 'auth/user-not-found':'No account with that email.',
+ 'auth/wrong-password':'Wrong password.',
+ 'auth/invalid-credential':'Wrong email or password.',
+ 'auth/email-already-in-use':'That email already has an account. Log in instead.',
+ 'auth/weak-password':'Password needs 6+ characters.',
+ 'auth/user-disabled':'This account has been disabled. Contact customer care.',
+ 'auth/too-many-requests':'Too many tries. Wait a few minutes and try again.',
+ 'auth/network-request-failed':'Could not reach the login server. Try again, switch between Wi-Fi and mobile data, or open this site in Chrome instead of WhatsApp/Instagram/Facebook.',
+ 'auth/timeout':'The login server took too long. Please try again.',
+ 'auth/internal-error':'Login had a temporary problem. Please try again.',
+ 'auth/unauthorized-domain':'This website address is not authorised in Firebase (Authentication > Settings > Authorized domains).',
+ 'auth/operation-not-allowed':'Email/Password sign-in is not enabled in Firebase (Authentication > Sign-in method).',
+ 'auth/configuration-not-found':'Email/Password sign-in is not enabled in Firebase (Authentication > Sign-in method).',
+ 'auth/invalid-api-key':'The Firebase API key is wrong.',
+ 'auth/api-key-not-valid.-please-pass-a-valid-api-key.':'The Firebase API key is wrong or restricted.',
+ 'auth/operation-not-supported-in-this-environment':'Open the site from a web address (https), not a double-clicked file.'
+};
 const aerr=t=>$('#aerr').textContent=t;
-$$('.tab[data-am]').forEach(b=>b.onclick=()=>{am=b.dataset.am;$$('.tab[data-am]').forEach(x=>x.classList.toggle('on',x===b));$('#aname').classList.toggle('hide',am!=='signup');$('#aage').classList.toggle('hide',am!=='signup');$('#ago').textContent=am==='signup'?'Create account':'Log in';aerr('')});
-$('#ago').onclick=async()=>{const em=$('#aem').value.trim(),pw=$('#apw').value,nm=$('#aname').value.trim();aerr('');if(!em||!pw)return aerr('Enter your email and password.');
-try{await au.setPersistence($('#akeep').checked?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION);if(am==='signup'){if(!nm)return aerr('Enter a player name.');if(!$('#aok').checked)return aerr('You must be 18 or older to play.');const c=await au.createUserWithEmailAndPassword(em,pw);await c.user.updateProfile({displayName:nm});await c.user.getIdToken(true)}else await au.signInWithEmailAndPassword(em,pw)}catch(e){aerr(AE[e.code]||'Login failed ('+(e.code||'error')+')')}};
-$('#afg').onclick=async()=>{const em=$('#aem').value.trim();if(!em)return aerr('Type your email first.');try{await au.sendPasswordResetEmail(em);aerr('Reset link sent.')}catch(e){aerr(AE[e.code]||'Could not send.')}};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+/* Retry only on network failures (up to 3 tries), so one weak-signal blip does not end the login */
+async function withRetry(f,tries=3){
+ for(let i=0;i<tries;i++){
+  try{return await f()}
+  catch(e){
+   const net=e&&(e.code==='auth/network-request-failed'||e.code==='auth/timeout'||e.code==='auth/internal-error');
+   if(!net||i===tries-1)throw e;
+   await sleep(1200*(i+1));
+  }
+ }
+}
+/* Warn people who opened the link inside WhatsApp / Facebook / Instagram etc. */
+(function(){const ua=navigator.userAgent||'';if(/FBAN|FBAV|FB_IAB|Instagram|WhatsApp|Snapchat|TikTok|musical_ly|MicroMessenger|Line\//i.test(ua))$('#inapp').classList.remove('hide')})();
+$$('.tab[data-am]').forEach(b=>b.onclick=()=>{am=b.dataset.am;$$('.tab[data-am]').forEach(x=>x.classList.toggle('on',x===b));$('#aname').classList.toggle('hide',am!=='signup');$('#aage').classList.toggle('hide',am!=='signup');$('#apw').autocomplete=am==='signup'?'new-password':'current-password';$('#ago').textContent=am==='signup'?'Create account':'Log in';aerr('')});
+$('#ago').onclick=async()=>{
+ const btn=$('#ago'),em=$('#aem').value.trim(),pw=$('#apw').value,nm=$('#aname').value.trim();
+ aerr('');
+ if(!em||!pw)return aerr('Enter your email and password.');
+ if(am==='signup'){
+  if(!nm)return aerr('Enter a player name.');
+  if(pw.length<6)return aerr('Password needs 6+ characters.');
+  if(!$('#aok').checked)return aerr('You must be 18 or older to play.');
+ }
+ if(navigator.onLine===false)return aerr('Your phone shows no internet. Turn on data or Wi-Fi and try again.');
+ const label=btn.textContent;btn.disabled=true;btn.textContent='Please wait…';
+ try{
+  /* Persistence is a nice-to-have. If it fails, login must still go ahead. */
+  try{await au.setPersistence($('#akeep').checked?firebase.auth.Auth.Persistence.LOCAL:firebase.auth.Auth.Persistence.SESSION)}catch(e){console.warn('persistence',e)}
+  if(am==='signup'){
+   const c=await withRetry(()=>au.createUserWithEmailAndPassword(em,pw));
+   try{await c.user.updateProfile({displayName:nm});await c.user.getIdToken(true)}catch(e){console.warn('profile',e)}
+  }else{
+   await withRetry(()=>au.signInWithEmailAndPassword(em,pw));
+  }
+ }catch(e){console.error('auth',e);aerr(AE[e.code]||'Login failed ('+(e.code||e.message||'error')+')')}
+ finally{btn.disabled=false;btn.textContent=label}
+};
+$('#afg').onclick=async()=>{const em=$('#aem').value.trim();if(!em)return aerr('Type your email first.');try{await withRetry(()=>au.sendPasswordResetEmail(em));aerr('Reset link sent. Check your inbox and spam.')}catch(e){aerr(AE[e.code]||'Could not send.')}};
 au.onAuthStateChanged(u=>{me=u;if(unW){unW();unW=null}if(!u){$('#auth').classList.add('on');$('#apw').value='';aerr('');show('home');return}$('#auth').classList.remove('on');const nx=new URLSearchParams(location.search).get('next');if(nx&&/^[\w-]+\.html$/.test(nx)){location.replace(nx);return}
 unW=db.doc('wallets/'+u.uid).onSnapshot(s=>{$('#wmsg').classList.add('hide');Wl=Object.assign({balance:0,locked:0,kyc:'none',limits:{}},s.exists?s.data():{});renderW();
 if(Wl.activeMatch)location.href='naija-kick.html';
