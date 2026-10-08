@@ -80,6 +80,9 @@ label.c{font-size:11px;font-weight:700;display:flex;flex-direction:column;align-
 button.tr{text-align:left;font-size:13px;letter-spacing:.3px;text-transform:none}button.tr small{display:block;color:var(--mu);font-weight:500;font-size:11px}
 #dlg{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.65);padding:16px}
 #toast{position:fixed;top:-90px;left:50%;transform:translateX(-50%);padding:11px 20px;border-radius:14px;background:linear-gradient(90deg,var(--gold),#ff9d2e);color:#1a1203;font-weight:800;font-size:13px;transition:top .4s;z-index:80;max-width:92vw;text-align:center}#toast.s{top:max(14px,env(safe-area-inset-top))}
+.bd{display:inline-block;padding:2px 9px;border-radius:99px;border:1px solid;font:700 10px Inter,sans-serif;letter-spacing:.4px;vertical-align:middle}
+.fx{padding:11px 12px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid var(--ln);margin:8px 0}.fx.me{border-color:var(--g);background:rgba(18,211,107,.08)}.fxn{font-size:14px}.fxs{font-size:11px;color:var(--mu);margin-top:3px}.fxs span{color:var(--gold);font-weight:700}
+.rh{font:600 13px Oswald,sans-serif;letter-spacing:2px;color:var(--gold);margin:14px 0 2px;text-transform:uppercase}
 @media (max-width:420px){.hud{gap:10px;padding:7px 12px}.hud b{font-size:28px;min-width:64px}.card{padding:14px}.cz{flex-direction:column;align-items:center}}
 
 </style></head><body>
@@ -394,7 +397,7 @@ if(net){netReport(r==='W'?ME.uid:r==='L'?S.oppUid:'draw');if(S.col==='matches')n
 S.gx=ffm?0:mg*10+(win?60:10);PR.xp+=S.gx;PR.coins+=ffm?0:mg*5+(win?50:0);PR.streak=win?PR.streak+1:0;if(win)PR.w++;PR.g+=mg;PR.sv+=oh.filter(v=>!v).length;
 ACH.forEach((a,i)=>{if(!PR.ach[i]&&a[3](m)){PR.ach[i]=1;PR.coins+=100;toast('🏅 '+a[1]+' unlocked! +100 🪙');sfx('ach')}});save();win?sfx('win'):(mg===og&&!ffm)?0:sfx('lose');
 const w=ffm?'YOU FORFEITED 🏳':ffo?'OPPONENT LEFT<br>YOU WIN! 🏆':mg===og?'DRAW':win?'YOU WIN! 🏆':'YOU LOSE';$('#menu').classList.remove('hide');$('#hud').classList.add('hide');
-$('#mcard').innerHTML=`<h1>${w}</h1><div class="code" style="letter-spacing:4px">${mg} - ${og}</div>${net&&S.col==='matches'?'<p id="mny" style="color:#ffd23f;font-weight:800">Confirming the result with your opponent…</p>':net?'<p style="color:#ffd23f;font-weight:800">Tournament game recorded. Standings update every few minutes.</p>':S.money?'<p id="mny" style="color:#ffd23f;font-weight:800">'+S.money+'</p>':''}<p>+${S.gx} XP · Streak ${PR.streak} 🔥</p><button id="contBtn" ${net&&S.col==='matches'?'disabled':''} onclick="${S.col==='matches'?'home()':'openT(TQID)'}">CONTINUE</button>`}
+$('#mcard').innerHTML=`<h1>${w}</h1><div class="code" style="letter-spacing:4px">${mg} - ${og}</div>${net&&S.col==='matches'?'<p id="mny" style="color:#ffd23f;font-weight:800">Confirming the result with your opponent…</p>':net?'<p style="color:#ffd23f;font-weight:800">Tournament game recorded. Standings update every few minutes.</p>':S.money?'<p id="mny" style="color:#ffd23f;font-weight:800">'+S.money+'</p>':''}<p>+${S.gx} XP · Streak ${PR.streak} 🔥</p><button id="contBtn" ${net&&S.col==='matches'?'disabled':''} onclick="${S.col==='matches'?'home()':'openT(TV)'}">CONTINUE</button>`}
 // ---- render loop (3D) ----
 let last=performance.now(),RIV=null;
 function loop(now){requestAnimationFrame(loop);try{loopBody(now)}catch(e){console.error(e)}}
@@ -477,7 +480,7 @@ function oppCfg(nm,uid){let h=0;for(const c of nm+uid)h=(h*31+c.charCodeAt(0))>>
 function replay(d){let r=0;for(;;){const v0=(d['v_'+d.players[0]]||{})[r],v1=(d['v_'+d.players[1]]||{})[r];if(v0===undefined||v1===undefined)break;const z=[+v0.split(':')[0],+v1.split(':')[0]],ki=r%2,goal=z[ki]!==z[1-ki];S.hist[ki].push(goal?1:0);if(goal)S.score[ki]++;r++}S.round=r;pips()}
 function startNet(mid,col){col=col||'matches';if(unM){unM();unM=null}let first=true;
 unM=db.doc(col+'/'+mid).onSnapshot(sn=>{if(!sn.exists)return;const d=sn.data();
-if(first){first=false;const mi=d.players.indexOf(ME.uid),oi=1-mi;newGame('net',mi,oppCfg(d.names[oi],d.players[oi]));S.mid=mid;S.col=col;S.stake=d.stake||0;S.oppUid=d.players[oi];S.pt=Date.now();S.bt=0;S.M=d;
+if(first){first=false;const mi=d.players.indexOf(ME.uid),oi=1-mi;newGame('net',mi,oppCfg(d.names[oi],d.players[oi]));S.mid=mid;S.col=col;S.fx=d.fid?1:0;S.stake=d.stake||0;S.oppUid=d.players[oi];S.pt=Date.now();S.bt=0;S.M=d;
 $('#pot').textContent=col==='matches'?'ONLINE · POT '+NG(d.stake*2)+' · WIN '+NG(payN(d.stake)):'🏆 TOURNAMENT GAME · FREE · POINTS ONLY';replay(d);
 const sv=localStorage.getItem('pks_'+mid+'_'+S.round);if((d['c_'+ME.uid]||{})[S.round]&&sv){S.phase='wait';S.mine=+sv.split(':')[0];S.ct=Date.now()}
 holdBusy=false;QJ=false;if(isDone())return end()}
@@ -492,9 +495,9 @@ else if(vm&&vo){const [zo,so]=vo.split(':');if(await sha(r+':'+zo+':'+so)!==co){
 const zm=+vm.split(':')[0],zz=+zo,kick=r%2===S.me;P[r]={k:kick?zm:zz,s:kick?zz:zm};tryRes()}}
 catch(e){permErr(e)}S.busy=false;if(again)onMatch()}
 setInterval(()=>{if(!S||S.mode!=='net'||S.over||S.phase==='anim'||!S.M)return;const d=S.M,now=Date.now(),me=ME.uid,op=S.oppUid,r=S.round,cm=(d['c_'+me]||{})[r],co=(d['c_'+op]||{})[r],vo=(d['v_'+op]||{})[r];
-if(S.phase==='pick'&&now-S.pt>45000)return end('me');
-if(S.phase==='wait'&&cm&&!co&&S.ct&&now-S.ct>45000)return end('opp');
-if(S.phase==='wait'&&cm&&co&&!vo&&S.bt&&now-S.bt>30000)return end('opp')},1000);
+const PAT=S.fx?24e4:45e3;if(S.phase==='pick'&&now-S.pt>PAT)return end('me');
+if(S.phase==='wait'&&cm&&!co&&S.ct&&now-S.ct>PAT)return end('opp');
+if(S.phase==='wait'&&cm&&co&&!vo&&S.bt&&now-S.bt>(S.fx?24e4:3e4))return end('opp')},1000);
 async function netReport(w){const k='rep_'+ME.uid;if(S.M&&S.M[k])return;try{await db.doc(S.col+'/'+S.mid).update({[k]:w,['repAt_'+ME.uid]:FV().serverTimestamp()})}catch(e){permErr(e)}}
 // Money moves only when BOTH players report the same winner (or the opponent stays silent for 2 minutes).
 async function settleTx(mid,uid,w,stake){await db.runTransaction(async t=>{const ref=db.doc('wallets/'+uid),wd=(await t.get(ref)).data()||{};if(!wd.hold||wd.hold.mid!==mid)return;
@@ -543,12 +546,13 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const fdt=m=>new Date(m).toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
 const fdy=m=>new Date(m+WAT).toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',timeZone:'UTC'});
 const plabel=(b,p)=>b==='day'?fdy(p.start):b==='week'?fdy(p.start)+' to '+fdy(p.end-1):new Date(p.start+WAT).toLocaleDateString('en-GB',{month:'long',year:'numeric',timeZone:'UTC'});
-let BD={},RWD=[],TL=[],TMY=[],BT='day',TV=null,TD=null,TSD=null,TEN=[],TMEM=new Set(),QTID=null,unB=[],unR=null,unTL=null,unTE=null,unTD=null,unTS=null,unTN=null,tOpened=false;
-function unsubLB(){unB.forEach(f=>f());unB=[];[unR,unTL,unTE,unTD,unTS,unTN].forEach(f=>f&&f());unR=unTL=unTE=unTD=unTS=unTN=null}
+let BD={},RWD=[],TL=[],TMY=[],BT='day',TV=null,TD=null,TSD=null,TEN=[],TMEM=new Set(),QTID=null,unB=[],unR=null,unTL=null,unTE=null,unTD=null,unTS=null,unTN=null,unTF=null,unOP=null,tOpened=false,TFX=[],OPR={},MYUN='',FXED=null,HUB='live';
+function unsubLB(){unB.forEach(f=>f());unB=[];[unR,unTL,unTE,unTD,unTS,unTN,unTF,unOP].forEach(f=>f&&f());unR=unTL=unTE=unTD=unTS=unTN=unTF=unOP=null}
 function subLB(){unsubLB();if(!ME||!db)return;const now=Date.now();
   ['day','week','month'].forEach(b=>{const p=periodOf(b,now);unB.push(db.doc('boards/'+b+'_'+p.key).onSnapshot(s=>{BD[b]=s.exists?s.data():null;refreshLB()},()=>{BD[b]=null}))});
   unR=db.collection('rewards').where('uid','==',ME.uid).limit(30).onSnapshot(s=>{RWD=s.docs.map(d=>d.data()).sort((a,b)=>msOf(b.at)-msOf(a.at));refreshLB()},()=>{});
   unTL=db.collection('tournaments').where('pub','==',true).limit(40).onSnapshot(s=>{TL=s.docs.map(d=>({id:d.id,...d.data()}));refreshLB()},()=>{});
+  unOP=db.collection('organizers').limit(300).onSnapshot(s=>{OPR={};s.docs.forEach(d=>OPR[d.id]=d.data());refreshLB()},()=>{});
   unTE=db.collection('tEntries').where('uid','==',ME.uid).limit(60).onSnapshot(s=>{TMY=s.docs.map(d=>d.data()).sort((a,b)=>msOf(b.at)-msOf(a.at));refreshLB()},()=>{})}
 function refreshLB(){if(S||$('#menu').classList.contains('hide')||(TAB!=='tour'&&TAB!=='rank')||BT==='new')return;tab('tour')}
 setInterval(()=>{const e=$('#bcd');if(!e)return;const r=+e.dataset.end-Date.now();if(r<=0){subLB();return}
@@ -574,109 +578,145 @@ function vBoard(b,bt){
   else if(!rows.length)L.innerHTML='<p>No staked wins yet this period. Be the first! 🏆</p>';
   else L.innerHTML=rows.slice(0,15).map((r,i)=>`<div class="lbr ${r.uid===ME.uid?'me':''}"><div class="rk">${i===0?'👑':i+1}</div><div class="nm">${esc(r.name)}${r.uid===ME.uid?' (you)':''}<small>${r.wins} wins · ${r.games} games</small></div><div class="pt">${r.points}<small>${r.ok?'✅':'🔒 '+(r.gt||0)+'/'+min}</small></div></div>`).join('')+(upd!=null?`<p style="font-size:10px">Updated ${upd<1?'just now':upd+' min ago'}</p>`:'');
   if(RWD.length)L.innerHTML+='<div class="sub">MY REWARDS</div>'+RWD.slice(0,5).map(r=>`<div class="hl"><span>#${esc(r.rank)} · ${esc(LBL[r.board]||r.board)} ${esc(r.key)}<small>${esc(r.points)} points${r.why?' · '+esc(r.why):''}</small></span><b class="${r.status==='paid'?'w':r.status==='held'?'':'l'}">${r.status==='paid'?'PAID '+NG(r.prize):r.status==='held'?'ON HOLD':'NOT PAID'}</b></div>`).join('')}
-// ---- tournaments: entry fee. 15% of all entry fees goes to Naija Kick, 85% is paid to the top players ----
+// ---- organizer-run tournaments: entry fee, organizer sets the matches, 15% of entry fees goes to Naija Kick ----
 const SPL={'100':[100],'65-35':[65,35],'50-30-20':[50,30,20]};
 function prizesOf(fee,split,n){const pool=n*fee,house=Math.floor(pool*15/100),pp=pool-house;return{pool,house,pp,list:(SPL[split]||[100]).map(p=>Math.floor(pp*p/100))}}
-let TQS=0,TQT=null,TQP=null,TQH=null,TQU=null,TQID='',TQPAIR=false;
+const TIER={Elite:['★ Elite Organizer','#f5c542'],Trusted:['✔ Trusted Organizer','#12d36b'],Rising:['Rising Organizer','#6cc4ff'],Caution:['⚠ Caution','#ff5c6c'],New:['New Organizer','#8e9bb0']};
+const tierBadge=u=>{const x=TIER[(OPR[u]||{}).tier]||TIER.New;return `<span class="bd" style="color:${x[1]};border-color:${x[1]}">${x[0]}</span>`};
+const STG=['Early round','Round of 32','Round of 16','Quarter-final','Semi-final','Final'],RN=['Final','Semi-final','Quarter-final','Round of 16','Round of 32','Round of 64','Round of 128','Round of 256'];
+const stageOf=k=>Math.max(0,5-k),dtv=m=>{const d=new Date(m),p=x=>String(x).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes())};
+function tstate(t){const n=Date.now();if(t.status==='closed'||t.settled||n>t.end)return'past';if(n<t.start)return'upcoming';return'live'}
+/* Knockout bracket with byes. P = [{uid,name}] already shuffled. Returns {fixtureKey: fixtureDoc}. */
+function buildBracket(P,tid,first,gap){let size=1;while(size<P.length)size*=2;const rounds=Math.log2(size),Pn=[...P,...Array(size-P.length).fill(null)],fx={};
+  for(let r=0;r<rounds;r++){const cnt=size/Math.pow(2,r+1),k=rounds-1-r;for(let m=0;m<cnt;m++)fx[r+'_'+m]={tid,round:r,slot:m,stage:stageOf(k),rname:RN[k]||'Round',a:'',b:'',an:'',bn:'',at:first+r*gap,status:'tbd',winner:'',by:'',nextId:r<rounds-1?tid+'_r'+(r+1)+'m'+(m>>1):'',nextSide:m%2?'b':'a',created:Date.now()}}
+  for(let m=0;m<size/2;m++){const a=Pn[m],b=Pn[size-1-m],f=fx['0_'+m];f.a=a.uid;f.an=a.name;
+    if(b){f.b=b.uid;f.bn=b.name;f.status='scheduled'}else{f.status='bye';f.winner=a.uid;f.by='bye';const nx=fx['1_'+(m>>1)];if(nx){const sd=m%2?'b':'a';nx[sd]=a.uid;nx[sd+'n']=a.name}}}
+  Object.values(fx).forEach(f=>{if(f.status==='tbd'&&f.a&&f.b)f.status='scheduled'});return fx}
+function shootout(m){const[a,b]=m.players||[];if(!a||!b)return null;const va=m['v_'+a]||{},vb=m['v_'+b]||{},h=[[],[]],sc=[0,0];
+  for(let r=0;;r++){const x=va[r],y=vb[r];if(x===undefined||y===undefined)break;const z=[+String(x).split(':')[0],+String(y).split(':')[0]],ki=r%2,goal=z[ki]!==z[1-ki];h[ki].push(goal?1:0);if(goal)sc[ki]++;
+    const n=5,ra=Math.max(0,n-h[0].length),rb=Math.max(0,n-h[1].length);let done=false;
+    if(h[0].length>=n&&h[1].length>=n){if(h[0].length===h[1].length&&sc[0]!==sc[1])done=true}else if(sc[0]>sc[1]+rb||sc[1]>sc[0]+ra)done=true;
+    if(done||r+1>=24)return sc[0]>sc[1]?a:sc[1]>sc[0]?b:'draw'}
+  return null}
 function vTourList(b){
-  const now=Date.now(),open=TL.filter(t=>t.end>now&&t.status==='open').sort((a,c)=>a.start-c.start);
-  b.innerHTML=`<button class="alt" onclick="sfx('click');BT='new';tab('tour')">＋ CREATE A TOURNAMENT</button><div class="sub">MY TOURNAMENTS</div><div id="tmy"></div><div class="sub">OPEN TOURNAMENTS</div><div id="top"></div><p style="font-size:11px">Everyone pays the same entry fee. 15% goes to Naija Kick and 85% is paid to the top players when the tournament ends. Your entry is refunded if it is cancelled or too few people join.</p>`;
-  const row=(id,name,sub)=>`<button class="gh tr" onclick="openT('${id}')">${esc(name)}<small>${esc(sub)}</small></button>`;
-  $('#tmy').innerHTML=TMY.length?TMY.map(e=>row(e.tid,e.tname||'Tournament','Entered '+fdt(msOf(e.at)))).join(''):'<p>You have not joined any tournament yet.</p>';
-  $('#top').innerHTML=open.length?open.map(t=>row(t.id,t.name,NG(t.fee)+' entry · '+(now<t.start?'games start '+fdt(t.start):'live now · ends '+fdt(t.end)))).join(''):'<p>No public tournaments right now. Create one!</p>'}
-function feeNote(){const f=Math.round((+$('#tf').value||0)*100),e=$('#tfn');if(e)e.textContent=f>=5000?'Each player pays '+NG(f)+'. Naija Kick keeps '+NG(Math.floor(f*15/100))+' of it and '+NG(f-Math.floor(f*15/100))+' goes into the prize pool.':'The minimum entry fee is ₦50.'}
+  const now=Date.now(),mineIds=new Set(TMY.map(e=>e.tid));
+  const seg=[['live','Live'],['upcoming','Upcoming'],['past','Past'],['mine','Mine']];
+  let L=HUB==='mine'?TL.filter(t=>mineIds.has(t.id)||t.creator===ME.uid):TL.filter(t=>tstate(t)===HUB);
+  L=L.slice().sort((x,y)=>HUB==='past'?y.end-x.end:x.start-y.start);
+  b.innerHTML=`<button class="alt" onclick="sfx('click');BT='new';tab('tour')">＋ CREATE A TOURNAMENT</button><div class="seg" style="margin-top:12px">${seg.map(x=>`<button class="${HUB===x[0]?'on':''}" onclick="sfx('click');HUB='${x[0]}';tab('tour')">${x[1]}</button>`).join('')}</div><div id="tl"></div><p class="fine">Organizers set the matches. Everyone pays the same entry fee. 15% goes to Naija Kick and 85% is paid to the top players. You are refunded automatically if the organizer does not set the matches in time.</p>`;
+  const row=t=>`<button class="gh tr" onclick="openT('${t.id}')">${esc(t.name)} ${tierBadge(t.creator)}<small>${NG(t.fee)} entry · ${tstate(t)==='upcoming'?'registration closes '+fdt(t.start):tstate(t)==='live'?'live · ends '+fdt(t.end):'ended '+fdt(t.end)}${t.settled?' · paid out':''}</small></button>`;
+  let h=L.map(row).join('');
+  if(HUB==='mine')h+=TMY.filter(e=>!TL.some(t=>t.id===e.tid)).map(e=>`<button class="gh tr" onclick="openT('${e.tid}')">${esc(e.tname||'Tournament')}<small>Private · entered ${fdt(msOf(e.at))}</small></button>`).join('');
+  $('#tl').innerHTML=h||'<p>Nothing here yet.'+(HUB==='mine'?'':' Be the first to create one!')+'</p>'}
 function vTourNew(b){
-  const d=new Date(Date.now()+15*6e4),pad=x=>String(x).padStart(2,'0'),dv=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes());
+  const st=new Date(Date.now()+30*6e4),en=new Date(Date.now()+7*864e5);
   b.innerHTML=`<h1 style="font-size:22px">NEW TOURNAMENT</h1>
   <label class="fl">Name</label><input class="tx" type="text" id="tn" maxlength="30" placeholder="e.g. Friday Night Showdown">
-  <label class="fl">Entry fee per player (₦)</label><input class="tx" type="number" id="tf" min="50" max="50000" value="500" oninput="feeNote()"><div style="font-size:11px;opacity:.8;text-align:left" id="tfn"></div>
-  <label class="fl">Prizes</label><select id="tsp" style="width:100%"><option value="50-30-20">Top 3: 50% / 30% / 20%</option><option value="65-35">Top 2: 65% / 35%</option><option value="100">Winner takes all</option></select>
-  <label class="fl">Registration closes and games start</label><input type="datetime-local" id="tst" value="${dv}">
-  <label class="fl">Games run for</label><select id="td" style="width:100%"><option value="1">1 hour</option><option value="6">6 hours</option><option value="24" selected>1 day</option><option value="72">3 days</option><option value="168">7 days</option><option value="336">14 days</option><option value="720">30 days</option></select>
-  <div class="row"><div><label class="fl">Minimum players</label><input class="tx" type="number" id="tm" min="2" max="200" value="4"></div><div><label class="fl">Maximum players</label><input class="tx" type="number" id="tx" min="2" max="200" value="50"></div></div>
-  <label class="fl">Who can see it</label><select id="tp" style="width:100%"><option value="1">Public (listed in Naija Kick)</option><option value="0">Private (invite link only)</option></select>
-  <label class="fl">Rules (optional, up to 300 letters)</label><textarea id="tr" maxlength="300" placeholder="e.g. Play fair. No quitting mid-game."></textarea>
-  <p style="font-size:11px;text-align:left">How it works: players pay the entry fee to join before the start time. During the tournament they play free games against each other. Win = 3 points, draw = 1. At the end the prize pool is paid automatically to the top players. <b>15% of all entry fees always goes to Naija Kick</b> and cannot be changed. If the tournament is cancelled or fewer than the minimum players join, everyone is refunded.</p>
-  <label class="fl" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="tok" style="width:auto"> I understand the 15% rule</label>
+  <label class="fl">Entry fee per player (₦)</label><input class="tx" type="number" id="tf" min="50" max="50000" value="500" oninput="feeNote()"><div style="font-size:11px;color:var(--mu);text-align:left" id="tfn"></div>
+  <label class="fl">Prizes</label><select id="tsp"><option value="50-30-20">Top 3: 50% / 30% / 20%</option><option value="65-35">Top 2: 65% / 35%</option><option value="100">Winner takes all</option></select>
+  <label class="fl">Registration closes</label><input type="datetime-local" id="tst" value="${dtv(st)}">
+  <label class="fl">Tournament end date (all matches must be played by then)</label><input type="datetime-local" id="ten" value="${dtv(en)}">
+  <div class="row"><div><label class="fl">Minimum players</label><input class="tx" type="number" id="tm" min="2" max="200" value="4"></div><div><label class="fl">Maximum players</label><input class="tx" type="number" id="tx" min="2" max="200" value="16"></div></div>
+  <label class="fl">Who can see it</label><select id="tp"><option value="1">Public (listed for everyone)</option><option value="0">Private (invite link only)</option></select>
+  <label class="fl">Rules (optional)</label><textarea id="tr" maxlength="300" placeholder="e.g. Be online 10 minutes before your match. No-shows lose."></textarea>
+  <p class="fine" style="text-align:left">You are the organizer. After registration closes you set the matches yourself (or tap AUTO-SET to shuffle a bracket). <b>If you do not set matches before the end date, every player is refunded in full automatically.</b> 15% of all entry fees always goes to Naija Kick.</p>
+  <label class="fl" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="tok" style="width:auto"> I understand the 15% rule and the refund rule</label>
   <div class="er" id="te"></div><button class="alt" onclick="createT()">CREATE TOURNAMENT</button><button class="gh" onclick="BT='tour';tab('tour')">CANCEL</button>`;feeNote()}
+function feeNote(){const f=Math.round((+$('#tf').value||0)*100),e=$('#tfn');if(e)e.textContent=f>=5000?'Each player pays '+NG(f)+'. Naija Kick keeps '+NG(Math.floor(f*15/100))+' and '+NG(f-Math.floor(f*15/100))+' goes into the prize pool.':'The minimum entry fee is ₦50.'}
 async function createT(){
-  const e=$('#te'),name=$('#tn').value.trim(),fee=Math.round((+$('#tf').value||0)*100),max=Math.round(+$('#tx').value),min=Math.round(+$('#tm').value),pub=$('#tp').value==='1',split=$('#tsp').value,rules=$('#tr').value.trim().slice(0,300),sv=$('#tst').value,dur=+$('#td').value*36e5;
+  const e=$('#te'),name=$('#tn').value.trim(),fee=Math.round((+$('#tf').value||0)*100),max=Math.round(+$('#tx').value),min=Math.round(+$('#tm').value),pub=$('#tp').value==='1',split=$('#tsp').value,rules=$('#tr').value.trim().slice(0,300),st=new Date($('#tst').value).getTime(),en=new Date($('#ten').value).getTime();
+  if(!MYUN)return e.textContent='Choose a username in Profile first. Players find you by it.';
   if(name.length<3)return e.textContent='Give the tournament a name (3 to 30 letters).';
   if(!(fee>=5000&&fee<=5000000))return e.textContent='Entry fee must be between ₦50 and ₦50,000.';
   if(!(max>=2&&max<=200))return e.textContent='Maximum players must be between 2 and 200.';
   if(!(min>=2&&min<=max))return e.textContent='Minimum players must be at least 2 and not more than the maximum.';
-  if(!sv)return e.textContent='Choose a start time.';
-  const st=new Date(sv).getTime();if(st<Date.now()+5*6e4)return e.textContent='Start at least 5 minutes from now so people can join.';
-  if(!$('#tok').checked)return e.textContent='Tick the box to confirm the 15% rule.';e.textContent='';
-  try{const r=await db.collection('tournaments').add({name,creator:ME.uid,cname:CFG.name.slice(0,12),fee,min,max,split,start:st,end:st+dur,pub,rules,houseCut:15,status:'open',created:FV().serverTimestamp()});
-    toast('Tournament created. Join it and invite your friends.');openT(r.id)}catch(x){permErr(x)}}
+  if(!(st>Date.now()+10*6e4))return e.textContent='Registration must close at least 10 minutes from now.';
+  if(!(en>=st+36e5&&en-st<=60*864e5))return e.textContent='The end date must be at least 1 hour after registration closes, and within 60 days.';
+  if(!$('#tok').checked)return e.textContent='Tick the box to confirm.';e.textContent='';
+  try{const r=await db.collection('tournaments').add({name,creator:ME.uid,cname:MYUN,fee,min,max,split,start:st,end:en,pub,rules,houseCut:15,status:'open',created:FV().serverTimestamp()});toast('Tournament created');openT(r.id)}catch(x){permErr(x)}}
 function openT(id){if(S&&!S.over){toast('Finish your match first');return}
-  TV=id;TD=null;TSD=null;TEN=[];[unTD,unTS,unTN].forEach(f=>f&&f());BT='det';
+  TV=id;TD=null;TFX=[];TEN=[];FXED=null;[unTD,unTN,unTF].forEach(f=>f&&f());BT='det';
   unTD=db.doc('tournaments/'+id).onSnapshot(s=>{TD=s.exists?s.data():false;refreshLB()},()=>{TD=false;refreshLB()});
-  unTS=db.doc('tStand/'+id).onSnapshot(s=>{TSD=s.exists?s.data():null;refreshLB()},()=>{});
   unTN=db.collection('tEntries').where('tid','==',id).limit(200).onSnapshot(s=>{TEN=s.docs.map(d=>d.data());refreshLB()},()=>{});
+  unTF=db.collection('tFix').where('tid','==',id).limit(300).onSnapshot(s=>{TFX=s.docs.map(d=>({id:d.id,...d.data()}));refreshLB();autoResolve()},()=>{});
   home('tour')}
+function fxHtml(f){const n=Date.now(),mineF=f.a===ME.uid||f.b===ME.uid,org=TD.creator===ME.uid,open=f.status==='scheduled'&&f.a&&f.b;
+  const st={tbd:'WAITING FOR PLAYERS',scheduled:'SCHEDULED',played:'PLAYED',awarded:'RESULT AWARDED',bye:'BYE'}[f.status]||String(f.status).toUpperCase(),win=f.winner?(f.winner===f.a?f.an:f.bn):'';
+  let h=`<div class="fx ${mineF?'me':''}"><div class="fxn"><b>${esc(f.an||'TBD')}</b> vs <b>${esc(f.bn||(f.status==='bye'?'BYE':'TBD'))}</b></div><div class="fxs">${f.status==='bye'||f.status==='tbd'?'':fdt(f.at)+(f.pp?' (postponed)':'')+' · '}<span>${st}</span>${win&&f.status!=='bye'?' · winner <b>'+esc(win)+'</b>'+(f.by==='organizer'?' · organizer ruling: '+esc(f.note||''):''):''}</div>`;
+  if(mineF&&open){if(n>=f.at-6e5&&n<=f.at+432e5)h+=`<button onclick="fxPlay('${f.id}')">PLAY NOW</button>`;else h+='<div class="fxs">Your match opens 10 minutes before the start time. Both players must be online.</div>'}
+  if(org&&open)h+=`<div class="row"><button class="gh" onclick="fxEd('${f.id}','post')">POSTPONE</button><button class="gh" onclick="fxEd('${f.id}','award')">AWARD RESULT</button></div>`;
+  if(FXED&&FXED.id===f.id)h+=FXED.mode==='post'?`<div class="row"><input type="datetime-local" id="fpn" value="${dtv(Math.max(f.at,n)+36e5)}"><button onclick="fxPost('${f.id}')">SAVE</button></div>`:`<div class="row"><select id="faw"><option value="a">${esc(f.an)} wins</option><option value="b">${esc(f.bn)} wins</option></select><select id="far"><option>No-show</option><option>Dispute ruling</option><option>Walkover</option></select></div><button onclick="fxAward('${f.id}')">CONFIRM RESULT</button>`;
+  return h+'</div>'}
 function vTourDet(b){const t=TD;
-  if(t===null){b.innerHTML='<p>Loading tournament…</p><button class="gh" onclick="BT=\'tour\';tab(\'board\')">BACK</button>';return}
-  if(t===false){b.innerHTML='<p>This tournament could not be found.</p><button class="gh" onclick="BT=\'tour\';tab(\'board\')">BACK</button>';return}
-  const now=Date.now(),joined=TEN.some(e=>e.uid===ME.uid),n=TEN.length,closed=t.status!=='open',reg=!closed&&now<t.start,live=!closed&&now>=t.start&&now<=t.end,over=!closed&&now>t.end;
-  const state=closed?'CANCELLED':reg?'OPEN FOR ENTRY':live?'LIVE NOW':'ENDED',pr=prizesOf(t.fee,t.split,n),pl=['🥇','🥈','🥉'];
-  b.innerHTML=`<h1 style="font-size:22px">${esc(t.name)}</h1><p style="margin:0">by ${esc(t.cname||'a player')} · <b style="color:#ffd23f">${state}</b></p>
+  if(t===null){b.innerHTML='<p>Loading tournament…</p><button class="gh" onclick="BT=\'tour\';tab(\'tour\')">BACK</button>';return}
+  if(t===false){b.innerHTML='<p>This tournament could not be found.</p><button class="gh" onclick="BT=\'tour\';tab(\'tour\')">BACK</button>';return}
+  const now=Date.now(),joined=TEN.some(e=>e.uid===ME.uid),n=TEN.length,org=t.creator===ME.uid,closed=t.status==='closed',reg=!closed&&now<t.start,pr=prizesOf(t.fee,t.split,n),pl=['🥇','🥈','🥉'];
+  const state=closed?'CANCELLED':t.settled?'FINISHED':reg?'OPEN FOR ENTRY':now>t.end?'ENDED':TFX.length?'LIVE':'WAITING FOR MATCHES';
+  const byRound={};TFX.slice().sort((x,y)=>x.round-y.round||x.slot-y.slot||x.at-y.at).forEach(f=>{const k=f.stage+'|'+f.rname;(byRound[k]=byRound[k]||[]).push(f)});
+  const keys=Object.keys(byRound).sort((x,y)=>(+x.split('|')[0])-(+y.split('|')[0])||0);
+  let fxh=keys.length?keys.map(k=>`<div class="rh">${esc(k.split('|')[1])}</div>`+byRound[k].map(fxHtml).join('')).join(''):`<p>${now>t.start||!reg?'The organizer has not set the matches yet. If no matches are set before '+fdt(t.end)+', everyone is refunded automatically.':'Matches are set after registration closes.'}</p>`;
+  let og='';
+  if(org&&!closed&&!t.settled&&now<t.end){og=`<div class="sub">ORGANIZER TOOLS</div><p>${n} paid player${n===1?'':'s'}. Matches must be set before ${fdt(t.end)}.</p>
+  ${!TFX.length&&!reg?`<label class="fl">First round date and time</label><input type="datetime-local" id="fa" value="${dtv(Date.now()+36e5)}"><label class="fl">Gap between rounds</label><select id="fg"><option value="1">1 hour</option><option value="3">3 hours</option><option value="6">6 hours</option><option value="24" selected>1 day</option><option value="48">2 days</option></select><button class="alt" onclick="autoSet()">AUTO-SET BRACKET (SHUFFLE PLAYERS)</button>`:''}
+  ${!reg?`<label class="fl">Or add a match yourself (players are found by username)</label><div class="row"><input class="tx" type="text" id="u1" placeholder="@username 1"><input class="tx" type="text" id="u2" placeholder="@username 2"></div><div class="row"><select id="fst">${STG.map((x,i)=>`<option value="${i}" ${i===0?'selected':''}>${x}</option>`).join('')}</select><input type="datetime-local" id="fat" value="${dtv(Date.now()+36e5)}"></div><button class="gh" onclick="addFx()">ADD MATCH</button>`:'<p>Registration is still open. You can set matches after it closes.</p>'}
+  <div class="er" id="fe"></div><p class="fine" style="text-align:left">Players who paid: ${TEN.map(e=>'@'+esc(e.un||'?')).join(', ')||'none yet'}</p>`}
+  b.innerHTML=`<h1 style="font-size:22px">${esc(t.name)}</h1><p style="margin:0">by <b>@${esc(t.cname||'organizer')}</b> ${tierBadge(t.creator)} · <b style="color:#f5c542">${state}</b></p>
   <div class="hs"><div><b>${NG(t.fee)}</b>ENTRY FEE</div><div><b>${n}/${t.max}</b>PLAYERS (MIN ${t.min})</div><div><b>${NG(pr.pp)}</b>PRIZE POOL</div></div>
   <div class="prz">${pr.list.map((x,i)=>`<div>${pl[i]} ${['1st','2nd','3rd'][i]}<b>${NG(x)}</b></div>`).join('')}</div>
-  <p style="font-size:12px;margin:0">${fdt(t.start)} to ${fdt(t.end)} · ${t.pub?'Public':'Private'}</p>
+  <p style="margin:0;font-size:12px">Registration closes ${fdt(t.start)} · ends ${fdt(t.end)} · ${t.pub?'Public':'Private'}</p>
   ${t.rules?`<div class="a u" style="margin:8px 0"><div><b>RULES</b><span>${esc(t.rules)}</span></div></div>`:''}
-  <p style="font-size:11px">Win a free tournament game = 3 points, draw = 1. You need at least 2 games to win a prize. 15% of entry fees goes to Naija Kick; the rest is paid automatically when the tournament ends. Full refund if it is cancelled or fewer than ${t.min} players join.</p>
-  ${!joined&&reg&&n<t.max?`<button class="alt" onclick="joinT()">JOIN · PAY ${NG(t.fee)}</button>`:''}
-  ${!joined&&reg&&n>=t.max?'<p>This tournament is full.</p>':''}
-  ${joined&&live?'<button class="alt" onclick="tPlay(TV)">⚽ PLAY A TOURNAMENT GAME · FREE</button>':''}
-  ${joined&&reg?'<p>✅ You are in. Games open when registration closes. Share the link to fill the prize pool.</p>':''}
-  ${over?'<p>This tournament has ended. Prizes are paid automatically within a few minutes.</p>':''}
+  ${!joined&&reg&&n<t.max?`<button class="alt" onclick="joinT()">JOIN · PAY ${NG(t.fee)}</button>`:''}${!joined&&reg&&n>=t.max?'<p>This tournament is full.</p>':''}
+  ${joined&&reg?'<p>✅ You are in. The organizer will set your match after registration closes.</p>':''}
   <div class="row"><button onclick="shareT()">🔗 SHARE LINK</button><button class="gh" onclick="waT()">WHATSAPP</button></div>
-  <div class="sub">STANDINGS</div><div id="tstd"></div><div class="sub">PLAYERS (${n})</div><p style="font-size:12px">${TEN.map(e=>esc(e.name)).join(', ')||'—'}</p>
-  ${t.creator===ME.uid&&!closed&&reg?'<button class="gh" onclick="closeT()">CANCEL TOURNAMENT (REFUNDS EVERYONE)</button>':''}
-  <button class="gh" onclick="BT='tour';tab('tour')">← ALL TOURNAMENTS</button>`;
-  const rows=(TSD&&TSD.rows)||[],upd=TSD&&TSD.updatedAt?Math.max(0,Math.round((Date.now()-TSD.updatedAt)/6e4)):null;
-  $('#tstd').innerHTML=rows.length?rows.slice(0,20).map((r,i)=>`<div class="lbr ${r.uid===ME.uid?'me':''}"><div class="rk">${i===0&&r.points>0?'👑':i+1}</div><div class="nm">${esc(r.name)}${r.uid===ME.uid?' (you)':''}<small>${r.wins} wins · ${r.games} games${r.games<2?' · needs 2 games for a prize':''}</small></div><div class="pt">${r.points}</div></div>`).join('')+(upd!=null?`<p style="font-size:10px">Updated ${upd<1?'just now':upd+' min ago'}</p>`:''):'<p>No standings yet. They appear after the first games are played.</p>'}
-function joinT(){const t=TD;if(!t||!ME)return;const h=Math.floor(t.fee*15/100);
-  ask('Pay '+NG(t.fee)+' to enter? '+NG(h)+' goes to Naija Kick and '+NG(t.fee-h)+' to the prize pool. Full refund if it is cancelled or fewer than '+t.min+' players join.',async()=>{
+  ${og}<div class="sub">MATCHES</div>${fxh}
+  <p class="fine" style="text-align:left">Full refund (including the 15%) if it is cancelled, too few players join, or the organizer does not set the matches in time. Prizes are paid automatically about 12 hours after the final result, so disputes can be raised first.</p>
+  ${org&&!closed&&reg?'<button class="gh" onclick="closeT()">CANCEL TOURNAMENT (REFUNDS EVERYONE)</button>':''}
+  <button class="gh" onclick="BT='tour';tab('tour')">← ALL TOURNAMENTS</button>`}
+function joinT(){const t=TD;if(!t||!ME)return;if(!MYUN){toast('Choose a username in Profile first');return}const h=Math.floor(t.fee*15/100);
+  ask('Pay '+NG(t.fee)+' to enter? '+NG(h)+' goes to Naija Kick and '+NG(t.fee-h)+' to the prize pool. Full refund if it is cancelled or the organizer does not set the matches in time.',async()=>{
     const wref=db.doc('wallets/'+ME.uid),eref=db.doc('tEntries/'+TV+'_'+ME.uid);
     try{await db.runTransaction(async tx=>{const w=(await tx.get(wref)).data()||{},e=await tx.get(eref);
       if(e.exists)throw Error('You already joined');if(w.blocked)throw Error('Your wallet is on hold. Contact customer care.');if((w.balance||0)<t.fee)throw Error('Not enough balance. Deposit first.');
       tx.set(wref,{balance:w.balance-t.fee,tpay:TV},{merge:true});
-      tx.set(eref,{tid:TV,uid:ME.uid,name:CFG.name.slice(0,12),tname:t.name,fee:t.fee,at:FV().serverTimestamp()})});
+      tx.set(eref,{tid:TV,uid:ME.uid,name:CFG.name.slice(0,12),un:MYUN,tname:t.name,fee:t.fee,at:FV().serverTimestamp()})});
       toast('You are in! '+NG(t.fee)+' paid')}catch(x){permErr(x)}},'YES, PAY '+NG(t.fee))}
 function closeT(){ask('Cancel this tournament? Everyone who joined is refunded automatically.',async()=>{try{await db.doc('tournaments/'+TV).update({status:'closed'});toast('Tournament cancelled')}catch(e){permErr(e)}},'YES, CANCEL')}
+async function autoSet(){const e=$('#fe'),first=new Date($('#fa').value).getTime(),gap=+$('#fg').value*36e5,t=TD;
+  if(!first||first<Date.now()-6e4)return e.textContent='Pick a first-round time in the future.';
+  if(TEN.length<t.min)return e.textContent='You need at least '+t.min+' paid players.';
+  if(TFX.length)return e.textContent='Matches are already set.';
+  const P=TEN.map(x=>({uid:x.uid,name:x.un||x.name})).sort(()=>Math.random()-.5),fx=buildBracket(P,TV,first,gap),rounds=Math.max(...Object.values(fx).map(f=>f.round))+1;
+  if(first+(rounds-1)*gap>t.end)return e.textContent='The last round would fall after the tournament end date. Use a shorter gap or move the end date.';
+  try{const bt=db.batch();Object.entries(fx).forEach(([k,f])=>{const[r,m]=k.split('_');bt.set(db.collection('tFix').doc(TV+'_r'+r+'m'+m),f)});await bt.commit();toast('Bracket created: '+P.length+' players, '+rounds+' round'+(rounds>1?'s':''))}catch(x){permErr(x)}}
+async function addFx(){const e=$('#fe'),cl_=x=>x.trim().toLowerCase().replace(/^@/,''),u1=cl_($('#u1').value),u2=cl_($('#u2').value),at=new Date($('#fat').value).getTime(),stage=+$('#fst').value;
+  if(!u1||!u2||u1===u2)return e.textContent='Enter two different usernames.';if(!at)return e.textContent='Pick a date and time.';if(at>TD.end)return e.textContent='The match must be before the tournament end date.';
+  const A=TEN.find(x=>(x.un||'')===u1),B=TEN.find(x=>(x.un||'')===u2);
+  if(!A||!B)return e.textContent='@'+(!A?u1:u2)+' has not paid the entry fee for this tournament.';
+  try{await db.collection('tFix').add({tid:TV,round:0,slot:TFX.length,stage,rname:STG[stage],a:A.uid,b:B.uid,an:A.un,bn:B.un,at,status:'scheduled',winner:'',by:'',nextId:'',nextSide:'',created:Date.now()});e.textContent='';$('#u1').value='';$('#u2').value=''}catch(x){permErr(x)}}
+function fxEd(id,mode){FXED=FXED&&FXED.id===id&&FXED.mode===mode?null:{id,mode};refreshLB()}
+async function fxPost(id){const at=new Date($('#fpn').value).getTime(),f=TFX.find(x=>x.id===id);if(!f||!at)return;if(at>TD.end)return toast('Must be before the end date');
+  try{await db.doc('tFix/'+id).update({at,pp:(f.pp||0)+1});FXED=null;toast('Match postponed. Both players will see the new time.')}catch(x){permErr(x)}}
+function fxAward(id){const f=TFX.find(x=>x.id===id);if(!f)return;const side=$('#faw').value,w=side==='a'?f.a:f.b,nm=side==='a'?f.an:f.bn,why=$('#far').value;
+  ask('Award this match to '+nm+' ('+why+')? This cannot be undone and the player advances.',async()=>{try{await setWinner(f,w,'organizer',why);FXED=null;toast('Result awarded')}catch(x){permErr(x)}},'YES, AWARD')}
+async function setWinner(f,w,by,note){const b=db.batch(),r=db.collection('tFix');b.update(r.doc(f.id),{status:by==='match'?'played':'awarded',winner:w,by,note:note||'',doneAt:Date.now()});
+  if(f.nextId){const sd=f.nextSide,nm=w===f.a?f.an:f.bn,nx=TFX.find(x=>x.id===f.nextId),other=nx?(sd==='a'?nx.b:nx.a):'';b.update(r.doc(f.nextId),{[sd]:w,[sd+'n']:nm,status:other?'scheduled':'tbd'})}
+  await b.commit()}
+async function autoResolve(){if(!TD||!ME||TD.creator!==ME.uid||autoResolve.b)return;autoResolve.b=1;
+  try{for(const f of TFX.filter(x=>x.status==='scheduled'&&x.a&&x.b)){const s=await db.doc('tMatches/fx_'+f.id).get();if(!s.exists)continue;const w=shootout(s.data());if(w&&w!=='draw'&&(w===f.a||w===f.b)){await setWinner(f,w,'match','');break}}}catch(e){console.error(e)}autoResolve.b=0}
+async function fxPlay(id){const f=TFX.find(x=>x.id===id);if(!f||(S&&!S.over))return;const mid='fx_'+id,mref=db.doc('tMatches/'+mid);
+  try{const s=await mref.get();if(!s.exists)await mref.set({players:[f.a,f.b],names:[String(f.an||'').slice(0,12),String(f.bn||'').slice(0,12)],tid:f.tid,fid:id,status:'live',created:Date.now()})}
+  catch(e){const s2=await mref.get().catch(()=>null);if(!s2||!s2.exists){permErr(e);return}}
+  startNet(mid,'tMatches')}
 const tLink=id=>location.href.replace(/[^\/]*$/,'')+'naija-arcade.html?next=naija-kick.html&t='+id;
-function shareT(){const l=tLink(TV),t='Join my Naija Kick tournament "'+(TD?TD.name:'')+'" (entry '+(TD?NG(TD.fee):'')+'): '+l;
+function shareT(){const l=tLink(TV),t='Join "'+(TD?TD.name:'')+'" on Naija Kick (entry '+(TD?NG(TD.fee):'')+'): '+l;
   if(navigator.share)navigator.share({title:'Naija Kick tournament',text:t,url:l}).catch(()=>{});
   else if(navigator.clipboard)navigator.clipboard.writeText(l).then(()=>toast('Invite link copied'),()=>toast(l));else toast(l)}
-function waT(){window.open('https://wa.me/?text='+encodeURIComponent('Join my Naija Kick tournament "'+(TD?TD.name:'')+'" (entry '+(TD?NG(TD.fee):'')+'): '+tLink(TV)),'_blank')}
+function waT(){window.open('https://wa.me/?text='+encodeURIComponent('Join "'+(TD?TD.name:'')+'" on Naija Kick (entry '+(TD?NG(TD.fee):'')+'): '+tLink(TV)),'_blank')}
 async function loadMembers(tid){try{const [ts,es]=await Promise.all([db.doc('tournaments/'+tid).get(),db.collection('tEntries').where('tid','==',tid).limit(500).get()]);
   TMEM=new Set(es.docs.map(d=>d.data().uid));const t=ts.data()||{},now=Date.now();
   return{ok:ts.exists,joined:TMEM.has(ME.uid),live:t.status==='open'&&now>=t.start&&now<=t.end}}catch(e){permErr(e);return{ok:false}}}
-// ---- free tournament games: own queue + own matches, so no wallet is touched ----
-function tStop(){clearInterval(TQT);clearInterval(TQP);clearInterval(TQH);if(TQU){TQU();TQU=null}TQS=0}
-async function tPlay(tid){if(S&&!S.over)return;const r=await loadMembers(tid);
-  if(!r.ok||!r.joined||!r.live){toast(!r.ok?'Tournament not found':!r.joined?'Join the tournament first':'This tournament is not live right now');return openT(tid)}
-  TQID=tid;TQS=Date.now();const qref=db.doc('tQueue/'+ME.uid);
-  try{await qref.set({uid:ME.uid,name:CFG.name.slice(0,12),tid,at:Date.now(),hb:Date.now(),status:'waiting'})}catch(e){TQS=0;permErr(e);return openT(tid)}
-  $('#menu').classList.remove('hide');$('#hud').classList.add('hide');
-  $('#mcard').innerHTML=`<h1>FINDING AN OPPONENT</h1><div class="radar"><i></i><i></i><i></i><span>🏆</span></div><p id="sTxt">Waiting for another tournament player…</p><div class="code" style="font-size:30px;letter-spacing:4px" id="sClk">0:00</div><p>Free tournament game. No stake. Your result earns tournament points.</p><button class="gh" onclick="tCancel()">CANCEL</button>`;
-  TQH=setInterval(()=>qref.update({hb:Date.now()}).catch(()=>{}),10000);TQP=setInterval(tPair,2500);setTimeout(tPair,800);
-  TQU=qref.onSnapshot(sn=>{const q=sn.data();if(q&&q.status==='matched')tJoin(q.mid)});
-  TQT=setInterval(()=>{const e=Date.now()-TQS,c=$('#sClk');if(c)c.textContent=Math.floor(e/60000)+':'+String(Math.floor(e/1000)%60).padStart(2,'0');if(e>=60000)tTimeout()},1000)}
-async function tPair(){if(TQPAIR||!TQS)return;TQPAIR=true;try{const sn=await db.collection('tQueue').where('tid','==',TQID).limit(25).get(),now=Date.now();
-  const c=sn.docs.map(d=>d.data()).filter(q=>q.status==='waiting'&&q.uid>ME.uid&&now-q.hb<30000&&TMEM.has(q.uid)).sort((a,b)=>a.at-b.at)[0];
-  if(c){const mref=db.collection('tMatches').doc();await db.runTransaction(async t=>{const mq=db.doc('tQueue/'+ME.uid),oq=db.doc('tQueue/'+c.uid),[a,b]=await Promise.all([t.get(mq),t.get(oq)]);
-    if(!a.exists||!b.exists||a.data().status!=='waiting'||b.data().status!=='waiting'||Date.now()-b.data().hb>30000)throw Error('skip');
-    t.set(mref,{players:[ME.uid,c.uid],names:[CFG.name.slice(0,12),String(b.data().name||'PLAYER').slice(0,12)],tid:TQID,status:'live',created:Date.now()});
-    t.update(mq,{status:'matched',mid:mref.id});t.update(oq,{status:'matched',mid:mref.id})})}}
-  catch(e){if(e.message!=='skip'&&e.code!=='aborted')console.error(e)}TQPAIR=false}
-async function tCancel(){tStop();const tid=TQID;try{const sn=await db.doc('tQueue/'+ME.uid).get();if(sn.exists&&sn.data().status==='matched'){tJoin(sn.data().mid);return}await db.doc('tQueue/'+ME.uid).delete()}catch(e){}openT(tid)}
-async function tTimeout(){tStop();const tid=TQID;try{const sn=await db.doc('tQueue/'+ME.uid).get();if(sn.exists&&sn.data().status==='matched'){tJoin(sn.data().mid);return}await db.doc('tQueue/'+ME.uid).delete()}catch(e){}
-  $('#mcard').innerHTML=`<h1>NOBODY ONLINE YET</h1><p>No other player from this tournament was searching. Share the invite link so more members come online, then try again.</p><button class="alt" onclick="tPlay('${tid}')">SEARCH AGAIN</button><button class="gh" onclick="openT('${tid}')">BACK TO THE TOURNAMENT</button>`}
-function tJoin(mid){tStop();startNet(mid,'tMatches')}
+async function claimUN(){const v=($('#un').value||'').trim().toLowerCase(),e=$('#une');if(!/^[a-z0-9_]{3,16}$/.test(v))return e.textContent='Use 3 to 16 letters, numbers or underscores.';
+  try{await db.runTransaction(async tx=>{const r=db.doc('usernames/'+v);if((await tx.get(r)).exists)throw Error('That username is taken');tx.set(r,{uid:ME.uid,name:v,at:FV().serverTimestamp()});tx.set(db.doc('players/'+ME.uid),{username:v},{merge:true})});MYUN=v;toast('Username saved: @'+v);tab('me')}catch(x){e.textContent=x.message||'Could not save'}}
 function tabHist(m){const h=PR.hist||[],w=h.filter(x=>x.r==='W').length,l=h.filter(x=>x.r==='L').length,g=h.reduce((a,x)=>a+x.a,0),net=h.reduce((a,x)=>a+(x.n||0),0),rate=h.length?Math.round(w/h.length*100):0;
 m.innerHTML=`<div class="hs"><div><b>${h.length}</b>PLAYED</div><div><b>${w}</b>WON</div><div><b>${l}</b>LOST</div><div><b>${rate}%</b>WIN RATE</div><div><b>${g}</b>GOALS</div><div><b style="color:${net<0?'#ff6b7d':'#2ee66b'}">${net<0?'-':net>0?'+':''}${NG(Math.abs(net))}</b>NET CASH</div></div><div id="hl" style="max-height:34vh;overflow:auto"></div>`;
 const L=$('#hl');if(!h.length){L.textContent='No games yet. Play one!';return}
@@ -695,7 +735,7 @@ function pv(){const e=$('#pvc');if(!e)return;const c1=CFG.c1,c2=CFG.c2,st=CFG.st
   const pat=st===1?[...Array(7)].map((_,i)=>`<rect x="${i*30}" width="14" height="240" fill="${c2}"/>`).join(''):st===2?[...Array(8)].map((_,i)=>`<rect y="${i*30}" width="200" height="14" fill="${c2}"/>`).join(''):st===3?`<polygon points="0,0 70,0 200,240 130,240" fill="${c2}"/>`:'';
   e.innerHTML=`<svg viewBox="0 0 200 240"><defs><clipPath id="jc"><path d="M62 18l-44 24 16 44 24-9v118h88V77l24 9 16-44-44-24q-10 18-44 18T62 18z"/></clipPath></defs><g clip-path="url(#jc)"><rect width="200" height="240" fill="${c1}"/>${pat}<rect y="0" width="200" height="30" fill="rgba(0,0,0,.18)"/></g><path d="M62 18l-44 24 16 44 24-9v118h88V77l24 9 16-44-44-24q-10 18-44 18T62 18z" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="2"/></svg><div class="num">${CFG.num}</div>`}
 function upd(){CFG=clean({...CFG,name:$('#nm').value||'YOU',num:$('#nu').value,c1:$('#c1').value,c2:$('#c2').value,ball:$('#bl').value});pv()}
-function tabPlayer(m){m.innerHTML=`<div class="cz"><div id="pvc" class="jv"></div><div class="ct"><div class="sub">CHANGE TEAM</div><div class="chips" id="clubs"></div>
+function tabPlayer(m){m.innerHTML=(MYUN?`<p>Your username: <b>@${MYUN}</b></p>`:`<div class="sub" style="margin-top:0">CHOOSE YOUR USERNAME (CANNOT BE CHANGED)</div><div class="row"><input class="tx" type="text" id="un" maxlength="16" placeholder="e.g. lagos_striker"><button onclick="claimUN()" style="flex:0 0 auto;width:auto;padding:12px 18px">SAVE</button></div><div class="er" id="une"></div>`)+`<div class="cz"><div id="pvc" class="jv"></div><div class="ct"><div class="sub">CHANGE TEAM</div><div class="chips" id="clubs"></div>
 <div class="row"><input type="text" id="nm" maxlength="12" placeholder="Name" value="${CFG.name}"><input type="number" id="nu" min="1" max="99" value="${CFG.num}" style="max-width:64px"></div>
 <div class="row"><label class="c">Kit<input type="color" id="c1" value="${CFG.c1}"></label><label class="c">Trim<input type="color" id="c2" value="${CFG.c2}"></label><label class="c">Ball<input type="color" id="bl" value="${CFG.ball}"></label></div>
 <div class="row" id="sks"></div><div class="row"><button class="gh" id="hr">Hair: ${HR[CFG.hair]}</button><button class="gh" id="sty">Kit: ${STY[CFG.sty]}</button></div></div></div>`;
@@ -737,57 +777,333 @@ unW=db.doc('wallets/'+u.uid).onSnapshot(sn=>{WL=Object.assign({balance:0,locked:
 if(OPENT&&!tOpened){tOpened=true;setTimeout(()=>{if(!S&&!holdBusy)openT(OPENT)},600)}});
 addEventListener('error',()=>toast('Something went wrong. Reload if the game freezes.'));
 home('play');
-</script><scrip>/* NAIJA KICK ADD-ON 2: arenas (5 stadium looks), match intro fly-in, boots and goal celebrations.
-   Paste in its own <script> block AFTER the other two, before </body>. Removes nothing. */
+
+
+/* ============================================================================
+   NAIJA KICK PLUS
+   Load AFTER the main game script (see README). Adds:
+   faces, keeper movement, reactive net + ball, crowd + board backgrounds,
+   crowd/net/ball sounds, 6 arenas + animated intro, boots + celebrations,
+   tournament arena picker, seasons + partnership seasons.
+   Everything hooks in through scene.onBeforeRender, so the 3D engine stays untouched.
+   ========================================================================== */
 (function(){
-const T=THREE,t=K3._t;
-const AR={
- night:{n:'Lagos Night',bg:0x03060b,fog:0x04070d,pitch:0xffffff,crowd:0xffffff,hemi:0x9ab7ff,sun:0xfff2dc,si:1.25,led:0xffffff},
- sunset:{n:'Sunset Derby',bg:0x2a1208,fog:0x3a1a0c,pitch:0xffd9a0,crowd:0xffc58a,hemi:0xff9a55,sun:0xff9a55,si:1.1,led:0xffb347},
- neon:{n:'Neon Dome',bg:0x080418,fog:0x0b0626,pitch:0x9fe8ff,crowd:0xc9a6ff,hemi:0x8f7bff,sun:0xb48cff,si:1,led:0x9d7bff},
- gold:{n:'Golden Cup',bg:0x120d03,fog:0x1a1405,pitch:0xf3ffc8,crowd:0xffe08a,hemi:0xffd77a,sun:0xffe9a8,si:1.3,led:0xf5c542},
- day:{n:'Day Match',bg:0x78b9f0,fog:0x9cc9ee,pitch:0xffffff,crowd:0xffffff,hemi:0xdff0ff,sun:0xffffff,si:1.6,led:0xffffff}};
-const BOOTS={black:['Black',0x0d0d0d],gold:['Gold',0xf5c542],green:['Green',0x12d36b],red:['Red',0xff3b4a],white:['White',0xf2f2f2],blue:['Blue',0x2f7bff]};
-const CEL={goal:'GOAL!',long:'GOALLL!',naija:'NAIJA!',ole:'OLE OLE!',boom:'BOOM!'};
-let X={arena:'night',boots:'black',cel:'goal'};try{Object.assign(X,JSON.parse(localStorage.getItem('pkx')||'{}'))}catch(e){}
-const sv=()=>{try{localStorage.setItem('pkx',JSON.stringify(X))}catch(e){}};
-window.xSet=(k,v)=>{X[k]=v;sv();sfx('click');tab('me')};
-window.xTA=k=>db.doc('tournaments/'+TV).update({arena:k}).then(()=>toast('Arena set'),permErr);
+'use strict';
+if(typeof K3==='undefined'||typeof THREE==='undefined')return;
+const T=THREE,V3=(x,y,z)=>new T.Vector3(x,y,z);
+const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),lerp=(a,b,t)=>a+(b-a)*t,eo=t=>1-Math.pow(1-clamp(t),3);
+const scene=K3._t.scene,H=K3._t.H(),ball=K3._t.ball(),cam=K3._t.cam(),netZ=K3._t.netZ,zonePos=K3._t.zonePos;
+const hasS=()=>typeof S!=='undefined'&&S;
 
-function apply(key){const A=AR[key]||AR.night,sc=t.scene;if(!sc)return;sc.background.set(A.bg);sc.fog.color.set(A.fog);
-  sc.traverse(o=>{if(o.isHemisphereLight)o.color.set(A.hemi);if(o.isDirectionalLight){o.color.set(A.sun);o.intensity=A.si}if(o.isSpotLight)o.color.set(A.sun);
-    if(o.isMesh&&o.material&&o.material.map&&o.geometry.type==='PlaneGeometry'&&o.geometry.parameters.width===70)o.material.color.set(A.pitch);
-    if(o.isMesh&&o.material&&o.material.isMeshBasicMaterial&&o.material.map&&o.material.map.wrapS===T.RepeatWrapping)o.material.color.set(A.led);
-    if(o.isPoints&&o.material.size===.42)o.material.color.set(A.crowd)})}
-const arenaFor=S=>(S&&S.col==='tMatches'&&S.M&&TD&&TV===S.M.tid&&TD.arena)||X.arena;
+/* ---------------------------------------------------------------- cosmetics store */
+const BOOTS={classic:{n:'Classic Black',c:0x0d0d0d,e:0x000000,p:0},neon:{n:'Neon Green',c:0x39ff7a,e:0x0a5a22,p:300},ghost:{n:'Ghost White',c:0xf4f4f4,e:0x303030,p:300},ice:{n:'Ice Blue',c:0x6cc4ff,e:0x0a3a55,p:600},flame:{n:'Flame',c:0xff4a1c,e:0x7a1c00,p:800},gold:{n:'Pure Gold',c:0xf5c542,e:0x5a4200,p:1200},rainbow:{n:'Rainbow',c:0xffffff,e:0x222222,p:1800}};
+const CELE={classic:{n:'Arms Up',p:0},slide:{n:'Knee Slide',p:400},plane:{n:'Airplane',p:500},shimmy:{n:'Naija Shimmy',p:600},flip:{n:'Backflip',p:900}};
+let COS={boots:'classic',cele:'classic',arena:'auto',owned:{}};
+try{Object.assign(COS,JSON.parse(localStorage.getItem('pkcos')||'{}'))}catch(e){}
+COS.owned=Object.assign({boots_classic:1,cele_classic:1},COS.owned||{});
+function saveCos(){try{localStorage.setItem('pkcos',JSON.stringify(COS))}catch(e){}
+  try{if(ME&&db)db.doc('players/'+ME.uid).set({kickCos:COS},{merge:true}).catch(()=>{})}catch(e){}}
 
-/* intro: the camera sweeps in from high above while the arena name and the two players fade in */
-const ov=document.createElement('div');
-ov.style.cssText="position:fixed;inset:0;z-index:7;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;font:700 clamp(26px,7vw,56px) Oswald,Impact,sans-serif;letter-spacing:4px;text-transform:uppercase;text-align:center;color:#fff;text-shadow:0 4px 30px #000;opacity:0;transition:opacity .6s";
-document.body.appendChild(ov);
-let cur='',lastS=null,intro=0;
-function showIntro(key){ov.innerHTML=`<small style="font-size:.38em;letter-spacing:6px;color:#12d36b">${esc(AR[key].n)}</small>${esc(CFG.name)} VS ${esc(S.opp.name)}`;ov.style.opacity=1;setTimeout(()=>ov.style.opacity=0,3000)}
-const _pk=pick;pick=function(z){if(Date.now()<intro)return;_pk(z)};
+/* ---------------------------------------------------------------- arenas */
+const ARENAS=[
+ {id:'lagos',name:'Lagos National',bg:0x03060b,fog:0x04070d,hemi:[0x9ab7ff,0x1d3b1f,.85],sun:[0xfff2dc,1.25],spot:0xfff0d0,grass:0xffffff,crowd:0xffffff,led:['#04120b','#12d36b','#f5c542','#ffffff'],txt:['NAIJA KICK','PLAY LIVE','WIN BIG','18+ PLAY RESPONSIBLY'],sky:['#02050a','#0a1a2e'],scr:['#06130c','#12d36b'],stars:1},
+ {id:'golden',name:'Golden Hour',bg:0x2a1408,fog:0x3a1c0c,hemi:[0xffc78a,0x3a2a12,.95],sun:[0xffb15c,1.35],spot:0xffc890,grass:0xffe8b8,crowd:0xffd9a0,led:['#1a0d03','#ff9d2e','#ffe08a','#ffffff'],txt:['GOLDEN HOUR','NAIJA KICK','SUNSET SHOWDOWN','18+ PLAY RESPONSIBLY'],sky:['#2a0f05','#ff7a2e'],scr:['#1f0e04','#ff9d2e'],stars:0},
+ {id:'lagoon',name:'Blue Lagoon',bg:0x020b18,fog:0x03101f,hemi:[0x6cc4ff,0x0d2a2f,.9],sun:[0xbfe4ff,1.2],spot:0xa8d8ff,grass:0xc8f5ff,crowd:0x9fd0ff,led:['#02101c','#35c9ff','#ffffff','#12d36b'],txt:['BLUE LAGOON','NAIJA KICK','MAKE WAVES','18+ PLAY RESPONSIBLY'],sky:['#010812','#0b3a63'],scr:['#02101c','#35c9ff'],stars:1},
+ {id:'carnival',name:'Carnival Dome',bg:0x12041c,fog:0x1a0626,hemi:[0xd9a0ff,0x1d3b1f,.9],sun:[0xffd6ff,1.2],spot:0xffc0ff,grass:0xe8ffe8,crowd:0xffb0ff,led:['#16041f','#ff3df0','#f5c542','#35e0ff'],txt:['CARNIVAL KICK','NAIJA KICK','PARTY TIME','18+ PLAY RESPONSIBLY'],sky:['#0a0212','#5b1a7a'],scr:['#16041f','#ff3df0'],stars:1},
+ {id:'day',name:'Match Day',bg:0x6fb6ff,fog:0x9fd0ff,hemi:[0xffffff,0x4a7a3a,1.1],sun:[0xffffff,1.6],spot:0xffffff,grass:0xf4ffe0,crowd:0xffffff,led:['#0b1d33','#ffffff','#f5c542','#12d36b'],txt:['MATCH DAY','NAIJA KICK','CHAMPIONS ONLY','18+ PLAY RESPONSIBLY'],sky:['#4aa3ff','#d4ecff'],scr:['#0b1d33','#ffffff'],stars:0},
+ {id:'fortress',name:'Red Fortress',bg:0x0a0204,fog:0x12040a,hemi:[0xff9a9a,0x2a1010,.8],sun:[0xffd0c0,1.2],spot:0xffb0a0,grass:0xe0f0d0,crowd:0xff9a9a,led:['#190305','#ff3b4e','#ffffff','#f5c542'],txt:['RED FORTRESS','NAIJA KICK','NO MERCY','18+ PLAY RESPONSIBLY'],sky:['#0a0103','#4a0a14'],scr:['#190305','#ff3b4e'],stars:1}
+];
+const arenaById=id=>ARENAS.find(a=>a.id===id)||ARENAS[0];
 
-const F=K3.frame;K3.frame=function(dt,time,S0,a,b,c){
-  const key=arenaFor(S0);if(key!==cur){cur=key;apply(key)}
-  if(S0!==lastS){lastS=S0;if(S0&&S0.round===0){intro=Date.now()+4200;showIntro(key)}}
-  F(dt,time,S0,a,b,c);
-  try{const H=t.H(),mineK=!S0||(!S0.over&&S0.round%2===S0.me);H.k.M.boots.color.set(mineK?BOOTS[X.boots][1]:0x0d0d0d);
-    if(S0&&!S0.over&&Date.now()<intro){const u=1-(intro-Date.now())/4200,e=u*u*(3-2*u);
-      t.cam().position.set(L(-20,1,e)+Math.sin(e*Math.PI)*12,L(14,1.9,e),L(36,21.5,e))}}catch(e){console.error('arenas',e)}};
+/* find the things the engine built, by their shape */
+const F={lights:[],boards:[],ledMap:null,pitch:null,crowd:null,flash:null,net:null,dome:null,screen:null,screenCv:null,screenTex:null};
+scene.traverse(o=>{
+  if(o.isHemisphereLight||o.isDirectionalLight||o.isSpotLight)F.lights.push(o);
+  if(o.isMesh&&o.geometry&&o.geometry.type==='PlaneGeometry'&&o.geometry.parameters.width===70)F.pitch=o;
+  if(o.isMesh&&o.material&&o.material.map&&o.material.map.image&&o.material.map.image.width===2048&&o.material.map.image.height===128){F.boards.push(o);F.ledMap=o.material.map}
+  if(o.isPoints&&o.material.vertexColors&&o.material.size===.42)F.crowd=o;
+  if(o.isPoints&&o.material.vertexColors&&o.material.size===1.1)F.flash=o;
+  if(o.isLineSegments&&o.geometry.attributes.position&&o.geometry.attributes.position.count===1524)F.net=o;
+});
+F.boards.forEach(b=>{b.userData.y0=b.position.y});
+const NU=30,NV=12,GW=7.32,GH=2.44,netBase=[];
+for(let j=0;j<=NV;j++){const y=GH*(1-j/NV);for(let i=0;i<=NU;i++)netBase.push([-GW/2+GW*i/NU,y,netZ(y)])}
+const netEdges=[];{const id=(i,j)=>j*(NU+1)+i;for(let j=0;j<=NV;j++)for(let i=0;i<=NU;i++){if(i<NU)netEdges.push([id(i,j),id(i+1,j)]);if(j<NV)netEdges.push([id(i,j),id(i,j+1)])}}
 
-/* goal celebration text */
-const _fin=finish;finish=function(){_fin();if(S&&S.an&&S.an.goal&&S.round%2===S.me)$('#big').textContent=CEL[X.cel]};
+/* sky dome (background behind the stands) */
+const domeCv=document.createElement('canvas');domeCv.width=64;domeCv.height=512;
+const domeTex=new T.CanvasTexture(domeCv);domeTex.colorSpace=T.SRGBColorSpace;
+F.dome=new T.Mesh(new T.SphereGeometry(280,24,16),new T.MeshBasicMaterial({map:domeTex,side:T.BackSide,fog:false,depthWrite:false}));F.dome.renderOrder=-10;scene.add(F.dome);
+function drawDome(a){const x=domeCv.getContext('2d'),W=domeCv.width,Hh=domeCv.height,g=x.createLinearGradient(0,0,0,Hh);g.addColorStop(0,a.sky[0]);g.addColorStop(.5,a.sky[1]);g.addColorStop(1,a.sky[1]);x.fillStyle=g;x.fillRect(0,0,W,Hh);
+  if(a.stars){for(let i=0;i<90;i++){x.fillStyle='rgba(255,255,255,'+(.25+Math.random()*.6)+')';x.fillRect(Math.random()*W,Math.random()*Hh*.42,1,1)}}domeTex.needsUpdate=true}
 
-/* UI: Profile > Settings gets arena, boots and celebration pickers */
-const grid=(obj,cur,k)=>'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'+Object.keys(obj).map(i=>`<button class="${cur===i?'':'gh'}" onclick="xSet('${k}','${i}')">${esc(Array.isArray(obj[i])?obj[i][0]:obj[i].n||obj[i])}</button>`).join('')+'</div>';
-const _ts=tabSet;tabSet=function(m){_ts(m);
-  m.insertAdjacentHTML('beforeend',`<div class="sub">MY ARENA (PRACTICE AND NON-TOURNAMENT GAMES)</div>${grid(AR,X.arena,'arena')}<div class="sub">BOOTS</div>${grid(BOOTS,X.boots,'boots')}<div class="sub">GOAL CELEBRATION</div>${grid(CEL,X.cel,'cel')}`)};
+/* jumbotron behind the goal: live score + arena name */
+F.screenCv=document.createElement('canvas');F.screenCv.width=1024;F.screenCv.height=300;
+F.screenTex=new T.CanvasTexture(F.screenCv);F.screenTex.colorSpace=T.SRGBColorSpace;
+F.screen=new T.Mesh(new T.PlaneGeometry(18,5.3),new T.MeshBasicMaterial({map:F.screenTex}));F.screen.position.set(0,10.5,-8.6);scene.add(F.screen);
+let scrKey='';
+function drawScreen(force){const a=AR||ARENAS[0];let l='NAIJA',r='KICK',sc='VS',sub=a.name.toUpperCase();
+  if(hasS()){l=(CFG.name||'YOU');r=S.opp.name;sc=S.score[S.me]+' - '+S.score[1-S.me];sub=a.name.toUpperCase()+' · ROUND '+(Math.min(S.round,24)+1)}
+  const key=l+r+sc+sub;if(!force&&key===scrKey)return;scrKey=key;
+  const x=F.screenCv.getContext('2d'),W=1024,Hh=300,g=x.createLinearGradient(0,0,W,0);g.addColorStop(0,a.scr[0]);g.addColorStop(.5,'#000');g.addColorStop(1,a.scr[0]);x.fillStyle=g;x.fillRect(0,0,W,Hh);
+  x.strokeStyle=a.scr[1];x.lineWidth=6;x.strokeRect(8,8,W-16,Hh-16);x.textAlign='center';x.textBaseline='middle';
+  x.fillStyle='#ffffff';x.font='700 54px Oswald, Impact, sans-serif';x.fillText(String(l).slice(0,10),190,95);x.fillText(String(r).slice(0,10),W-190,95);
+  x.fillStyle=a.scr[1];x.font='700 120px Oswald, Impact, sans-serif';x.fillText(sc,W/2,110);
+  x.fillStyle='#ffffffcc';x.font='600 34px Oswald, Impact, sans-serif';x.fillText(sub,W/2,230);
+  for(let i=0;i<Hh;i+=4){x.fillStyle='rgba(0,0,0,.18)';x.fillRect(0,i,W,1)}F.screenTex.needsUpdate=true}
 
-/* tournament page: everyone sees the arena, the organizer picks it */
-const _vd2=vTourDet;vTourDet=function(b){_vd2(b);const tt=TD;if(!tt||!ME)return;
-  const org=tt.creator===ME.uid&&tt.status==='open',d=document.createElement('div'),a=tt.arena||'night';
-  d.innerHTML=`<div class="sub">ARENA</div><p style="margin:0 0 6px">All tournament games are played in <b style="color:#ffd23f">${esc(AR[a]?AR[a].n:AR.night.n)}</b>.</p>`+(org?'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">'+Object.keys(AR).map(i=>`<button class="${a===i?'':'gh'}" onclick="xTA('${i}')">${esc(AR[i].n)}</button>`).join('')+'</div>':'');
-  const fx=[...b.querySelectorAll('.sub')].find(x=>x.textContent==='FIXTURES');fx?b.insertBefore(d,fx):b.appendChild(d)};
-})();</script></scrip>/body></html>
+/* ---------------------------------------------------------------- arena apply */
+let AR=null,base={},LIGHTK=1,crowdSize=.42;
+function drawBoards(a,extra){if(!F.ledMap)return;const c=F.ledMap.image,x=c.getContext('2d'),W=c.width,Hh=c.height;x.fillStyle=a.led[0];x.fillRect(0,0,W,Hh);
+  const t=a.txt.slice();if(extra)t[0]=extra;const cols=[a.led[1],a.led[2],a.led[3],a.led[1]];
+  x.font='900 70px Oswald, Impact, sans-serif';x.textBaseline='middle';x.textAlign='center';t.forEach((s,i)=>{x.fillStyle=cols[i];x.fillText(String(s).slice(0,26),W/8+i*W/4,Hh/2+4)});
+  x.fillStyle='#ffffff22';for(let i=0;i<Hh;i+=4)x.fillRect(0,i,W,1);F.ledMap.needsUpdate=true}
+function applyArena(id,boardText){const a=arenaById(id);AR=a;
+  scene.background=new T.Color(a.bg);if(scene.fog){scene.fog.color.set(a.fog);scene.fog.near=a.id==='day'?70:40;scene.fog.far=a.id==='day'?220:150}
+  F.lights.forEach(l=>{if(l.isHemisphereLight){l.color.set(a.hemi[0]);l.groundColor.set(a.hemi[1]);base[l.uuid]=a.hemi[2]}
+    else if(l.isDirectionalLight){l.color.set(a.sun[0]);base[l.uuid]=a.sun[1]}else if(l.isSpotLight){l.color.set(a.spot);base[l.uuid]=a.id==='day'?.15:.55}});
+  F.lights.forEach(l=>{l.intensity=base[l.uuid]*LIGHTK});
+  if(F.pitch)F.pitch.material.color.set(a.grass);if(F.crowd)F.crowd.material.color.set(a.crowd);
+  drawDome(a);drawBoards(a,boardText);drawScreen(true)}
+function menuArena(){applyArena(COS.arena!=='auto'?COS.arena:'lagos')}
+function arenaForMatch(){const s=S;let id=null,txt=null;
+  if(s.mode==='net'){const m=s.M||{};if(s.col==='tMatches'&&m.tid&&typeof TD!=='undefined'&&TD&&typeof TV!=='undefined'&&TV===m.tid){if(TD.arena)id=TD.arena;txt=String(TD.name||'').toUpperCase()}
+    if(!id){let h=0;for(const c of String(s.mid||''))h=(h*31+c.charCodeAt(0))>>>0;id=ARENAS[h%ARENAS.length].id}}
+  else id=COS.arena!=='auto'?COS.arena:ARENAS[Math.floor(Math.random()*ARENAS.length)].id;
+  applyArena(id,txt)}
+
+/* ---------------------------------------------------------------- faces */
+function addFace(o){const head=o.head,f={cur:{sm:.15,open:0,tilt:0,raise:0,eye:1}};
+  const white=new T.MeshBasicMaterial({color:0xffffff}),dark=new T.MeshBasicMaterial({color:0x140d0a,side:T.DoubleSide});
+  /* the original hair cap and afro hide the face, so reshape them */
+  if(o.hair.short){o.hair.short.geometry.dispose();o.hair.short.geometry=new T.SphereGeometry(.112,16,10,0,Math.PI*2,0,Math.PI*.4)}
+  if(o.hair.afro)o.hair.afro.position.z=.075;
+  f.eyes=[-1,1].map(s=>{const e=new T.Mesh(new T.SphereGeometry(.021,10,8),white);e.position.set(s*.042,.012,-.091);const p=new T.Mesh(new T.SphereGeometry(.011,8,6),dark);p.position.set(0,0,-.014);e.add(p);e.userData.p=p;head.add(e);return e});
+  f.brows=[-1,1].map(s=>{const b=new T.Mesh(new T.BoxGeometry(.05,.009,.012),dark);b.position.set(s*.042,.042,-.108);b.userData.s=s;head.add(b);return b});
+  f.mouth=new T.Mesh(new T.TorusGeometry(.026,.005,6,14,Math.PI),dark);f.mouth.rotation.z=Math.PI;f.mouth.position.set(0,-.036,-.1);head.add(f.mouth);
+  f.open=new T.Mesh(new T.SphereGeometry(.02,10,8),dark);f.open.position.set(0,-.05,-.097);f.open.scale.set(1,.01,.35);head.add(f.open);
+  return f}
+const FACE={k:addFace(H.k),g:addFace(H.g)};
+const MOOD={neutral:{sm:.15,open:0,tilt:0,raise:0,eye:1},focus:{sm:0,open:0,tilt:.8,raise:-.004,eye:.8},cheer:{sm:1,open:.85,tilt:-.3,raise:.012,eye:.65},sad:{sm:-1,open:0,tilt:-.9,raise:.004,eye:.85},shock:{sm:0,open:1,tilt:-.2,raise:.02,eye:1.35}};
+function mood(f,name,dt){const m=MOOD[name]||MOOD.neutral,k=1-Math.exp(-dt*9),c=f.cur;for(const key in m)c[key]=lerp(c[key],m[key],k);
+  f.mouth.scale.y=Math.abs(c.sm)<.06?.06:c.sm;f.mouth.position.y=-.037+.01*c.sm;f.open.scale.y=Math.max(.01,c.open*.9);
+  f.eyes.forEach(e=>e.scale.set(1,c.eye,1));f.brows.forEach(b=>{b.rotation.z=b.userData.s*c.tilt*.45;b.position.y=.042+c.raise})}
+
+/* ---------------------------------------------------------------- ball extras: shadow, trail, squash */
+const shadow=new T.Mesh(new T.CircleGeometry(.14,20),new T.MeshBasicMaterial({color:0x000000,transparent:true,opacity:.3,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=.015;scene.add(shadow);
+const TR=18,trailPos=new Float32Array(TR*3),trailCol=new Float32Array(TR*3),trailGeo=new T.BufferGeometry();
+trailGeo.setAttribute('position',new T.BufferAttribute(trailPos,3));trailGeo.setAttribute('color',new T.BufferAttribute(trailCol,3));
+const trail=new T.Points(trailGeo,new T.PointsMaterial({size:.2,vertexColors:true,transparent:true,blending:T.AdditiveBlending,depthWrite:false}));trail.frustumCulled=false;scene.add(trail);
+const BS={prev:V3(0,0,0),speed:0,vy:0,squash:0,hit:null,hitDone:false,lastAn:null,vz:0,pos:[]};
+
+/* ---------------------------------------------------------------- audio */
+const AU={amb:null,exc:.3,nb:null,wb:null,last:0};
+const aOK=()=>{try{return ST.snd&&ST.vol>0}catch(e){return false}};
+function ctx(){try{return ac()}catch(e){return null}}
+function bufs(a){if(!AU.nb){const n=a.sampleRate*2,b=a.createBuffer(1,n,a.sampleRate),x=b.getChannelData(0);let l=0;for(let i=0;i<n;i++){l=l*.97+(Math.random()*2-1)*.3;x[i]=l*3}AU.nb=b;const w=a.createBuffer(1,a.sampleRate,a.sampleRate),y=w.getChannelData(0);for(let i=0;i<y.length;i++)y[i]=Math.random()*2-1;AU.wb=w}}
+function burst(a,t,dur,type,f0,f1,peak,att,white){bufs(a);const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=white?AU.wb:AU.nb;s.loop=true;f.type=type;f.Q.value=type==='bandpass'?.7:.5;f.frequency.setValueAtTime(f0,t);f.frequency.exponentialRampToValueAtTime(Math.max(40,f1),t+dur);
+  g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(peak,t+(att||.02));g.gain.exponentialRampToValueAtTime(.0001,t+dur);s.connect(f);f.connect(g);g.connect(a.destination);s.start(t);s.stop(t+dur+.05)}
+function tn(a,t,f0,f1,dur,v,type){const o=a.createOscillator(),g=a.createGain();o.type=type||'sine';o.frequency.setValueAtTime(f0,t);if(f1)o.frequency.exponentialRampToValueAtTime(f1,t+dur);g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+dur+.02)}
+const V=()=>ST.vol;
+function sKick(){const a=ctx();if(!a||!aOK())return;const t=a.currentTime;tn(a,t,200,50,.16,.75*V());burst(a,t,.05,'highpass',2500,2500,.5*V(),.003,true);burst(a,t,.12,'bandpass',900,400,.35*V(),.005,true);AU.exc=Math.max(AU.exc,.55)}
+function sNet(spd){const a=ctx();if(!a||!aOK())return;const t=a.currentTime,p=clamp(spd/24,.35,1);
+  [0,.06,.14,.24].forEach((d,i)=>burst(a,t+d,.22,'highpass',4200-i*500,1800,.34*p*V()/(i+1)*1.4,.004,true));tn(a,t,120,55,.25,.28*p*V());burst(a,t,.5,'lowpass',900,300,.18*p*V(),.01)}
+function sBounce(v){const a=ctx();if(!a||!aOK())return;tn(a,a.currentTime,230,100,.09,clamp(v/6,.1,.5)*V())}
+function sSlap(){const a=ctx();if(!a||!aOK())return;const t=a.currentTime;burst(a,t,.09,'bandpass',2800,1800,.55*V(),.003,true);tn(a,t,150,70,.12,.5*V())}
+function sCheer(){const a=ctx();if(!a||!aOK())return;const t=a.currentTime;AU.exc=1;
+  burst(a,t,2.8,'bandpass',600,1500,.6*V(),.35);burst(a,t+.1,2.4,'bandpass',1200,2400,.3*V(),.45);
+  [466,622].forEach(f=>{const o=a.createOscillator(),g=a.createGain();o.type='sawtooth';o.frequency.value=f;g.gain.setValueAtTime(.0001,t+.15);g.gain.linearRampToValueAtTime(.07*V(),t+.2);g.gain.setValueAtTime(.07*V(),t+.65);g.gain.exponentialRampToValueAtTime(.0001,t+.85);o.connect(g);g.connect(a.destination);o.start(t+.15);o.stop(t+.9)});
+  [523,659,784].forEach((f,i)=>tn(a,t+i*.09,f,0,.22,.1*V(),'triangle'))}
+function sGroan(){const a=ctx();if(!a||!aOK())return;const t=a.currentTime;AU.exc=.7;burst(a,t,1.5,'bandpass',520,230,.42*V(),.12);tn(a,t,420,200,.7,.07*V(),'triangle')}
+function sWhistle(){const a=ctx();if(!a||!aOK())return;const t=a.currentTime;[0,.28].forEach(d=>{const o=a.createOscillator(),l=a.createOscillator(),lg=a.createGain(),g=a.createGain();o.type='sine';o.frequency.value=2900;l.frequency.value=38;lg.gain.value=90;l.connect(lg);lg.connect(o.frequency);g.gain.setValueAtTime(.0001,t+d);g.gain.linearRampToValueAtTime(.16*V(),t+d+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d+.3);o.connect(g);g.connect(a.destination);o.start(t+d);l.start(t+d);o.stop(t+d+.32);l.stop(t+d+.32)});AU.exc=.6}
+SFX.kick=sKick;SFX.goal=sCheer;SFX.save=()=>{sGroan();sSlap()};SFX.whistle=sWhistle;
+function ambOn(){if(AU.amb)return;const a=ctx();if(!a)return;try{if(a.state==='suspended')a.resume()}catch(e){}bufs(a);const s=a.createBufferSource(),f=a.createBiquadFilter(),g=a.createGain();s.buffer=AU.nb;s.loop=true;f.type='bandpass';f.frequency.value=650;f.Q.value=.4;g.gain.value=0;s.connect(f);f.connect(g);g.connect(a.destination);s.start();AU.amb={s,f,g}}
+function ambOff(){if(!AU.amb)return;const x=AU.amb;AU.amb=null;try{x.g.gain.setTargetAtTime(0,x.g.context.currentTime,.25)}catch(e){}setTimeout(()=>{try{x.s.stop()}catch(e){}},1500)}
+function ambTick(dt){if(!AU.amb)return;AU.exc=Math.max(.25,AU.exc-dt*.22);const n=performance.now();if(n-AU.last<90)return;AU.last=n;const a=AU.amb,t=a.g.context.currentTime,swell=.6+.4*Math.sin(n/1900)*Math.sin(n/700);
+  try{a.g.gain.setTargetAtTime((aOK()?ST.vol:0)*(.07+AU.exc*.3)*swell,t,.12);a.f.frequency.setTargetAtTime(550+AU.exc*900,t,.2)}catch(e){}}
+
+/* ---------------------------------------------------------------- intro */
+let intro=null,introEl=null;
+(function(){const st=document.createElement('style');st.textContent='#introx{position:fixed;inset:0;z-index:7;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:16vh;pointer-events:auto;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 60%,rgba(0,0,0,.6));text-align:center}#introx .ar{font:700 13px Oswald,sans-serif;letter-spacing:6px;color:#12d36b;text-transform:uppercase}#introx .vs{font:700 clamp(30px,8vw,64px) Oswald,sans-serif;letter-spacing:3px;text-shadow:0 4px 18px #000;margin:6px 0}#introx .vs i{color:#f5c542;font-style:normal;margin:0 12px}#introx small{font:600 11px Inter,sans-serif;color:#cbd5e1;letter-spacing:2px}';document.head.appendChild(st);
+  introEl=document.createElement('div');introEl.id='introx';introEl.className='hide';introEl.addEventListener('pointerdown',()=>{if(intro)intro.skip=1});document.body.appendChild(introEl)})();
+function startIntro(){if(!hasS())return;const first=S.phase==='pick';intro={t0:performance.now(),dur:4200,skip:0,hold:first};if(first)S.phase='intro';
+  introEl.innerHTML='<div class="ar">'+esc(AR?AR.name:'')+'</div><div class="vs">'+esc(CFG.name)+'<i>VS</i>'+esc(S.opp.name)+'</div><small>TAP TO SKIP</small>';introEl.classList.remove('hide');
+  LIGHTK=.12;if(F.crowd)F.crowd.material.size=0;F.boards.forEach(b=>b.scale.y=.001);sWhistle();AU.exc=.9}
+function endIntro(){if(!intro)return;intro=null;introEl.classList.add('hide');LIGHTK=1;F.lights.forEach(l=>{if(base[l.uuid]!=null)l.intensity=base[l.uuid]});if(F.crowd)F.crowd.material.size=crowdSize;F.boards.forEach(b=>{b.scale.y=1;b.position.y=b.userData.y0});
+  if(hasS()&&S.phase==='intro'){S.phase='pick';S.pt=Date.now();S.bt=0;setTag();if(S.mode==='net'&&typeof onMatch==='function')onMatch()}
+  const b=document.getElementById('big');if(b&&hasS()&&!S.over){b.className='big';void b.offsetWidth;b.textContent='KICK OFF!';b.style.color='#12d36b';b.classList.add('show')}sCheer()}
+function introStep(now){if(!intro)return false;const el=now-intro.t0;if(intro.skip||el>=intro.dur||!hasS()){endIntro();return false}
+  const u=el/intro.dur,e=eo(u),lk=.12+.88*eo(el/1800);
+  F.lights.forEach(l=>{if(base[l.uuid]!=null)l.intensity=base[l.uuid]*lk});
+  if(F.crowd)F.crowd.material.size=crowdSize*eo((el-400)/1800);
+  F.boards.forEach(b=>{const s=Math.max(.001,eo(el/1100));b.scale.y=s;b.position.y=b.userData.y0*s});
+  const R=lerp(36,21.5,e),a=lerp(-1.15,0,e),h=lerp(17,1.9,e);cam.position.set(Math.sin(a)*R+e,h,Math.cos(a)*R);cam.lookAt(0,lerp(3.2,.95,e),lerp(8,4,e));return true}
+
+/* ---------------------------------------------------------------- per-frame hook (runs after the engine has posed everything, before drawing) */
+let lastT=performance.now(),tmeSecs=0,crowdJump=0,prevScore='',bootHue=0;
+const kIdx=()=>hasS()?S.round%2:0,kickerIsMe=()=>!hasS()||kIdx()===S.me;
+function bootStyle(human,mine,time){const M=human.M.boots,b=mine?BOOTS[COS.boots]||BOOTS.classic:BOOTS.classic;
+  if(mine&&COS.boots==='rainbow'){M.color.setHSL((time*.4)%1,.9,.55);M.emissive.setHSL((time*.4)%1,.9,.2)}else{M.color.set(b.c);M.emissive.set(b.e)}M.metalness=mine&&COS.boots==='gold'?.8:.25}
+function celebrate(an,t,time){const o=H.k,r=H.kRoot,c=COS.cele;if(c==='classic')return;const s=clamp(t-.56,0,.8),sw=Math.sin(s*34);
+  const R=(p,x,y,z)=>p.rotation.set(x||0,y||0,z||0);
+  if(c==='slide'){const run=clamp(s/.4),sl=clamp((s-.35)/.2);r.rotation.y=Math.PI;r.position.z+=3.4*eo(run);const cyc=Math.sin(s*50);
+    R(o.lL.hp,cyc*.8*(1-sl));R(o.lR.hp,-cyc*.8*(1-sl));R(o.lL.kn,-Math.max(0,-cyc)*1.1-sl*1.6);R(o.lR.kn,-Math.max(0,cyc)*1.1-sl*1.6);
+    R(o.aL.sh,0,0,-1.4);R(o.aR.sh,0,0,1.4);R(o.spine,.2*(1-sl)-.5*sl);o.hips.position.y=.95-.42*sl;o.g.position.y=0;R(o.head,-.25*sl)}
+  else if(c==='plane'){const run=clamp(s/.75);r.rotation.y=Math.PI;r.position.z+=5.2*eo(run);const cyc=Math.sin(s*46);
+    R(o.lL.hp,cyc*.8);R(o.lR.hp,-cyc*.8);R(o.lL.kn,-Math.max(0,-cyc)*1.1);R(o.lR.kn,-Math.max(0,cyc)*1.1);R(o.aL.sh,0,0,-1.5);R(o.aR.sh,0,0,1.5);R(o.aL.el,0);R(o.aR.el,0);R(o.spine,.12,0,Math.sin(s*9)*.35);o.g.position.y=0}
+  else if(c==='shimmy'){r.rotation.y=Math.PI;R(o.hips,0,0,sw*.22);R(o.spine,.05,0,-sw*.28);o.hips.position.y=.95-Math.abs(sw)*.05;
+    R(o.aL.sh,-.9+Math.sin(s*34)*.6,0,.45);R(o.aR.sh,-.9-Math.sin(s*34)*.6,0,-.45);R(o.aL.el,-1.5);R(o.aR.el,-1.5);R(o.lL.kn,-.3-Math.max(0,sw)*.4);R(o.lR.kn,-.3-Math.max(0,-sw)*.4);R(o.head,0,sw*.25,sw*.15);o.g.position.y=0}
+  else if(c==='flip'){const p=clamp(s/.5),jump=Math.sin(Math.PI*p)*.95,ang=Math.PI*2*eo(p),ca=Math.cos(ang),sa=Math.sin(ang);
+    o.g.rotation.x=ang;o.g.position.set(0,.95+jump-.95*ca,-.95*sa);const tuck=Math.sin(Math.PI*p);R(o.lL.hp,1.2*tuck);R(o.lR.hp,1.2*tuck);R(o.lL.kn,-1.5*tuck);R(o.lR.kn,-1.5*tuck);R(o.aL.sh,2.8*tuck,0,.2);R(o.aR.sh,2.8*tuck,0,-.2);
+    if(p>=1){o.g.rotation.x=0;o.g.position.set(0,0,0);R(o.aL.sh,3.0,0,.35);R(o.aR.sh,3.0,0,-.35)}}}
+function keeperExtra(an,t,time){const o=H.g,r=H.gRoot;
+  if(!an||t<.3){const sh=Math.sin(time*2.6),cyc=Math.sin(time*5.2),pre=an?clamp(1-t/.3):1;
+    r.position.x+=Math.sin(time*1.1+1)*.22*pre;o.hips.position.y+=Math.abs(cyc)*.018*pre+Math.sin(time*2.2)*.006;o.lL.hp.rotation.z=-.12+cyc*.1*pre;o.lR.hp.rotation.z=.12+cyc*.1*pre;
+    if(an){const bump=Math.sin(Math.PI*clamp((t-.2)/.11));o.hips.position.y-=.07*bump;o.spine.rotation.x+=.15*bump;o.aL.sh.rotation.x+=.4*bump;o.aR.sh.rotation.x+=.4*bump}
+    o.g.position.set(0,0,0);return}
+  const p=eo((t-.31)/.24),side=Math.sign(zonePos(an.s).x);
+  r.rotation.y=-side*.35*p;if(side)o.lL.kn.rotation.x-=.5*p;
+  if(an.goal&&t>.58){const q=clamp((t-.6)/.2);o.head.rotation.x+=.55*q;o.spine.rotation.x+=.2*q}
+  if(!an.goal&&t>.58){const q=clamp((t-.58)/.15);o.aL.sh.rotation.x=lerp(o.aL.sh.rotation.x,2.9+Math.sin(time*30)*.25,q);o.aR.sh.rotation.x=lerp(o.aR.sh.rotation.x,2.9-Math.sin(time*30)*.25,q)}
+  const rec=clamp((t-(an.goal?1.05:.82))/.25);if(rec>0){r.rotation.z*=1-rec;r.rotation.y*=1-rec;r.position.y*=1-rec}}
+function netHook(an,time,dt){if(!F.net)return;const arr=F.net.geometry.attributes.position.array,w=BS.hit;
+  const goal=an&&an.goal;if(!goal&&!w)return;
+  for(let k=0;k<netEdges.length;k++)for(let e=0;e<2;e++){const p=netBase[netEdges[k][e]];let dz=0;
+    if(w){const age=time-w.t0,d2=(p[0]-w.x)**2+(p[1]-w.y)**2,env=Math.exp(-d2/1.5);dz=-w.a*env*(.55+.45*Math.cos(age*15-Math.sqrt(d2)*2.4))*Math.exp(-age*1.9);dz+=Math.sin(time*2+p[0]*1.3+p[1])*.012*Math.exp(-age*.5)}
+    arr[k*6+e*3+2]+=dz}
+  F.net.geometry.attributes.position.needsUpdate=true;if(w&&time-w.t0>3.2)BS.hit=null}
+function netDeflect(time){const w=BS.hit;if(!w)return 0;const age=time-w.t0,d2=(ball.position.x-w.x)**2+(ball.position.y-w.y)**2,env=Math.exp(-d2/1.5);return -w.a*env*(.55+.45*Math.cos(age*15-Math.sqrt(d2)*2.4))*Math.exp(-age*1.9)}
+function ballHook(an,dt,time){
+  const pos=ball.position,d=pos.clone().sub(BS.prev),sp=d.length()/Math.max(dt,.001);BS.speed=lerp(BS.speed,sp,.5);
+  if(an!==BS.lastAn){BS.lastAn=an;BS.hit=null;BS.hitDone=false;BS.squash=0}
+  const nz=netZ(pos.y);
+  if(an&&an.goal&&!BS.hitDone&&pos.z<nz+.2&&Math.abs(pos.x)<GW/2){BS.hitDone=true;const spd=Math.max(BS.speed,BS.vz,14);BS.hit={x:pos.x,y:clamp(pos.y,.2,GH),t0:time,a:clamp(.3+spd*.016,.4,.75)};sNet(spd);AU.exc=1}
+  if(an&&!BS.hitDone&&BS.speed>BS.vz)BS.vz=BS.speed;if(!an)BS.vz=0;
+  if(BS.hit&&an&&an.goal){const dz=netDeflect(time);pos.z=Math.min(pos.z,nz+dz+.11)}
+  if(BS.prev.y>.13&&pos.y<=.112&&BS.speed>1.5){BS.squash=1;sBounce(BS.speed)}
+  BS.squash=Math.max(0,BS.squash-dt*7);const sq=1-.22*Math.sin(Math.min(1,BS.squash)*Math.PI*.5);ball.scale.set(1/Math.sqrt(sq),sq,1/Math.sqrt(sq));
+  if(pos.y<.14&&BS.speed>.4){const ax=V3(d.z,0,-d.x).normalize();if(isFinite(ax.x))ball.rotateOnWorldAxis(ax,BS.speed*dt/.11*.6)}
+  shadow.position.x=pos.x;shadow.position.z=pos.z;const h=Math.max(0,pos.y-.11);shadow.scale.setScalar(1+h*.7);shadow.material.opacity=clamp(.35-h*.12,.08,.35);shadow.visible=pos.z>-2.2;
+  BS.pos.unshift(pos.clone());if(BS.pos.length>TR)BS.pos.length=TR;const show=BS.speed>7&&an;
+  for(let i=0;i<TR;i++){const q=BS.pos[i]||pos;trailPos[i*3]=q.x;trailPos[i*3+1]=q.y;trailPos[i*3+2]=q.z;const f=show?Math.max(0,1-i/TR)*.55:0;trailCol[i*3]=f;trailCol[i*3+1]=f*.95;trailCol[i*3+2]=f*.8}
+  trailGeo.attributes.position.needsUpdate=true;trailGeo.attributes.color.needsUpdate=true;BS.prev.copy(pos)}
+function crowdHook(an,dt,time){if(!F.crowd||intro)return;
+  if(an&&!an.__c&&an.t>.52){an.__c=1;crowdJump=an.goal?1:.35}crowdJump*=Math.exp(-dt*1.1);
+  F.crowd.position.y=Math.abs(Math.sin(time*(an&&an.goal?13:3.2)))*(.03+crowdJump*.38);F.crowd.material.size=crowdSize*(1+crowdJump*.12);
+  if(F.flash&&crowdJump>.3)F.flash.material.size=1.1+Math.sin(time*40)*.2}
+function faceHook(an,t,dt,time){let km='neutral',gm='neutral';
+  if(hasS()){km='focus';gm='focus';if(an&&t>.5){if(an.goal){km='cheer';gm=t<.66?'shock':'sad'}else{gm='cheer';km=t<.66?'shock':'sad'}}}
+  mood(FACE.k,km,dt);mood(FACE.g,gm,dt);
+  const px=clamp(-(ball.position.x-H.gRoot.position.x)*.004,-.007,.007),py=clamp((ball.position.y-1.6)*.003,-.006,.003);
+  FACE.g.eyes.forEach(e=>e.userData.p.position.set(px,py,-.014));FACE.k.eyes.forEach(e=>e.userData.p.position.set(0,-.003,-.014))}
+
+scene.onBeforeRender=function(){
+  const now=performance.now(),dt=Math.min(.05,(now-lastT)/1000);lastT=now;const time=now/1000;
+  const an=hasS()?S.an:null,t=an?Math.min(an.t,1.5):-1;
+  if(an&&!an.__k){an.__k=1;AU.exc=Math.max(AU.exc,.7)}
+  if(hasS()){const key=S.score.join('-')+'|'+S.round;if(key!==prevScore){prevScore=key;drawScreen()}}
+  if(an&&t>=.56&&kickerIsMe()&&an.goal)celebrate(an,t,time);else if(an&&t<.5)H.k.g.position.set(0,0,0);
+  const ki=hasS()?kIdx():0,kme=kickerIsMe();bootStyle(H.k,kme,time);bootStyle(H.g,!kme&&hasS(),time);
+  keeperExtra(an,t,time);netHook(an,time,dt);ballHook(an,dt,time);crowdHook(an,dt,time);faceHook(an,t,dt,time);ambTick(dt);
+  if(!hasS()||S.over){if(AU.amb&&!hasS())ambOff()}
+  introStep(now)};
+
+/* ---------------------------------------------------------------- lifecycle wrappers */
+const _newGame=newGame;newGame=function(){_newGame.apply(this,arguments);ambOn();if(F.crowd)F.crowd.userData.keep=1;arenaForMatch();startIntro();setTimeout(()=>{if(hasS()){arenaForMatch();drawScreen(true)}},60)};
+const _end=end;end=function(){_end.apply(this,arguments);ambOff();setTimeout(drawScreen,50,true)};
+const _home=home;home=function(){intro&&endIntro();ambOff();menuArena();return _home.apply(this,arguments)};
+menuArena();
+
+/* ---------------------------------------------------------------- username + cosmetics load (the base game never reloads the username after a refresh) */
+function loadProfile(u){db.doc('players/'+u.uid).get().then(s=>{const d=s.data()||{};if(d.username&&typeof MYUN!=='undefined'&&!MYUN)MYUN=d.username;
+  if(d.kickCos){COS=Object.assign(COS,d.kickCos);COS.owned=Object.assign({boots_classic:1,cele_classic:1},d.kickCos.owned||{},COS.owned||{});try{localStorage.setItem('pkcos',JSON.stringify(COS))}catch(e){}}}).catch(()=>{})}
+if(typeof au!=='undefined'&&au)au.onAuthStateChanged(u=>{if(u){loadProfile(u);subSeas(u)}else{subSeas(null)}});
+
+/* ---------------------------------------------------------------- Style tab (boots, celebrations, arena) */
+const _tabMe=tabMe;
+tabMe=function(m){_tabMe(m);const seg=m.querySelector('.seg');if(seg){const b=document.createElement('button');b.textContent='Style';b.className=PS==='style'?'on':'';b.onclick=()=>{sfx('click');PS='style';tab('me')};seg.appendChild(b);if(PS==='style')seg.querySelectorAll('button').forEach(x=>{if(x!==b)x.classList.remove('on')})}
+  if(PS==='style'){const body=document.getElementById('pbody');if(body)styleView(body)}};
+function item(kind,id,def,cur){const k=kind+'_'+id,own=!!COS.owned[k],on=cur===id;
+  return `<button class="gh ${on?'on2':''}" style="margin:4px 0;text-align:left;text-transform:none;letter-spacing:.3px" onclick="PLUS.pick('${kind}','${id}')">${esc(def.n)}<small style="display:block;color:var(--mu);font-weight:500;font-size:11px">${on?'EQUIPPED':own?'Owned · tap to equip':'🪙 '+def.p+' · tap to buy'}</small></button>`}
+function styleView(b){b.innerHTML=`<p>Your coins: <b style="color:#f5c542">🪙 ${PR.coins||0}</b>. Earn coins by scoring, winning and unlocking trophies.</p>
+  <div class="sub" style="margin-top:0">BOOTS</div>${Object.keys(BOOTS).map(id=>item('boots',id,BOOTS[id],COS.boots)).join('')}
+  <div class="sub">GOAL CELEBRATION</div>${Object.keys(CELE).map(id=>item('cele',id,CELE[id],COS.cele)).join('')}
+  <div class="sub">PRACTICE ARENA (online games pick the arena for you; tournaments use the organizer's arena)</div>
+  <select onchange="PLUS.arena(this.value)"><option value="auto" ${COS.arena==='auto'?'selected':''}>Random</option>${ARENAS.map(a=>`<option value="${a.id}" ${COS.arena===a.id?'selected':''}>${esc(a.name)}</option>`).join('')}</select>
+  <p class="fine">Your boots and celebration are shown whenever you score.</p>`}
+
+/* ---------------------------------------------------------------- seasons + tournament arena */
+let SEAS=[],SEASP=[],SV=null,SVID=null,unS=[],PRES='',PEND=null;
+function subSeas(u){unS.forEach(f=>f());unS=[];SEAS=[];SEASP=[];if(!u||!db)return;
+  unS.push(db.collection('seasons').where('pub','==',true).limit(60).onSnapshot(s=>{SEAS=s.docs.map(d=>({id:d.id,...d.data()}));refreshLB()},()=>{}));
+  unS.push(db.collection('seasons').where('members','array-contains',u.uid).limit(30).onSnapshot(s=>{SEASP=s.docs.map(d=>({id:d.id,...d.data()}));refreshLB()},()=>{}))}
+const allSeas=()=>{const m=new Map();[...SEAS,...SEASP].forEach(x=>m.set(x.id,x));return[...m.values()]};
+const sState=s=>s.status==='declined'?'declined':s.status==='pending'?'pending':(Date.now()>s.end||s.status==='ended')?'past':Date.now()<s.start?'soon':'live';
+const _refresh=refreshLB;refreshLB=function(){if(SV==='new')return;return _refresh.apply(this,arguments)};
+const _vtl=vTourList;vTourList=function(b){if(SV)return vSeason(b);_vtl(b);b.insertAdjacentHTML('afterbegin','<button class="gold" onclick="PLUS.seasons()">🏅 SEASONS &amp; PARTNERSHIPS</button>')};
+function seasonRow(s){const st=sState(s);return `<button class="gh tr" onclick="PLUS.sopen('${s.id}')">${esc(s.name)} ${s.official?'<span class="bd" style="color:#f5c542;border-color:#f5c542">OFFICIAL</span>':''}${s.partner?'<span class="bd" style="color:#6cc4ff;border-color:#6cc4ff">PARTNERSHIP</span>':''}<small>by @${esc(s.cname||'admin')}${s.pun?' + @'+esc(s.pun):''} · ${esc(arenaById(s.arena).name)} · ${st==='live'?'ends '+fdt(s.end):st==='soon'?'starts '+fdt(s.start):st==='pending'?'waiting for partner':st==='past'?'ended '+fdt(s.end):'declined'}</small></button>`}
+function vSeason(b){const back='<button class="gh" onclick="PLUS.back()">← BACK TO TOURNAMENTS</button>';
+  if(SV==='list'){const L=allSeas(),inv=L.filter(s=>s.partner===ME.uid&&s.status==='pending'),live=L.filter(s=>['live','soon'].includes(sState(s))),past=L.filter(s=>sState(s)==='past'),mine=L.filter(s=>s.members&&s.members.includes(ME.uid)&&s.status==='pending'&&s.partner!==ME.uid);
+    const sec=(t,a)=>a.length?`<div class="sub">${t}</div>`+a.map(seasonRow).join(''):'';
+    b.innerHTML=`<h1 style="font-size:22px">SEASONS</h1><p>A season groups tournaments under one banner. Players can create their own, admins run official ones, and two players can run one together as partners.</p><button class="alt" onclick="PLUS.snew()">＋ CREATE A SEASON</button>${sec('INVITATIONS TO YOU',inv)}${sec('SENT, WAITING FOR PARTNER',mine)}${sec('ACTIVE &amp; UPCOMING',live)}${sec('PAST SEASONS',past)}${!L.length?'<p>No seasons yet. Create the first one!</p>':''}${back}`;return}
+  if(SV==='new'){const st=new Date(Date.now()+36e5),en=new Date(Date.now()+30*864e5);
+    b.innerHTML=`<h1 style="font-size:22px">NEW SEASON</h1><label class="fl">Name</label><input class="tx" type="text" id="sn" maxlength="30" placeholder="e.g. Lagos Summer League">
+    <label class="fl">Run it</label><select id="sk" onchange="document.getElementById('spw').style.display=this.value==='pair'?'block':'none'"><option value="solo">By myself</option><option value="pair">With a partner (both of you can add tournaments)</option></select>
+    <div id="spw" style="display:none"><label class="fl">Partner username</label><input class="tx" type="text" id="sp" placeholder="@username"><p class="fine" style="text-align:left">Your partner must accept before the season goes live.</p></div>
+    <div class="row"><div><label class="fl">Starts</label><input type="datetime-local" id="ss" value="${dtv(st)}"></div><div><label class="fl">Ends</label><input type="datetime-local" id="se2" value="${dtv(en)}"></div></div>
+    <label class="fl">Season arena (default for its tournaments)</label><select id="sar">${ARENAS.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select>
+    <label class="fl">Who can see it</label><select id="spb"><option value="1">Public</option><option value="0">Private</option></select>
+    <div class="er" id="se"></div><button class="alt" onclick="PLUS.screate()">CREATE SEASON</button><button class="gh" onclick="PLUS.seasons()">CANCEL</button>`;return}
+  const s=allSeas().find(x=>x.id===SVID);if(!s){b.innerHTML='<p>Season not found.</p>'+back;return}
+  const st=sState(s),tl=(TL||[]).filter(t=>t.sid===s.id),amP=s.partner===ME.uid,amM=s.members&&s.members.includes(ME.uid);
+  b.innerHTML=`<h1 style="font-size:22px">${esc(s.name)}</h1><p style="margin:0">by <b>@${esc(s.cname||'admin')}</b>${s.pun?' + <b>@'+esc(s.pun)+'</b>':''} ${s.official?'<span class="bd" style="color:#f5c542;border-color:#f5c542">OFFICIAL</span>':''} · <b style="color:#f5c542">${st.toUpperCase()}</b></p>
+  <p style="margin:4px 0">${fdt(s.start)} to ${fdt(s.end)} · Arena: ${esc(arenaById(s.arena).name)}</p>
+  ${amP&&s.status==='pending'?'<button class="alt" onclick="PLUS.saccept(\''+s.id+'\')">ACCEPT PARTNERSHIP</button><button class="gh" onclick="PLUS.sdecline(\''+s.id+'\')">DECLINE</button>':''}
+  ${amM&&st==='live'?'<button onclick="PLUS.tin(\''+s.id+'\')">＋ CREATE A TOURNAMENT IN THIS SEASON</button>':''}
+  <div class="sub">TOURNAMENTS IN THIS SEASON (${tl.length})</div>${tl.length?tl.map(t=>`<button class="gh tr" onclick="PLUS.tgo('${t.id}')">${esc(t.name)}<small>${NG(t.fee)} entry · ${tstate(t)}</small></button>`).join(''):'<p>No public tournaments yet.</p>'}${back}`}
+async function createSeason(){const e=document.getElementById('se'),v=id=>document.getElementById(id).value,name=v('sn').trim(),pair=v('sk')==='pair',pu=(v('sp')||'').trim().toLowerCase().replace(/^@/,''),st=new Date(v('ss')).getTime(),en=new Date(v('se2')).getTime();
+  if(!MYUN)return e.textContent='Choose a username in Profile first.';if(name.length<3)return e.textContent='Give the season a name (3 to 30 letters).';
+  if(!(en>st+36e5&&en-st<=366*864e5))return e.textContent='The season must last at least 1 hour and at most a year.';let partner='';
+  if(pair){if(!pu||pu===MYUN)return e.textContent='Enter your partner\'s username.';try{const s=await db.doc('usernames/'+pu).get();if(!s.exists)return e.textContent='No player has that username.';partner=s.data().uid}catch(x){return permErr(x)}}
+  try{await db.collection('seasons').add({name,creator:ME.uid,cname:MYUN,partner,pun:pair?pu:'',members:partner?[ME.uid,partner]:[ME.uid],pub:v('spb')==='1',start:st,end:en,arena:v('sar'),official:false,partnerOk:!partner,status:partner?'pending':'active',created:FV().serverTimestamp()});toast(partner?'Invitation sent to @'+pu:'Season created');SV='list';tab('tour')}catch(x){permErr(x)}}
+const _vtn=vTourNew;vTourNew=function(b){_vtn(b);const er=document.getElementById('te');if(!er)return;
+  const my=allSeas().filter(s=>s.members&&s.members.includes(ME.uid)&&s.status==='active'&&Date.now()<s.end);
+  er.insertAdjacentHTML('beforebegin',`<label class="fl">Arena (the stadium everyone plays in)</label><select id="tar">${ARENAS.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select><label class="fl">Part of a season?</label><select id="tsea"><option value="">No season</option>${my.map(s=>`<option value="${s.id}" ${PRES===s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</select>`);
+  if(PRES){const s=my.find(x=>x.id===PRES);if(s){document.getElementById('tar').value=s.arena||'lagos'}}};
+const _createT=createT;createT=async function(){const ar=document.getElementById('tar'),se=document.getElementById('tsea');
+  if(se&&se.value){const s=allSeas().find(x=>x.id===se.value),en=new Date(document.getElementById('ten').value).getTime();if(s&&en>s.end){document.getElementById('te').textContent='The tournament must end before the season ends ('+fdt(s.end)+').';return}}
+  PEND=ar?{arena:ar.value,...(se&&se.value?{sid:se.value}:{})}:null;try{await _createT()}finally{PEND=null;PRES=''}};
+const _openT=openT;openT=function(id){if(PEND){const p=PEND;PEND=null;db.doc('tournaments/'+id).update(p).catch(permErr)}return _openT.apply(this,arguments)};
+const _vtd=vTourDet;vTourDet=function(b){_vtd(b);const t=TD;if(!t)return;const h=b.querySelector('h1');if(h){const s=t.sid?allSeas().find(x=>x.id===t.sid):null;h.insertAdjacentHTML('afterend',`<p class="fine" style="text-align:left;margin:2px 0">🏟 Arena: <b>${esc(arenaById(t.arena).name)}</b>${t.sid?' · 🏅 Season: <b>'+esc(s?s.name:'part of a season')+'</b>':''}</p>`)}};
+
+/* ---------------------------------------------------------------- refunds with NO server (Spark plan)
+   Each player claims their own refund when they open the game. Firestore rules (see firestore.rules.additions.txt)
+   only allow it when the tournament was cancelled, or ended with no matches set. The full fee (incl. the 15%) comes back. */
+async function markFx(){try{if(!TV||!TD||TD.creator!==ME.uid||TD.hasFx)return;const s=await db.collection('tFix').where('tid','==',TV).limit(1).get();if(!s.empty)await db.doc('tournaments/'+TV).update({hasFx:true})}catch(e){}}
+const _autoSet=autoSet;autoSet=async function(){await _autoSet.apply(this,arguments);markFx()};
+const _addFx=addFx;addFx=async function(){await _addFx.apply(this,arguments);markFx()};
+let RFB=false;
+async function claimRefunds(){if(RFB||!ME||!db||hasS())return;RFB=true;
+  try{const es=await db.collection('tEntries').where('uid','==',ME.uid).limit(60).get();
+    for(const e of es.docs){const d=e.data();if(d.refunded)continue;const ts=await db.doc('tournaments/'+d.tid).get();if(!ts.exists)continue;const t=ts.data();
+      if(!(t.status==='closed'||(Date.now()>t.end&&!t.hasFx&&!t.settled)))continue;
+      await db.runTransaction(async tx=>{const er=await tx.get(e.ref);if(!er.exists||er.data().refunded)return;const wref=db.doc('wallets/'+ME.uid),w=(await tx.get(wref)).data()||{};
+        tx.set(wref,{balance:(w.balance||0)+d.fee,rfTid:d.tid},{merge:true});
+        tx.update(e.ref,{refunded:true,refundedAt:FV().serverTimestamp(),refundWhy:t.status==='closed'?'cancelled':'organizer_no_matches'})});
+      toast('Refunded '+NG(d.fee)+' from "'+(t.name||'tournament')+'"')}}
+  catch(e){console.error(e)}RFB=false}
+setInterval(()=>{if(ME)claimRefunds()},60000);setTimeout(()=>{if(ME)claimRefunds()},5000);
+
+/* handlers used by inline onclick */
+window.PLUS={arenas:ARENAS,
+  pick(kind,id){const def=(kind==='boots'?BOOTS:CELE)[id],k=kind+'_'+id;if(!COS.owned[k]){if((PR.coins||0)<def.p){toast('Not enough coins. You need 🪙 '+def.p);return}
+      ask('Buy '+def.n+' for 🪙 '+def.p+'?',()=>{PR.coins-=def.p;COS.owned[k]=1;COS[kind]=id;save();saveCos();toast(def.n+' equipped');tab('me')},'YES, BUY');return}
+    COS[kind]=id;saveCos();sfx('click');tab('me')},
+  arena(v){COS.arena=v;saveCos();menuArena();sfx('click')},
+  seasons(){sfx('click');SV='list';SVID=null;tab('tour')},back(){sfx('click');SV=null;tab('tour')},snew(){sfx('click');SV='new';tab('tour')},
+  sopen(id){sfx('click');SV='det';SVID=id;tab('tour')},screate:createSeason,
+  saccept(id){db.doc('seasons/'+id).update({partnerOk:true,status:'active'}).then(()=>toast('Partnership accepted')).catch(permErr)},
+  sdecline(id){db.doc('seasons/'+id).update({status:'declined'}).then(()=>{toast('Declined');SV='list';tab('tour')}).catch(permErr)},
+  tin(id){PRES=id;SV=null;BT='new';tab('tour')},tgo(id){SV=null;openT(id)}};
+})();
+</script></body></html>
