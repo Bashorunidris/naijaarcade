@@ -878,11 +878,44 @@ function addFace(o){const head=o.head,f={cur:{sm:.15,open:0,tilt:0,raise:0,eye:1
   /* the original hair cap and afro hide the face, so reshape them */
   if(o.hair.short){o.hair.short.geometry.dispose();o.hair.short.geometry=new T.SphereGeometry(.112,16,10,0,Math.PI*2,0,Math.PI*.4)}
   if(o.hair.afro)o.hair.afro.position.z=.075;
-  f.eyes=[-1,1].map(s=>{const e=new T.Mesh(new T.SphereGeometry(.021,10,8),white);e.position.set(s*.042,.012,-.091);const p=new T.Mesh(new T.SphereGeometry(.011,8,6),dark);p.position.set(0,0,-.014);e.add(p);e.userData.p=p;head.add(e);return e});
+  f.eyes=[-1,1].map(s=>{const e=new T.Mesh(new T.SphereGeometry(.021,10,8),white);e.position.set(s*.042,.012,-.091);const ir=new T.Mesh(new T.SphereGeometry(.0142,10,8),new T.MeshBasicMaterial({color:0x4a2c1a}));ir.position.set(0,0,-.008);e.add(ir);const p=new T.Mesh(new T.SphereGeometry(.011,8,6),dark);p.position.set(0,0,-.014);e.add(p);e.userData.p=p;head.add(e);return e});
   f.brows=[-1,1].map(s=>{const b=new T.Mesh(new T.BoxGeometry(.05,.009,.012),dark);b.position.set(s*.042,.042,-.108);b.userData.s=s;head.add(b);return b});
-  f.mouth=new T.Mesh(new T.TorusGeometry(.026,.005,6,14,Math.PI),dark);f.mouth.rotation.z=Math.PI;f.mouth.position.set(0,-.036,-.1);head.add(f.mouth);
+  f.mouth=new T.Mesh(new T.TorusGeometry(.026,.006,6,14,Math.PI),new T.MeshBasicMaterial({color:0x6b2f2a,side:T.DoubleSide}));f.mouth.rotation.z=Math.PI;f.mouth.position.set(0,-.036,-.1);head.add(f.mouth);
   f.open=new T.Mesh(new T.SphereGeometry(.02,10,8),dark);f.open.position.set(0,-.05,-.097);f.open.scale.set(1,.01,.35);head.add(f.open);
   return f}
+/* ---------------------------------------------------------------- realistic player bodies (same rig, new shapes) */
+function rebuildBody(o){
+  const M=o.M,keep=new Set([o.plate,o.hair.short,o.hair.afro,o.hair.mohawk]);
+  o.g.traverse(m=>{if(m.isMesh&&!keep.has(m))m.visible=false});
+  M.skin.roughness=.55;M.skin.emissive.set(0x1c0903);M.shirt.side=T.DoubleSide;M.hair.roughness=.55;
+  const tp=(rt,rb,h,seg)=>new T.CylinderGeometry(rt,rb,h,seg||18),sp=(r,w,h)=>new T.SphereGeometry(r,w||16,h||12);
+  const mk=(par,geo,mat,x,y,z,sx,sy,sz)=>{const m=new T.Mesh(geo,mat);m.position.set(x||0,y||0,z||0);if(sx!==undefined)m.scale.set(sx,sy,sz);m.castShadow=true;par.add(m);return m};
+  const sole=new T.MeshStandardMaterial({color:0xf2f2f2,roughness:.6});
+  /* torso: chest wider than waist, collar, club crest */
+  const prof=[[.001,0],[.11,0],[.125,.08],[.135,.2],[.15,.32],[.168,.44],[.158,.5],[.09,.57],[.001,.58]].map(p=>new T.Vector2(p[0],p[1]));
+  mk(o.spine,new T.LatheGeometry(prof,30),M.shirt,0,.02,0,1.22,1,.72);
+  mk(o.spine,new T.TorusGeometry(.06,.013,8,22),M.sleeve,0,.585,0).rotation.x=Math.PI/2;
+  mk(o.spine,new T.CircleGeometry(.03,16),new T.MeshBasicMaterial({color:0xffffff}),-.075,.4,-.122);
+  o.plate.position.set(0,.34,.121);
+  mk(o.spine,tp(.05,.058,.1),M.skin,0,.6,0);
+  /* pelvis + shorts */
+  mk(o.hips,tp(.145,.15,.22,24),M.shorts,0,-.04,0,1,1,.78);
+  /* legs */
+  [o.lL,o.lR].forEach(L=>{
+    mk(L.hp,tp(.082,.06,.46),M.skin,0,-.23,0);mk(L.hp,tp(.108,.1,.27),M.shorts,0,-.13,0);
+    mk(L.kn,sp(.058),M.skin,0,0,0);mk(L.kn,tp(.058,.04,.42),M.socks,0,-.22,0);mk(L.kn,sp(.056),M.socks,0,-.16,.012,1,1.5,1);
+    mk(L.an,sp(.042),M.socks,0,0,0);mk(L.an,tp(.046,.05,.075),M.boots,0,-.02,0);
+    mk(L.an,sp(.05),M.boots,0,-.045,-.07,1,.75,2.6);mk(L.an,new T.BoxGeometry(.1,.016,.27),sole,0,-.085,-.075)});
+  /* arms: short sleeve, skin forearm, real hand */
+  [o.aL,o.aR].forEach(A=>{
+    mk(A.sh,sp(.064),M.sleeve,0,0,0);mk(A.sh,tp(.06,.054,.2),M.sleeve,0,-.1,0);mk(A.sh,tp(.05,.045,.12),M.skin,0,-.24,0);
+    mk(A.el,sp(.045),M.skin,0,0,0);mk(A.el,tp(.046,.033,.26),M.skin,0,-.14,0);
+    const hm=new T.MeshStandardMaterial({color:0x8a5530,roughness:.55});A.hm=hm;A.hand=mk(A.el,sp(.045),hm,0,-.29,0,.85,1.35,.6)});
+  /* head: jaw, ears, nose */
+  mk(o.head,sp(.098,32,24),M.skin,0,0,0,.95,1.13,1);mk(o.head,sp(.07),M.skin,0,-.068,-.028,1,.9,1);
+  [-1,1].forEach(s=>mk(o.head,sp(.022,10,8),M.skin,s*.097,-.005,.004,.5,1,.8));
+  mk(o.head,sp(.02,10,8),M.skin,0,-.02,-.098,.9,1.25,1.2)}
+rebuildBody(H.k);rebuildBody(H.g);
 const FACE={k:addFace(H.k),g:addFace(H.g)};
 const MOOD={neutral:{sm:.15,open:0,tilt:0,raise:0,eye:1},focus:{sm:0,open:0,tilt:.8,raise:-.004,eye:.8},cheer:{sm:1,open:.85,tilt:-.3,raise:.012,eye:.65},sad:{sm:-1,open:0,tilt:-.9,raise:.004,eye:.85},shock:{sm:0,open:1,tilt:-.2,raise:.02,eye:1.35}};
 function mood(f,name,dt){const m=MOOD[name]||MOOD.neutral,k=1-Math.exp(-dt*9),c=f.cur;for(const key in m)c[key]=lerp(c[key],m[key],k);
@@ -997,12 +1030,35 @@ function faceHook(an,t,dt,time){let km='neutral',gm='neutral';
   const px=clamp(-(ball.position.x-H.gRoot.position.x)*.004,-.007,.007),py=clamp((ball.position.y-1.6)*.003,-.006,.003);
   FACE.g.eyes.forEach(e=>e.userData.p.position.set(px,py,-.014));FACE.k.eyes.forEach(e=>e.userData.p.position.set(0,-.003,-.014))}
 
+/* ---------------------------------------------------------------- username on the back of the shirt */
+const PL={k:{},g:{}};
+function plateTex(slot,name,num,c1){const p=PL[slot];
+  if(!p.cv){p.cv=document.createElement('canvas');p.cv.width=p.cv.height=256;p.tex=new T.CanvasTexture(p.cv);p.tex.colorSpace=T.SRGBColorSpace;p.tex.anisotropy=8;p.key=''}
+  const txt=new T.Color(c1).getHSL({}).l>.6?'#111111':'#ffffff',key=name+'|'+num+'|'+txt;if(key===p.key)return p.tex;p.key=key;
+  const x=p.cv.getContext('2d');x.clearRect(0,0,256,256);x.fillStyle=txt;x.textAlign='center';let fs=46;
+  x.font='800 '+fs+'px Oswald, Arial, sans-serif';while(x.measureText(name).width>236&&fs>16){fs-=2;x.font='800 '+fs+'px Oswald, Arial, sans-serif'}
+  x.fillText(name,128,52);x.font='900 170px Oswald, Arial, sans-serif';x.fillText(String(num),128,215);p.tex.needsUpdate=true;return p.tex}
+function plates(){const s=hasS(),kme=kickerIsMe(),mine=String((typeof MYUN!=='undefined'&&MYUN)||CFG.name||'YOU').toUpperCase().slice(0,16);
+  const set=(slot,name,cfg,c1)=>{const pm=H[slot].plate.material,tex=plateTex(slot,String(name).toUpperCase().slice(0,16),cfg.num,c1);if(pm.map!==tex){pm.map=tex;pm.needsUpdate=true}};
+  if(!s||kme)set('k',mine,CFG,CFG.c1);else set('k',S.opp.name,S.opp,S.opp.c1);
+  if(s){if(!kme)set('g',mine,CFG,'#ff7a00');else set('g',S.opp.name,S.opp,'#ff7a00')}
+  /* skin tone + gloves (the base game tinted the keeper's whole skin green through the shared hand material) */
+  const rv=(typeof RIV!=='undefined'&&RIV)?RIV:CFG,kc=(!s||kme)?CFG:S.opp,gc=s?(kme?S.opp:CFG):rv,sk=c=>new T.Color(SK[(c.skin|0)%5]);
+  H.k.M.skin.color.copy(sk(kc));H.k.aL.hm.color.copy(sk(kc));H.k.aR.hm.color.copy(sk(kc));
+  H.g.M.skin.color.copy(sk(gc));H.g.aL.hm.color.set(0x39ff7a);H.g.aR.hm.color.set(0x39ff7a)}
+/* ---------------------------------------------------------------- kicking leg stays UP after the shot */
+function legHold(an,t){if(!an||t<.345)return;const o=H.k;
+  if(t>=.56&&an.goal&&kickerIsMe()&&COS.cele!=='classic')return;
+  const f=clamp((t-.345)/.12);o.lR.hp.rotation.x=lerp(o.lR.hp.rotation.x,1.65,f);o.lR.kn.rotation.x=lerp(o.lR.kn.rotation.x,-.2,f);o.lR.an.rotation.x=.5;
+  o.lL.kn.rotation.x=-.18*f;o.spine.rotation.x=Math.min(o.spine.rotation.x,0)-.1*f}
+
 scene.onBeforeRender=function(){
   const now=performance.now(),dt=Math.min(.05,(now-lastT)/1000);lastT=now;const time=now/1000;
   const an=hasS()?S.an:null,t=an?Math.min(an.t,1.5):-1;
   if(an&&!an.__k){an.__k=1;AU.exc=Math.max(AU.exc,.7)}
   if(hasS()){const key=S.score.join('-')+'|'+S.round;if(key!==prevScore){prevScore=key;drawScreen()}}
   if(an&&t>=.56&&kickerIsMe()&&an.goal)celebrate(an,t,time);else if(an&&t<.5)H.k.g.position.set(0,0,0);
+  legHold(an,t);plates();
   const ki=hasS()?kIdx():0,kme=kickerIsMe();bootStyle(H.k,kme,time);bootStyle(H.g,!kme&&hasS(),time);
   keeperExtra(an,t,time);netHook(an,time,dt);ballHook(an,dt,time);crowdHook(an,dt,time);faceHook(an,t,dt,time);ambTick(dt);
   if(!hasS()||S.over){if(AU.amb&&!hasS())ambOff()}
