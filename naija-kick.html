@@ -778,7 +778,6 @@ if(OPENT&&!tOpened){tOpened=true;setTimeout(()=>{if(!S&&!holdBusy)openT(OPENT)},
 addEventListener('error',()=>toast('Something went wrong. Reload if the game freezes.'));
 home('play');
 
-
 /* ============================================================================
    NAIJA KICK PLUS
    Load AFTER the main game script (see README). Adds:
@@ -789,7 +788,9 @@ home('play');
    ========================================================================== */
 (function(){
 'use strict';
-if(typeof K3==='undefined'||typeof THREE==='undefined')return;
+if(typeof K3==='undefined'||typeof THREE==='undefined'){alert('NAIJA KICK PLUS: not loaded. This script must come AFTER the main game script (just before </body>).');return}
+const PLUS_VER='v4';
+const plusErr=(w,e)=>{console.error('PLUS '+w,e);if(!plusErr.s){plusErr.s=1;try{toast('PLUS error in '+w+': '+(e&&e.message))}catch(x){}}};
 const T=THREE,V3=(x,y,z)=>new T.Vector3(x,y,z);
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),lerp=(a,b,t)=>a+(b-a)*t,eo=t=>1-Math.pow(1-clamp(t),3);
 const scene=K3._t.scene,H=K3._t.H(),ball=K3._t.ball(),cam=K3._t.cam(),netZ=K3._t.netZ,zonePos=K3._t.zonePos;
@@ -915,7 +916,7 @@ function rebuildBody(o){
   mk(o.head,sp(.098,32,24),M.skin,0,0,0,.95,1.13,1);mk(o.head,sp(.07),M.skin,0,-.068,-.028,1,.9,1);
   [-1,1].forEach(s=>mk(o.head,sp(.022,10,8),M.skin,s*.097,-.005,.004,.5,1,.8));
   mk(o.head,sp(.02,10,8),M.skin,0,-.02,-.098,.9,1.25,1.2)}
-rebuildBody(H.k);rebuildBody(H.g);
+try{rebuildBody(H.k);rebuildBody(H.g)}catch(e){plusErr('bodies',e)}
 const FACE={k:addFace(H.k),g:addFace(H.g)};
 const MOOD={neutral:{sm:.15,open:0,tilt:0,raise:0,eye:1},focus:{sm:0,open:0,tilt:.8,raise:-.004,eye:.8},cheer:{sm:1,open:.85,tilt:-.3,raise:.012,eye:.65},sad:{sm:-1,open:0,tilt:-.9,raise:.004,eye:.85},shock:{sm:0,open:1,tilt:-.2,raise:.02,eye:1.35}};
 function mood(f,name,dt){const m=MOOD[name]||MOOD.neutral,k=1-Math.exp(-dt*9),c=f.cur;for(const key in m)c[key]=lerp(c[key],m[key],k);
@@ -1057,12 +1058,14 @@ scene.onBeforeRender=function(){
   const an=hasS()?S.an:null,t=an?Math.min(an.t,1.5):-1;
   if(an&&!an.__k){an.__k=1;AU.exc=Math.max(AU.exc,.7)}
   if(hasS()){const key=S.score.join('-')+'|'+S.round;if(key!==prevScore){prevScore=key;drawScreen()}}
-  if(an&&t>=.56&&kickerIsMe()&&an.goal)celebrate(an,t,time);else if(an&&t<.5)H.k.g.position.set(0,0,0);
-  legHold(an,t);plates();
-  const ki=hasS()?kIdx():0,kme=kickerIsMe();bootStyle(H.k,kme,time);bootStyle(H.g,!kme&&hasS(),time);
-  keeperExtra(an,t,time);netHook(an,time,dt);ballHook(an,dt,time);crowdHook(an,dt,time);faceHook(an,t,dt,time);ambTick(dt);
-  if(!hasS()||S.over){if(AU.amb&&!hasS())ambOff()}
-  introStep(now)};
+  const step=(n,f)=>{try{f()}catch(e){plusErr(n,e)}};
+  step('celebrate',()=>{if(an&&t>=.56&&kickerIsMe()&&an.goal)celebrate(an,t,time);else if(an&&t<.5)H.k.g.position.set(0,0,0)});
+  step('leg',()=>legHold(an,t));step('shirt name',plates);
+  step('boots',()=>{const kme=kickerIsMe();bootStyle(H.k,kme,time);bootStyle(H.g,!kme&&hasS(),time)});
+  step('keeper',()=>keeperExtra(an,t,time));step('net',()=>netHook(an,time,dt));step('ball',()=>ballHook(an,dt,time));
+  step('crowd',()=>crowdHook(an,dt,time));step('faces',()=>faceHook(an,t,dt,time));step('sound',()=>ambTick(dt));
+  step('intro',()=>introStep(now))};
+setTimeout(()=>{try{toast('PLUS '+PLUS_VER+' loaded')}catch(e){}},1500);
 
 /* ---------------------------------------------------------------- lifecycle wrappers */
 const _newGame=newGame;newGame=function(){_newGame.apply(this,arguments);ambOn();if(F.crowd)F.crowd.userData.keep=1;arenaForMatch();startIntro();setTimeout(()=>{if(hasS()){arenaForMatch();drawScreen(true)}},60)};
@@ -1162,4 +1165,5 @@ window.PLUS={arenas:ARENAS,
   sdecline(id){db.doc('seasons/'+id).update({status:'declined'}).then(()=>{toast('Declined');SV='list';tab('tour')}).catch(permErr)},
   tin(id){PRES=id;SV=null;BT='new';tab('tour')},tgo(id){SV=null;openT(id)}};
 })();
+
 </script></body></html>
